@@ -4,7 +4,10 @@
       {% for link in site.navigation %}
       <li class="col">
 	<a {% if page.url == link.url or request.path == link.url %}class="active"{% endif %}
-           href="{{ link.url }}" title="{{ link.text }}">{{link.text}}</a>
+           href="{{ link.url }}" title="{{ link.text }}">
+          <i class="fa fa-{{link.icon}} fa-fw"></i>&nbsp;
+          {{link.text}}
+        </a>
       </li>
       {% endfor %}
     </ul>

@@ -13,12 +13,15 @@ baseurl: ""
 url: "http://docs.robotical.io"
 
 navigation:
-  - text: '&leftarrow; Main Site'
-    url: 'https://robotical.io'
   - text: 'Documentation Home'
     url: '/'
+    icon: 'home'
+  - text: 'Main Site'
+    url: 'https://robotical.io'
+    icon: 'external-link'
   - text: 'Forum'
     url: 'https://robotical.io/forum'
+    icon: 'external-link'
 
 # Primary and Accent (Compliment) colour:
 theme_colour: "#37abc8"
