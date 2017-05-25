@@ -1,0 +1,12 @@
+<div class="site_nav" id="main_site_nav">
+  <nav class="container wide nogutter">
+    <ul class="row nav-ul">      
+      {% for link in site.navigation %}
+      <li class="col">
+	<a {% if page.url == link.url or request.path == link.url %}class="active"{% endif %}
+           href="{{ link.url }}" title="{{ link.text }}">{{link.text}}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>

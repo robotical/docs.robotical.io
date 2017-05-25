@@ -1,0 +1,35 @@
+---
+layout: base
+---
+
+<header class="page-header hidden-print">
+  <div class="container wide">
+    <div class="header-container">
+
+      <div class="header-left visible-md">
+        <div class="hamburger hamburger--elastic">
+          <div class="hamburger-box">
+            <div class="hamburger-inner"></div>
+          </div>
+        </div>
+        <script>
+          $('.hamburger').on('click', function(e) {
+          $('.hamburger').toggleClass("is-active");
+          $('#main_site_nav').toggleClass("borkbork");
+          e.preventDefault();
+          });
+        </script>
+      </div>
+
+      <div class="header-logo">
+        <a href="/" class="hero-logo">
+          <img src="{{ site.baseurl }}/img/robotical_logo.svg" class="img-responsive">
+        </a>
+      </div>
+    </div><!-- /.header-container -->
+  </div><!-- /.container -->
+</header>
+
+{% include nav.html %}
+
+{{ content }}

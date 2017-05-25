@@ -12,6 +12,14 @@ description: "Robotical Documentations"
 baseurl: ""
 url: "http://docs.robotical.io"
 
+navigation:
+  - text: 'Main Site'
+    url: 'https://robotical.io'
+  - text: 'Documentation Home'
+    url: '/'
+  - text: 'Forum'
+    url: 'https://robotical.io/forum'
+
 # Primary and Accent (Compliment) colour:
 theme_colour: "#37abc8"
 theme_complement: "#ffda61"
