@@ -13,7 +13,7 @@ baseurl: ""
 url: "http://docs.robotical.io"
 
 navigation:
-  - text: 'Main Site'
+  - text: '&leftarrow; Main Site'
     url: 'https://robotical.io'
   - text: 'Documentation Home'
     url: '/'
