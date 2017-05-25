@@ -1,0 +1,37 @@
+
+#  --------
+#
+#    D O C S . R O B O T I C A L . I O    S I T E    C O N F I G U R A T I O N
+#
+#  --------
+
+
+# Site Settings
+title: Robotical Docs
+description: "Robotical Documentations"
+baseurl: ""
+url: "http://docs.robotical.io"
+
+# Primary and Accent (Compliment) colour:
+theme_colour: "#37abc8"
+theme_complement: "#ffda61"
+
+# :selection and mark colour
+select_colour: "desaturate(lighten(#9ac6ff, 10%), 10%)"
+
+# Build Settings
+future: false
+show_drafts: false
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+permalink: pretty
+highlighter: rouge
+gems: [jekyll-paginate]
+sass:
+  style: compressed
+
+

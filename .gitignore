@@ -1,0 +1,8 @@
+.jekyll-metadata
+_site/*
+_site
+*.html#
+*.css#
+.sass-cache/*
+.sass-cache
+*.xcf
