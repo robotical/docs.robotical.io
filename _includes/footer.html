@@ -1,13 +1,32 @@
 
 <footer>  
-  <div class="container wide vspace">
+  <div class="container vspace">
+
+    <p class="bitbigger">
+      The source for this Robotical Documentation site is on
+      <a href="https://github.com/robotical/docs.robotical.io">GitHub</a>
+    </p>
+
+    <p>
+      If you've seen an error or want to suggest an improvement, please submit an issue on GitHub
+    </p>
+
+    <p>
+      Last Updated <time>{{ site.time | date: "%FT%TZ" }}</time>
+    </p>
+    
     <hr>
 
     <div class="pull-right">
       <img src="{{ iste.baseurl }}/img/scotland.png"
            class="img-responsive scotland">
     </div>
-    <h1 class="titlefont">Robotical LTD</h1>
+    <h1 class="titlefont">
+      <a href="https://robotical.io">
+        Robotical LTD
+        &nbsp;|&nbsp; Documentation
+      </a>
+    </h1>
     <p class="muted">
       &copy; Robotical Ltd. 2015 - 2017
     </p>

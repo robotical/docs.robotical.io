@@ -4,6 +4,44 @@ layout: page
 
 <div class="container vspace">
   <article>
+
+    <h1 class="post-title">
+      <a href="{{ site.baseurl }}{{ page.url }}"
+         title="Permalink to page"
+         style="outline-width: 0px !important; user-select: text !important;">{{ page.title }}</a>
+    </h1>
+
+    {% if page.breadcrumbs %}
+    <ol class="breadcrumb">
+        {% for crumb in page.breadcrumbs %}
+        <li><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+        {% endfor %}
+        <li class="active">{{ page.title }}</li>
+    </ol>
+    {% endif %}
+    
+    {% if page.versions %}
+    <br>
+    <div class="sheet padder">
+      <span class="smaller">
+        This page refers to the following specific versions or dependencies:
+      </span>
+      <dl>
+        {% for version in page.versions %}
+        <dt>
+          {{ version.name }}
+        </dt>
+        <dd>
+          {{ version.value }}
+        </dd>
+        {% endfor %}
+      </dl>
+    </div>
+    <br>
+    {% endif %}
+
     {{ content }}
   </article>
 </div>
+
+

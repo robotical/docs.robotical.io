@@ -5,7 +5,7 @@
       <li class="col">
 	<a {% if page.url == link.url or request.path == link.url %}class="active"{% endif %}
            href="{{ link.url }}" title="{{ link.text }}">
-          <i class="fa fa-{{link.icon}} fa-fw"></i>&nbsp;
+          <i class="fa fa-{{link.icon}} fa-fw muted smaller"></i>&nbsp;
           {{link.text}}
         </a>
       </li>

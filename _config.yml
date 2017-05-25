@@ -7,8 +7,8 @@
 
 
 # Site Settings
-title: Robotical Docs
-description: "Robotical Documentations"
+title: 'Robotical Docs'
+description: "Robotical Documentation"
 baseurl: ""
 url: "http://docs.robotical.io"
 
@@ -24,11 +24,10 @@ navigation:
     icon: 'external-link'
 
 # Primary and Accent (Compliment) colour:
+# NOTE current (S)CSS is generated from main web repo so not
+# directly using these
 theme_colour: "#37abc8"
 theme_complement: "#ffda61"
-
-# :selection and mark colour
-select_colour: "desaturate(lighten(#9ac6ff, 10%), 10%)"
 
 # Build Settings
 future: false
