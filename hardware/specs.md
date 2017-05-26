@@ -1,8 +1,6 @@
 ---
-title: Hardware Specifications
+title: Technical Specifications
 breadcrumbs:
- - name: Home
-   url: '/'
  - name: 'Hardware'
    url: '/hardware'
 layout: article

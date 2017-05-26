@@ -6,19 +6,18 @@ layout: page
   <article>
 
     <h1 class="post-title">
-      <a href="{{ site.baseurl }}{{ page.url }}"
+      <a href="{{ page.url }}"
          title="Permalink to page"
          style="outline-width: 0px !important; user-select: text !important;">{{ page.title }}</a>
     </h1>
 
-    {% if page.breadcrumbs %}
     <ol class="breadcrumb">
+        <li><a href="{{ site.url }}">Home</a></li>
         {% for crumb in page.breadcrumbs %}
-        <li><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+        <li><a href="{{ site.baseurl }}{{ crumb.url }}">{{ crumb.name }}</a></li>
         {% endfor %}
         <li class="active">{{ page.title }}</li>
     </ol>
-    {% endif %}
     
     {% if page.versions %}
     <br>
