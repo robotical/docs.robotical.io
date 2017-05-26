@@ -72,3 +72,6 @@ Lithium polymer batteries (LiPo) can be dangerous if abused. Do not overcharge t
 or discharge it below the minimum safe voltage of **6.4v**. Don't disassemble or pierce the
 battery, leave it charging unattended or dispose of it in regular household waste or by burning.
 {:.alert.danger.tag.padder}
+
+
+<br>
