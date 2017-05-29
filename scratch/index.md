@@ -10,15 +10,16 @@ a program from blocks.
 
 
 <div class="center bitbigger padder">
-<a href="http://scratchx.org/?url=http://alexanderenoch.github.io/scratchtest/martyExtended.js" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch</a>
+<a href="http://scratchx.org/?url=http://alexanderenoch.github.io/scratchtest/martyExtended.js" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch &times; Marty</a>
 </div>
 
-Getting Started
----
+Scratch needs to connect to Marty over your WiFi network to send instructions...
 
-First things first, when you click the above button scratch is going to open in a
-new tab or window in your browser.
 
-TODO: Induction into scratch, how to handle popup asking for Marty Address. Copy stuff out of http://robotical.io/scratch
+**TODO:** Short Induction into scratch (**NOT** a tutorial), how to handle popup asking for Marty Address. Copy stuff out of http://robotical.io/scratch then block-by-block dosumentation, maybe lower level how it works stuff
+{:.text-danger.bitbigger}
+
+
+**TODO:** Move scratch extension out of `scratchtest` to a robotical repo
 {:.text-danger.bitbigger}
 

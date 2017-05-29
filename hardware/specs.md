@@ -6,9 +6,32 @@ breadcrumbs:
 layout: article
 ---
 
+
+Charge Cable and Supplied Battery
+---
+
+The supplied USB to 9v barrel-jack is rated for **5v** on the USB end, and outputs
+**9v** on the barrel jack, centre pin positive. The supplied rechargeable LiPo battery
+has a nominal charged voltage **8.4v**. The battery's capacity is **1400mAh**.
+{:.feature}
+
+The supplied cable can provide adequate voltage to charge the battery through rick, but
+using an equivalent mains-powered 9v DC charger the battery can charge faster.
+For the fastest charging an external LiPo battery charger, commonly used for Remote-Control applications
+can be used to charge the battery.
+
+Lithium polymer batteries (LiPo) can be dangerous if abused. Do not overcharge the battery
+or discharge it below the minimum safe voltage of **6.4v**. Don't disassemble or pierce the
+battery, leave it charging unattended or dispose of it in regular household waste or by burning.
+{:.alert.danger.tag.padder}
+
+
+
 Rick - Ratings and Maximums
 ---
 
+Rick's logic level is **3v3**. The GPIOs and Serial lines are 5v tolerant but the
+I<sup>2</sup>C ports <code>SDA<sub>1</sub></code> and <code>SCL<sub>1</sub></code> are not.
 Rick has a maximum power output of **3A** per each of the two **5v** channel, maximum operational
 temperature of **50&deg;C**, thermal cut-out at **90&deg;C** and an on-board dual-cell
 **7.4v LiPo** battery charger with **\_\_A** peak charge current. Nominal battery voltage is
@@ -55,23 +78,25 @@ could also permanently damage your control board.
 
 
 
-Charge Cable and Supplied Battery
+Rick - Major Chipsets & Programming
 ---
 
-The supplied USB to 9v barrel-jack is rated for **5v** on the USB end, and outputs
-**9v** on the barrel jack, centre pin positive. The supplied rechargeable LiPo battery
-has a nominal charged voltage **8.4v**. The battery's capacity is **1400mAh**.
+Rick has two microcontrollers on-board, a `STM32F446RE` ARM Cortex M-4 core (`U1` on the PCB),
+and an `ESP8266` on a `ESP-12` integrated WiFi module (`U2` on the PCB).
 {:.feature}
 
-The supplied cable can provide adequate voltage to charge the battery through rick, but
-using an equivalent mains-powered 9v DC charger the battery can charge faster *at your own risk*.
-For the fastest charging an external LiPo battery charger, commonly used for Remote-Control applications
-can be used to charge the battery *again, at your own risk*.
+The JTAG header `P2` targets the STM32 and can be used to reflash it's firmware with a compatible
+programmer (`ST Link`) and the ST's boot select pin `BOOT0` is broken out to testpoint `TP6`,
+while the testpoint `TP7` connects the ESP's `GPIO0` pin, `TP3` the `TXDO` port, `TP4` the
+`RXDI` port on the ESP. These can be used to reflash the ESP's firmware.
 
-Lithium polymer batteries (LiPo) can be dangerous if abused. Do not overcharge the battery
-or discharge it below the minimum safe voltage of **6.4v**. Don't disassemble or pierce the
-battery, leave it charging unattended or dispose of it in regular household waste or by burning.
-{:.alert.danger.tag.padder}
+Also on-board are a `MMA8652FC` accelerometer and a small speaker attached to the ST's DAC.
+
+Note that the factory firmware on Rick's main ST chip and ESP *is not currently available*
+so if you reprogram the board you won't be able to restore it's original firmware and function later.
+{:.alert.info.tag.padder}
+
+
 
 
 <br>
