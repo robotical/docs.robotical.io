@@ -16,7 +16,7 @@ pip install martypy
 <div>
 <a href="/python/remote/" class="inherit">
 <div class="well bigger">
-  MartyPy Documentation
+  MartyPy Library Documentation
   <div class="smaller muted">
     For controlling rick remotely
   </div>
