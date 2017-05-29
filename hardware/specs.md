@@ -53,8 +53,8 @@ loads attached to the `GPIO` pins. The nominal voltage in our testing is **5.2v*
 *except* `M8` has a **0.1&#x2126;** current sense resistor between it and `GND`.
 
 Do not connect the Motor's <code>M<sub>GND</sub></code> pins to the `GND` pins elsewhere
-on Rick or any other attached, grounded device as this may damage the control board. This
-is because of the current sense resistors.
+on Rick or each-other, or any other attached grounded device as this may damage the control
+board. This is because each is connected to a current sense resistor and GPIO pin.
 {:.alert.danger.tag.padder}
 
 Rick has some *basic* reverse-polarisation protection, with two Q-FETs
