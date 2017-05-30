@@ -62,12 +62,12 @@ so no value can be reported.
 
 Command packets intstruct the control board to do something. Similar to the `GET` type packets,
 `COMMAND` packets all begin `0x02`. This type of packet can vary
-in length depending on the operation, so the 1st and 2nd bytes encode the payload size, though
-don't count themselves nor the zeroth byte in the size.
+in length depending on the operation, so the 1st and 2nd bytes encode the payload size
+(number of *bytes*), though don't count themselves nor the zeroth byte in the size.
 
-| Byte 0 | Byte 1     | Byte 2     | Byte 3           | ...       | Byte M    |
-|--------|------------|------------|------------------|-----------|-----------|
-| 0x02   | *Size LSB* | *Size MSB* | *Command Opcode* | *1st Arg* | *Nth Arg* |
+| Byte 0 | Byte 1     | Byte 2     | Byte 3           | ... | Byte M    |
+|--------|------------|------------|------------------|-----|-----------|
+| 0x02   | *Size LSB* | *Size MSB* | *Command Opcode* | ... | *Nth Arg* |
 {:.bitfield}
 
 The payload size (1st and 2nd bytes) should be encoded as a little endian integer.
@@ -79,7 +79,11 @@ Bytes in position 4 through M depend on the opcode and command being called.
 |:-----------------|:-----------|:-----|:--------------------------------------------------------|
 | *hello*          | 0x00       | 1    | *none*                                                  |
 | *lean*           | 0x01       | 5    | uint8 dir, uint8 amount, uint16 move\_time              |
-| *walk*           | 0x01       | 7    | uint8 steps, uint8 turn, uint16 move\_time, int8 step\_length, int8 side |
+| *walk*           | 0x03       | 7    | uint8 steps, uint8 turn, uint16 move\_time, int8 step\_length, int8 side |
+| *eyes*           | 0x04       | 2    | uint8 amount                                            |
+| *kick*           | 0x05       | 5    | uint8 amount, int8 twist, uint16 move\_time             |
+| *celebrate*      | 0x08       | 3    | uint16 move\_time                                       |
+| *arms*           | 0x0B       | 5    | int8 r\_angle, int8 l\_angle, uint16 move\_time         |
 {:.tt}
 
 **TODO:** Complete all `COMMAND` opcodes
@@ -91,8 +95,17 @@ Bytes in position 4 through M depend on the opcode and command being called.
 `ROS COMMAND` Type Packets
 ---
 
-**TODO**
-{:.bigger.text-danger}
+The `ROS COMMAND` packet format is the lowest level of access offered by the TCP Socket API,
+and simply passes on the `Data` byte array to the main controller chip vie **ROS Serial**.
+The size bytes are similar to the `COMMAND` packet format's size bytes, giving the length
+of the `Data` array in bytes.
+
+| Byte 0 | Byte 1     | Byte 2     | Byte 3   | ... | Byte M    |
+|--------|------------|------------|----------|-----|-----------|
+| 0x03   | *Size LSB* | *Size MSB* | Data[0]  | ... | Data[N-1] |
+{:.bitfield}
+
+More information on ROS (and ROS Serial) is given [here](/ros/)
 
 <br>
 
