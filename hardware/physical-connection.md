@@ -1,14 +1,11 @@
 ---
-title: Connection Guide
+title: Physical Connection Guide
 layout: article
 breadcrumbs:
  - name: 'Hardware'
    url: '/hardware'
 ---
 
-
-**TODO:** cover connection to ESP in detail
-{:.bitbigger.text-danger}
 
 **TODO:** be very clear that `M_GND` pins should *not* be connected together ever and that
 the `+5V_MTR` bus should not be connected to the `+5v` bus

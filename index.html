@@ -18,8 +18,9 @@ layout: page
         Arduino or other serial-enabled microcontroller or mini-pc is inside the head with Rick.
       </p>
       <p class="bigger">
-        Some of our APIs and Integrations work with only one of these, some with both so we've
-        split them into those groups below. Martys can also be simulated using V-REP.
+        Some of our APIs and Integrations work with only one of these modes, some with both so we've
+        split them into groups below. Martys can also be simulated using V-REP without needing a physical
+        robot, also detailed below.
       </p>
       <br>
     </div>
@@ -299,7 +300,7 @@ layout: page
       
       <div class="row padd">
         <div class="col">
-          <a href="{{ site.baseurl }}/hardware/connections" class="inherit">
+          <a href="{{ site.baseurl }}/hardware/remote-connection" class="inherit">
             <div class="well bigger">
               <strong>WiFi Connection Guide</strong>
               <p class="smaller">
@@ -310,24 +311,13 @@ layout: page
           </a>
         </div>
         <div class="col">
-          <a href="{{ site.baseurl }}/hardware/connections" class="inherit">
+          <a href="{{ site.baseurl }}/hardware/physical-connection" class="inherit">
             <div class="well bigger">
               <strong>Physical Connection Guide</strong>
               <p class="smaller">
                 Pinouts from Rick and information on
                 how to connect a RaspberryPi, Arduino or other serial-enabled device
                 to Rick inside a Marty's head.
-              </p>
-            </div>
-          </a>
-        </div>
-        <div class="col">
-          <a href="TODO" class="inherit">
-            <div class="well bigger">
-              <strong>Low Level APIs</strong>
-              <p class="smaller">
-                Byte-level specification of the WiFi socket API with Rick over the ESP, as well
-                as brief details on the ROS Serial integration and Websocket communication with Rick
               </p>
             </div>
           </a>
@@ -342,23 +332,23 @@ layout: page
       
       <div class="row padd">
         <div class="col">
+          <a href="{{ site.baseurl }}/hardware/lowlevel-api" class="inherit">
+            <div class="well bigger">
+              <strong>Low Level APIs</strong>
+              <p class="smaller">
+                Byte-level specification of the WiFi socket API with Rick over the ESP, as well
+                as brief details on the ROS Serial integration and Websocket communication with Rick
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col">
           <a href="{{ site.baseurl }}/hardware/specs" class="inherit">
             <div class="well bigger">
               <strong>Specifications</strong>
               <p class="smaller">
                 Rick's maximum power output ratings, battery safety, thermal characteristics,
                 limits and charge capablity.
-              </p>
-            </div>
-          </a>
-        </div>
-        <div class="col">
-          <a href="TODO" class="inherit">
-            <div class="well bigger">
-              <strong>Reflashing the ST and ESP</strong>
-              <p class="smaller">
-                A pretty in-depth guide to changing the firmware on either the ESP-12 WiFi module
-                or the STM32F main IC
               </p>
             </div>
           </a>
