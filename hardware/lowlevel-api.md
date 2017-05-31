@@ -28,7 +28,6 @@ over port `24`
 
 
 
-
 `GET` Type Packets
 ---
 

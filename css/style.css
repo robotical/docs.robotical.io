@@ -818,23 +818,21 @@ table.bitfield {
   width: auto;
   padding: 0.5em 1em;
   margin-top: 0.5em;
-  color: #222;
-  background: #f0f0f0;
-  -webkit-border-radius: 0.5rem;
-  -moz-border-radius: 0.5rem;
-  -ms-border-radius: 0.5rem;
-  border-radius: 0.5rem; }
+  color: #164450;
+  background: #d7eef4; }
   table.bitfield th {
     text-align: left; }
   table.bitfield thead {
-    border-bottom: 3px solid #ccc; }
+    border-bottom: 3px solid #d7eef4; }
+  table.bitfield tbody {
+    color: #216778; }
   table.bitfield tr {
     border: 0; }
   table.bitfield td {
     border: 0; }
   table.bitfield th + th,
   table.bitfield td + td {
-    border-left: 2px solid #ccc; }
+    border-left: 3px solid #9bd5e4; }
 
 @media screen and (min-width: 70rem) {
   table.bitfield {
@@ -1428,39 +1426,35 @@ dl dd {
     dl dd {
       font-size: 0.8em; } }
 
-dl.doc dt,
-.docitem {
-  color: #444;
-  background: #f0f0f0;
-  -webkit-border-radius: 0.3rem;
-  -moz-border-radius: 0.3rem;
-  -ms-border-radius: 0.3rem;
-  border-radius: 0.3rem;
+.docitem, .docsubitem {
+  color: #164450;
+  background: #d7eef4;
+  border-top: 2px solid #329ab4;
   display: inline-block;
   padding: 0.3em 1em;
   font-weight: normal;
-  font-size: 1.3em; }
-  dl.doc dt code, dl.doc dt article pre, article dl.doc dt pre, dl.doc dt .articulate pre, .articulate dl.doc dt pre,
-  .docitem code,
-  .docitem article pre,
-  article .docitem pre,
-  .docitem .articulate pre,
-  .articulate .docitem pre {
+  font-size: 1.2em; }
+  .docitem code, .docsubitem code, .docitem article pre, article .docitem pre, .docsubitem article pre, article .docsubitem pre, .docitem .articulate pre, .articulate .docitem pre, .docsubitem .articulate pre, .articulate .docsubitem pre {
     color: inherit;
     background: none;
     padding: 0; }
 
-@media screen and (min-width: 70rem) {
-  dl.doc dt,
-  .docitem {
-    margin-left: -2em; } }
-dl.doc dd,
-.docdesc {
-  color: #111;
-  font-size: 1.2em;
-  margin: 1em 2em;
-  margin-right: 0; }
+.docitem:after, .docsubitem:after {
+  content: " ";
+  display: block; }
 
+.docsubitem {
+  color: #3a3a3a;
+  background: #f0f0f0;
+  border-top-color: #aaa;
+  font-size: 1.1em; }
+
+@media screen and (min-width: 50rem) {
+  .docitem, .docsubitem {
+    margin-left: -2em; }
+
+  .docsubitem {
+    margin-left: -1.5em; } }
 .em {
   font-style: italic; }
 
