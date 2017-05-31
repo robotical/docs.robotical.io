@@ -14,6 +14,8 @@ layout: article
 ---
 
 
+
+
 TCP Socket API
 ===
 
@@ -22,6 +24,9 @@ connecting to this API can send byte-level commands to the ESP which will in tur
 the main control chip to perform an action or report back on a sensor. The socket API runs
 over port `24`
 {:.feature}
+
+
+
 
 
 `GET` Type Packets
@@ -57,6 +62,8 @@ so no value can be reported.
 <br>
 
 
+
+
 `COMMAND` Type Packets
 ---
 
@@ -65,9 +72,9 @@ Command packets intstruct the control board to do something. Similar to the `GET
 in length depending on the operation, so the 1st and 2nd bytes encode the payload size
 (number of *bytes*), though don't count themselves nor the zeroth byte in the size.
 
-| Byte 0 | Byte 1     | Byte 2     | Byte 3           | ... | Byte M    |
-|--------|------------|------------|------------------|-----|-----------|
-| 0x02   | *Size LSB* | *Size MSB* | *Command Opcode* | ... | *Nth Arg* |
+| Byte 0 | Byte 1     | Byte 2     | Byte 3           | Byte 4    | ... | Byte M    |
+|--------|------------|------------|------------------|-----------|-----|-----------|
+| 0x02   | *Size LSB* | *Size MSB* | *Command Opcode* | *1st Arg* | ... | *Nth Arg* |
 {:.bitfield}
 
 The payload size (1st and 2nd bytes) should be encoded as a little endian integer.
@@ -75,21 +82,32 @@ Bytes in position 4 through M depend on the opcode and command being called.
 
 
 
-| Command          | Opcode     | Size | Arguments                                               |
-|:-----------------|:-----------|:-----|:--------------------------------------------------------|
-| *hello*          | 0x00       | 1    | *none*                                                  |
-| *lean*           | 0x01       | 5    | uint8 dir, uint8 amount, uint16 move\_time              |
-| *walk*           | 0x03       | 7    | uint8 steps, uint8 turn, uint16 move\_time, int8 step\_length, int8 side |
-| *eyes*           | 0x04       | 2    | uint8 amount                                            |
-| *kick*           | 0x05       | 5    | uint8 amount, int8 twist, uint16 move\_time             |
-| *celebrate*      | 0x08       | 3    | uint16 move\_time                                       |
-| *arms*           | 0x0B       | 5    | int8 r\_angle, int8 l\_angle, uint16 move\_time         |
+| Command                | Opcode     | Size | Arguments                                               |
+|:-----------------------|:-----------|:-----|:--------------------------------------------------------|
+| *hello*                | 0x00       | 1    | *-none-*                                                |
+| *lean*                 | 0x01       | 5    | uint8 dir, uint8 amount, uint16 move\_time              |
+| *walk*                 | 0x03       | 7    | uint8 steps, uint8 turn, uint16 move\_time, int8 step\_length, int8 side |
+| *eyes*                 | 0x04       | 2    | uint8 amount                                            |
+| *kick*                 | 0x05       | 5    | uint8 amount, int8 twist, uint16 move\_time             |
+| *celebrate*            | 0x08       | 3    | uint16 move\_time                                       |
+| *arms*                 | 0x0B       | 5    | int8 r\_angle, int8 l\_angle, uint16 move\_time         |
+| *sidestep*             | 0x0E       | 6    | int8 side, int8 num\_steps, uint16 move\_time, int8 step\_length  |
+| *stand straight*       | 0x0F       | 3    | uint16 move\_time                                       |
+| *play\_sound*          | 0x10       | 7    | uint16 freq\_start, uint16 freq\_end, uint16 duration   |
+| *stop*                 | 0x11       | 2    | uint8 stop\_type (0x00, 0x01, 0x02, 0x03)               |
+| *move\_joint*          | 0x12       | 5    | uint8 joint\_id, int8 position, uint16 move\_time       |
+| *enable\_motors*       | 0x13       | 1    | *-none-*                                                |
+| *disable\_motors*      | 0x14       | 1    | *-none-*                                                |
+| *fall\_protection*     | 0x15       | 2    | bool enabled (0x00 or 0x01)                             |
+| *motor\_protection*    | 0x16       | 2    | bool enabled (0x00 or 0x01)                             |
+| *low\_battery\_cutoff* | 0x17       | 2    | bool enabled (0x00 or 0x01)                             |
+| *buzz\_prevention*     | 0x18       | 2    | bool enabled (0x00 or 0x01)                             |
+| *save\_calibration*    | 0xFF       | 1    | *-none-*                                                |
 {:.tt}
 
-**TODO:** Complete all `COMMAND` opcodes
-{:.bigger.text-danger}
-
 <br>
+
+
 
 
 `ROS COMMAND` Type Packets
@@ -109,7 +127,7 @@ More information on ROS (and ROS Serial) is given [here](/ros/)
 
 <br>
 
-### Example Socket Call in Python 3
+### Simple Sockets Example in Python 3
 
 Just to illustrate how the socket API works, though if you're using Python to communicate
 with Marty  we'd recommend you check out the **MartyPy** api [documented here](/python/remote/)
