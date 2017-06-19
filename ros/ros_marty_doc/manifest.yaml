@@ -1,0 +1,19 @@
+actions: []
+authors: Alejandro Bordallo <alex.bordallo@robotical.io>
+brief: ''
+bugtracker: ''
+depends:
+- catkin
+- std_msgs
+- marty_description
+- rospy
+- tf2_ros
+- marty_msgs
+description: The ros_marty package
+license: Apache
+maintainers: Alejandro Bordallo <alex.bordallo@robotical.io>
+msgs: []
+package_type: package
+repo_url: ''
+srvs: []
+url: http://robotical.io/
