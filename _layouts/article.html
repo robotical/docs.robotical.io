@@ -22,7 +22,7 @@ layout: page
 <div class="container {% if page.skinny %}skinny{% endif %} vspace">
   <article>
     <ol class="breadcrumb">
-        <li><a href="{{ site.url }}">Home</a></li>
+        <li><a href="/">Home</a></li>
         {% for crumb in page.breadcrumbs %}
         <li><a href="{{ site.baseurl }}{{ crumb.url }}">{{ crumb.name }}</a></li>
         {% endfor %}
