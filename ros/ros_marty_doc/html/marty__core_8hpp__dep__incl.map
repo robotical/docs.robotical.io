@@ -1,0 +1,8 @@
+<map id="marty_core.hpp" name="marty_core.hpp">
+<area shape="rect" id="node2" href="$cmd__server_8hpp.html" title="CMD Server for Marty, enabling execution of CMDs remotely. " alt="" coords="5,155,120,181"/>
+<area shape="rect" id="node4" href="$trajectory_8hpp.html" title="trajectory.hpp" alt="" coords="100,80,201,107"/>
+<area shape="rect" id="node6" href="$marty__core_8cpp.html" title="Marty Core header providing access to Marty methods. " alt="" coords="225,80,337,107"/>
+<area shape="rect" id="node7" href="$ros__marty_8cpp.html" title="Sets up the ROS Marty API. " alt="" coords="361,80,466,107"/>
+<area shape="rect" id="node3" href="$cmd__server_8cpp.html" title="CMD Server for Marty, enabling execution of CMDs remotely. " alt="" coords="5,229,120,256"/>
+<area shape="rect" id="node5" href="$trajectory_8cpp.html" title="trajectory.cpp" alt="" coords="144,155,245,181"/>
+</map>

@@ -1,0 +1,28 @@
+actions: []
+authors: Alejandro Bordallo <alex.bordallo@robotical.io>
+brief: ''
+bugtracker: ''
+depends:
+- message_generation
+- catkin
+- std_msgs
+description: Marty_msgs package containing ROS messages for Marty the Robot
+license: Apache
+maintainers: Alejandro Bordallo <alex.bordallo@robotical.io>
+msgs:
+- Accelerometer
+- MotorCurrents
+- Sound
+- KeyframeArray
+- Output
+- ServoMsg
+- SoundArray
+- GPIOs
+- ServoMsgArray
+- Keyframe
+package_type: package
+repo_url: ''
+srvs:
+- GPIOConfig
+- Command
+url: http://robotical.io/

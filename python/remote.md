@@ -41,7 +41,7 @@ or contribute pull requests.
 
 **ProTip:** See [Python.org](https://www.python.org) for how to install Python on your
 System, and for generic syntax help and learning resources
-{:.alert.success.tag}
+{:.alert.info.tag}
 
 
 Basic Usage
