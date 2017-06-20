@@ -40,13 +40,12 @@ Alright, now we've set up the workspace! Next on the list is downloading and com
 You should already be in the `src` folder. Here, we'll clone the repositories we need from GitHub:
 
 
-    # You need ros_marty and marty_msgs
     git clone https://github.com/robotical/ros_marty.git
     git clone https://github.com/robotical/marty_msgs.git
-    # These three are optional demos and extra functionality
+    git clone https://github.com/robotical/marty_description.git
+    # These two are optional demos and extra functionality
     git clone https://github.com/robotical/marty_joy.git
     git clone https://github.com/robotical/marty_football.git
-    git clone https://github.com/robotical/marty_description.git
 
 
 Now, `cd ..` back up into `catkin_ws`, and here, build the downloaded packages:
