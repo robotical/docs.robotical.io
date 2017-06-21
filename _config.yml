@@ -19,8 +19,11 @@ navigation:
   - text: 'Main Site'
     url: 'https://robotical.io'
     icon: 'external-link'
+  - text: 'Learn'
+    url: 'https://robotical.io/learn/'
+    icon: 'external-link'
   - text: 'Forum'
-    url: 'https://robotical.io/forum'
+    url: 'https://robotical.io/forum/'
     icon: 'external-link'
 
 # Primary and Accent (Compliment) colour:
