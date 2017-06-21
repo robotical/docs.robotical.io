@@ -1,5 +1,5 @@
 ---
-title: Low Level APIs
+title: Low Level API
 breadcrumbs:
  - name: 'Hardware'
    url: '/hardware'
@@ -95,8 +95,8 @@ Bytes in position 4 through M depend on the opcode and command being called.
 | *play\_sound*          | 0x10       | 7    | uint16 freq\_start, uint16 freq\_end, uint16 duration   |
 | *stop*                 | 0x11       | 2    | uint8 stop\_type (0x00, 0x01, 0x02, 0x03)               |
 | *move\_joint*          | 0x12       | 5    | uint8 joint\_id, int8 position, uint16 move\_time       |
-| *enable\_motors*       | 0x13       | 1    | *-none-*                                                |
-| *disable\_motors*      | 0x14       | 1    | *-none-*                                                |
+| *enable\_motors*       | 0x13       | ??   | **TODO: Now takes args**                                |
+| *disable\_motors*      | 0x14       | ??   | **TODO: Now takes args**                                |
 | *fall\_protection*     | 0x15       | 2    | bool enabled (0x00 or 0x01)                             |
 | *motor\_protection*    | 0x16       | 2    | bool enabled (0x00 or 0x01)                             |
 | *low\_battery\_cutoff* | 0x17       | 2    | bool enabled (0x00 or 0x01)                             |
