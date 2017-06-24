@@ -1,0 +1,68 @@
+---
+title: Socket API Discovery
+breadcrumbs:
+ - name: 'Hardware'
+   url: '/hardware'
+ - name: 'Socket API over ESP'
+   url: '/hardware/esp-socket-api'
+layout: article
+---
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.js" 
+            integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+            crossorigin="anonymous"/></script>
+        <script type="text/javascript">
+           
+            // Currently pinging the ESP's web server on port 80
+            // The magic command "AA" is used to filter out other web servers which may reply with
+            // HTTP 200 codes (404's are handled by the error function).
+
+            function sendRequest(requestIp) {
+                $.ajax({
+                    type:'GET',
+                    url:requestIp + "/service-discovery", 
+                    success:function(data) {
+                        
+                        // Something replied!
+
+                        var magic_signature = data.substring(0, 2); // [0, 1]
+                        var marty_name = data.substring(2);     // [2, ...]
+
+                        if (magic_signature == "AA") {
+                            $('#response').append('<span class="text-success">[+] ' + requestIp + ": " +  marty_name + '</span><br/>');
+                        } else {
+                            $('#response').append('<span class="text-danger">[-] ' + requestIp + '</span><br/>');
+                        }
+
+                    },
+                    error:function(jqXHR, textStatus, errorThrown) {
+                        // Nothing there
+                        $('#response').append("[ ] " + requestIp + "<br/>");
+                    },
+                    timeout:5000 // we want to give the ESP a fair chance of replying
+                });
+            }
+
+            function scanRange() {
+                var ip = document.getElementById("ip").value;
+                for (i = 1; i < 255; i++) {
+                    sendRequest("http://" + ip + "." + i);
+                }             
+            }
+        </script>
+
+<p class="feature">
+  This tool will try and find local Marties on the network by dumbly scanning the IP range by sending
+  a discovery packet to each address. The <code>192.168.0.1/32</code> range is very commonly used
+  by domestic routers, but may be different depending on your exact setup.
+</p>
+
+<div class="tt">
+  <code><input id="ip" type="text" placeholder="192.168.0" value="192.168.0"/>.1/32 </code> &nbsp;
+  <a class="btn success smaller" onclick="scanRange();">Connect</a>
+  <br>
+  <code>[ ] = no response &nbsp; [-] = not a Marty &nbsp; [+] = a Marty</code><br>
+  <br>
+  <div id="response" class="smaller"></div>
+</div>
+

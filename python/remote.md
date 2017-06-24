@@ -92,6 +92,13 @@ For more info on extending the available client types via `client_types` see [he
 Moves to the zero position and wiggles the eyebrows
 
 
+`discover()`
+{:.docsubitem#discover}
+
+Look for Marties available over whatever interface you're using, e.g. the `socket` client
+will look for Martyies over the LAN. Return types from this command can be varied, depending
+on the client interface.
+
 
 `stop(stop_type=None)`
 {:.docsubitem#stop}
@@ -118,12 +125,6 @@ clear and zero
 
 Move a specific joint, selected by `joint_id` (0 to 8) to `position` taking `move_time` milliseconds
 
-
-`SIDE_CODES`
-{:.docsubitem#SIDE_CODES}
-
-A str, one of `'left'`, `'right'`, `'forward'` and `'backward'`.
-These are relative to Marty's facing direction.
 
 
 `lean(direction, amount, move_time)`
@@ -283,11 +284,29 @@ Low level proxied access to the ROS Serial API between the modem and main contro
 Will forward the given `byte_array` (i.e. list of chars/bytes) through to the main controller.
 
 
+
+
+`SIDE_CODES`
+{:.docsubitem#SIDE_CODES}
+
+A str, one of `'left'`, `'right'`, `'forward'` and `'backward'`.
+These are relative to Marty's facing direction.
+
+
+`STOP_TYPE`
+{:.docsubitem#STOP_TYPE}
+
+A str, one of `'clear queue'`, `'clear and stop'`, `'clear and disable'`
+and `'clear and zero'`
+
+
+
 `_pack_uint16(num)`
 {:.docsubitem#pack_uint16}
 
 Packs a (assumingly unsigned) 16-bit integer `num` into two 8-bit bytes,
 returned as a tuple `(LSB, MSB)`
+
 
 
 
@@ -330,6 +349,40 @@ has broken those constraints, e.g. by overflowing.
 
 Raised when a command has been called that is not supported by the client type
 specified in the `Marty` URL or elsewhere.
+
+
+
+
+
+
+
+
+<a name="adding-commands"></a> Adding Commands or Clients
+===
+
+Execution of a command is resolved in MartyPy as follows:
+
+The `Marty` class calls
+the Client's method `execute(*args, **kwargs)`, with the command name as the first argument,
+and any further arguments as necessary.
+
+`execute` is implemented in `martypy.GenericClient`, which will perform a lookup against
+the `GenericClient.COMMANDS_LUT` lookup-table. All the known commands shoulf be in there,
+as `None`s, given the generic client just provides interface, not implementation.
+
+If a callback is left as `None` then a `UnavailableCommandException` is raised when `Marty` tries
+to call it - this is the preferred behaviour for client types that *don't* support a given command.
+
+Each Client Type should subclass `GenericClient` and then register its own handlers for commands,
+using the `register_commands` method, which basically merges the default `COMMANDS_LUT` dict with
+any supplied dicts. The client class, say `SocketClient`, for example, would provide an appropriate
+handler for each method. It's probably best to look at the source `martypy/socketclient.py` for
+how exactly to do this.
+
+
+
+
+
 
 
 <a name="client-types"></a> Client Types & GenericClient
@@ -385,8 +438,6 @@ preference to the newer handler in `handlers`
 Calls a command, `args[0]` with the command handler against that key in `COMMANDS_LUT`,
 passing `self`, `*args` and `**kwargs` to it. Since `self` is passed, non-class member
 handlers might have some issues working correctly.
-
-
 
 
 <br>

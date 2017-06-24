@@ -1,0 +1,210 @@
+---
+title: Test Harness for the Socket API
+breadcrumbs:
+ - name: 'Hardware'
+   url: '/hardware'
+ - name: 'Socket API over ESP'
+   url: '/hardware/esp-socket-api'
+layout: article
+---
+
+<p class="feature">
+  This test harness provides a simple way to connect to and dump outbound sensor data
+  from Marty onto the page. You'll need the IP address of the Marty, and to be able to
+  connect to if over port <code>81</code>
+</p>
+
+See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
+
+<div>
+  <h2>Target:</h2>
+
+  <p class="smaller muted">Enter the IP address of a Marty to connect to:</p>
+  <code>ws://<input id="ip" type="text" value="192.168.0."/>:81/ </code> &nbsp;
+  <a class="btn success smaller" onclick="connect();">Connect</a>
+  <!--
+  <a class="btn smaller" onclick="send = false; pause();">Pause</a>
+  <a class="btn smaller" onclick="resume();">Resume</a>
+  -->
+</div>
+
+<br>
+
+<div class="tt">
+  <div>Battery: <span id="bat">waiting...</span></div>
+  <br/>
+  <div>Acceleration 0: <span id="acc0">waiting...</span></div>
+  <div>Acceleration 1: <span id="acc1">waiting...</span></div>
+  <div>Acceleration 2: <span id="acc2">waiting...</span></div>
+  <br/>
+  <div>GPIO 0: <span id="gpio0">waiting...</span></div>
+  <div>GPIO 1: <span id="gpio1">waiting...</span></div>
+  <div>GPIO 2: <span id="gpio2">waiting...</span></div>
+  <div>GPIO 3: <span id="gpio3">waiting...</span></div>
+  <div>GPIO 4: <span id="gpio4">waiting...</span></div>
+  <div>GPIO 5: <span id="gpio5">waiting...</span></div>
+  <div>GPIO 6: <span id="gpio6">waiting...</span></div>
+  <div>GPIO 7: <span id="gpio7">waiting...</span></div>
+  <br/>
+  <div>Motor Current 0: <span id="mc0">waiting...</span></div>
+  <div>Motor Current 1: <span id="mc1">waiting...</span></div>
+  <div>Motor Current 2: <span id="mc2">waiting...</span></div>
+  <div>Motor Current 3: <span id="mc3">waiting...</span></div>
+  <div>Motor Current 4: <span id="mc4">waiting...</span></div>
+  <div>Motor Current 5: <span id="mc5">waiting...</span></div>
+  <div>Motor Current 6: <span id="mc6">waiting...</span></div>
+  <div>Motor Current 7: <span id="mc7">waiting...</span></div>
+  <br/>
+  <div>Pending requests: <span id="reqs">0</span></div>
+  <div>Current time: <span id="time">0.00</span> ms</div>
+  <div>Last time: <span id="delay">0.00</span> ms</div>
+  <br/>
+  <div>RTT (average): <span id="avg">0.00</span> ms</div>
+  <div>RTT (std.dev): <span id="stddev">0.00</span> ms</div>
+</div>
+
+<hr>
+
+<p class="muted">
+  This page uses JavaScript to connect to the Marty/Rick over a websocket.
+  You can see how this works by viewing the page source either in-browser or on GitHub.
+</p>
+
+<br>
+<br>
+
+        <script type="text/javascript">
+
+            function standardDeviation(values){
+                var avg = average(values);
+
+                var squareDiffs = values.map(function(value){
+                    var diff = value - avg;
+                    var sqrDiff = diff * diff;
+                    return sqrDiff;
+                });
+
+                var avgSquareDiff = average(squareDiffs);
+
+                var stdDev = Math.sqrt(avgSquareDiff);
+                return stdDev;
+            }
+
+            function average(data){
+                var sum = data.reduce(function(sum, value){
+                    return sum + value;
+                }, 0);
+
+                var avg = sum / data.length;
+                return avg;
+            }
+
+            var socket;
+
+            function connect() {
+                var ip = document.getElementById("ip").value;
+                socket = new WebSocket("ws://" + ip + ":81/");
+                socket.binaryType = 'arraybuffer'; 
+            
+                socket.onmessage = function (event) {
+                    reqs -= 1;
+                    var target = targets[0];
+                    targets.shift();
+                    update_value(target, event);
+                    update("reqs", reqs);
+
+                    if (reqs == 0) {
+                        var time_new = performance.now();
+                        update("delay", (time_new - time_old).toFixed(2));
+                        
+                        rtts.push(time_new - time_old);
+                       
+                        var avg = average(rtts);
+                        var stddev = standardDeviation(rtts);
+
+                        update("avg", avg.toFixed(2));
+                        update("stddev", stddev.toFixed(2));
+
+                        resume();
+                    }
+                };
+
+                socket.onopen = function () {
+                    resume();
+                    setInterval(update_rtt, 100);
+                };
+            }
+
+
+            var reqs = 0;
+            var targets = [];
+
+            var interval = {};
+            var time_old;
+
+            var rtts = [];
+
+            function update_value(id, event) {
+                var div = document.getElementById(id);
+                var buf = new Float32Array(event.data);
+                div.innerHTML = buf[0];
+            }
+
+            function update(id, value) {
+                var div = document.getElementById(id);
+                div.innerHTML = value;
+            }
+
+            function send(id, arr) {
+                targets.push(id);
+                socket.send(arr);
+                reqs += 1;
+                update("reqs", reqs);    
+            }
+
+            function update_rtt() {
+                var time_new = performance.now();
+                update("time", (time_new - time_old).toFixed(2));
+            }
+
+            function send_all() {
+
+                time_old = performance.now();
+               
+                pause();
+
+                send("bat", new Uint8Array([0x01, 0x01, 0x00]));
+
+                send("acc0", new Uint8Array([0x01, 0x02, 0x00]));
+                send("acc1", new Uint8Array([0x01, 0x02, 0x01]));
+                send("acc2", new Uint8Array([0x01, 0x02, 0x02]));
+                
+                send("mc0", new Uint8Array([0x01, 0x03, 0x00]));
+                send("mc1", new Uint8Array([0x01, 0x03, 0x01]));
+                send("mc2", new Uint8Array([0x01, 0x03, 0x02]));
+                send("mc3", new Uint8Array([0x01, 0x03, 0x03]));
+                send("mc4", new Uint8Array([0x01, 0x03, 0x04]));
+                send("mc5", new Uint8Array([0x01, 0x03, 0x05]));
+                send("mc6", new Uint8Array([0x01, 0x03, 0x06]));
+                send("mc7", new Uint8Array([0x01, 0x03, 0x07]));
+
+                send("gpio0", new Uint8Array([0x01, 0x04, 0x00]));
+                send("gpio1", new Uint8Array([0x01, 0x04, 0x01]));
+                send("gpio2", new Uint8Array([0x01, 0x04, 0x02]));
+                send("gpio3", new Uint8Array([0x01, 0x04, 0x03]));
+                send("gpio4", new Uint8Array([0x01, 0x04, 0x04]));
+                send("gpio5", new Uint8Array([0x01, 0x04, 0x05]));
+                send("gpio6", new Uint8Array([0x01, 0x04, 0x06]));
+                send("gpio7", new Uint8Array([0x01, 0x04, 0x07]));
+            }
+
+            function pause() {
+                clearInterval(interval);
+            }
+
+            function resume() {
+                interval = setInterval(send_all, 5);
+            }
+            
+
+        </script>

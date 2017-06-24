@@ -1,5 +1,5 @@
 ---
-title: Low Level API
+title: Socket API over ESP
 breadcrumbs:
  - name: 'Hardware'
    url: '/hardware'
@@ -13,19 +13,47 @@ versions:
 layout: article
 ---
 
+<br>
 
-
-
-TCP Socket API
-===
-
-The `ESP8266` WiFi modem on Rick presents a low-level TCP socket API to the network. Clients
-connecting to this API can send byte-level commands to the ESP which will in turn instruct
+The `ESP8266` WiFi modem on Rick presents a low-level TCP Socket and Web Socket API to the network.
+Clients connecting to this API can send byte-level commands to the ESP which will in turn instruct
 the main control chip to perform an action or report back on a sensor. The socket API runs
-over port `24`
+over port `24`.
 {:.feature}
 
+There's a *Test Harness* available that can connect to Marty and just print out a stream
+of Sensor data. This uses JavaScript and a Web Socket connection. Incidentally, this is
+how Scratch talks to Marty.
 
+<div class="center">
+    <a href="/hardware/esp-socket-harness" class="btn rounded">
+        <i class="fa fa-fw fa-wifi muted"></i> &nbsp; Test Harness for the Socket API
+    </a>
+    <a href="/hardware/esp-socket-discovery" class="btn rounded">
+        <i class="fa fa-fw fa-search muted"></i> &nbsp; Simple Discovery Tool
+    </a>
+</div>
+
+
+Ports & Services
+---
+
+| Number    | Use                                                             |
+|-----------|-----------------------------------------------------------------|
+| `23`      | Unmanaged sockets                                               |
+| `24`      | Managed sockets                                                 |
+| `80`      | "Marty Setup" functionality, JavaScript-based service discovery |
+| `81`      | Websockets                                                      |
+| `4000`    | UDP-based service discovery                                     |
+
+
+<br>
+
+------------------------------------------------------------------------------------------------
+
+
+For Ports `23`, `24` & `81`:
+===
 
 
 `GET` Type Packets
@@ -151,4 +179,5 @@ accel = struct.unpack('f', accel_raw)[0]
 {% endhighlight %}
 
 
+<br>
 <br>
