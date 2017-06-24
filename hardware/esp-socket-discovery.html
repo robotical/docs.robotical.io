@@ -53,12 +53,12 @@ layout: article
 
 <p class="feature">
   This tool will try and find local Marties on the network by dumbly scanning the IP range by sending
-  a discovery packet to each address. The <code>192.168.0.1/32</code> range is very commonly used
+  a discovery packet to each address. The <code>192.168.0.1/24</code> range is very commonly used
   by domestic routers, but may be different depending on your exact setup.
 </p>
 
 <div class="tt">
-  <code><input id="ip" type="text" placeholder="192.168.0" value="192.168.0"/>.1/32 </code> &nbsp;
+  <code><input id="ip" type="text" placeholder="192.168.0" value="192.168.0"/>.1/24 </code> &nbsp;
   <a class="btn success smaller" onclick="scanRange();">Connect</a>
   <br>
   <code>[ ] = no response &nbsp; [-] = not a Marty &nbsp; [+] = a Marty</code><br>
