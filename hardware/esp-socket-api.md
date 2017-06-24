@@ -25,6 +25,8 @@ There's a *Test Harness* available that can connect to Marty and just print out 
 of Sensor data. This uses JavaScript and a Web Socket connection. Incidentally, this is
 how Scratch talks to Marty.
 
+<br>
+
 <div class="center">
     <a href="/hardware/esp-socket-harness" class="btn rounded">
         <i class="fa fa-fw fa-wifi muted"></i> &nbsp; Test Harness for the Socket API
@@ -52,8 +54,12 @@ Ports & Services
 ------------------------------------------------------------------------------------------------
 
 
-For Ports `23`, `24` & `81`:
+Socket API
 ===
+
+Over Ports 23, 24 & 81
+---
+{:.subhead}
 
 
 `GET` Type Packets
