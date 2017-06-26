@@ -1,5 +1,10 @@
 ---
 title: V-REP Simulation
+versions:
+ - name: 'ROS'
+   value: 'Indigo or Jade or Kinetic'
+ - name: 'V-REP'
+   value: 'v3.4.0 or later'
 layout: article
 ---
 

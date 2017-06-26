@@ -6,14 +6,13 @@ breadcrumbs:
 layout: article
 ---
 
-{:.feature}
 V-REP allows the use of ROS through a dedicated interface, `RosInterface`, which
-is part of the <a href="http://www.coppeliarobotics.com/helpFiles/en/apisOverview.htm">V-REP API framework </a>.
+is part of the [V-REP API framework](http://www.coppeliarobotics.com/helpFiles/en/apisOverview.htm).
 By duplicating the C/C++ ROS API, V-REP can act as a ROS node and enables
 communication via ROS topics.
+{:.feature}
 
 In order to do this, the interface has to be installed.
-{:.feature}
 
 Installation
 ===
@@ -32,11 +31,9 @@ desired messages to the `messages.txt` file located in the `meta` folder of your
 
 In our case:
 
-{:.feature}
     marty_msgs/ServoMsg
     marty_msgs/ServoMsgArray
     marty_msgs/Accelerometer
-{:.feature}
 
 Entering Simulation Mode
 ===
@@ -47,17 +44,13 @@ set to simulation mode. Two files have to be edited: `config.cfg` and `marty.lau
 Let's do `config.cfg` first. This file is located within `../ros_marty/cfg` and,
 thankfully, the change to be made is simple. Set the `false` variable to `true`:
 
-{:.feature}
     simulated: false     # Whether Marty is being simulated
-{:.feature}
 
 Next, let's edit `marty.launch`. This file is located in the `launch` folder of
 your `ros_marty` package. Again, the change is relatively simple, set the `false`
 variable to `true`:
 
-{:.feature}
     <param name="use_sim_time" value="false"/> <!-- Enable if Simulated -->
-{:.feature}
 
 Now, instead of using a "real-time" clock, it will use the
 simulator's timing system. This is important as V-REP can be sped up or slowed down.
