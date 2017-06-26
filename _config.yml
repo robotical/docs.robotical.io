@@ -12,7 +12,7 @@ description: "Robotical Documentation"
 baseurl: ""
 url: "http://docs.robotical.io"
 
-include: ['.well-known']
+# include: ['.well-known']
 
 navigation:
   - text: 'Docs Home'
