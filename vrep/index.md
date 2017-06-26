@@ -1,5 +1,10 @@
 ---
 title: V-REP Simulation
+versions:
+ - name: 'ROS'
+   value: 'Indigo or Jade or Kinetic'
+ - name: 'V-REP'
+   value: 'v3.4.0 or later'
 layout: article
 ---
 
@@ -9,8 +14,31 @@ to use the same control software as you would an advanced real-Marty setup, and 
 toggle between the two.
 {:.feature}
 
+<div>
+
+<br class="smaller">
+<a href="/vrep/getting_started" class="inherit">
+<div class="well bigger">
+  Getting Started
+<div class="smaller muted">
+  Before doing anything else, take a look here
+</div>
+</div>
+</a>
+
+<br class="smaller">
+<a href="/vrep/tutorial" class="inherit">
+<div class="well bigger">
+  Tutorial
+<div class="smaller muted">
+  Let's get Marty ROSing around
+</div>
+</div>
+</a>
+
+<br class="smaller">
+</div>
 
 <div class="center bitbigger padder">
 <a href="http://www.coppeliarobotics.com/helpFiles/index.html" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; V-REP User Manual</a>
 </div>
-
