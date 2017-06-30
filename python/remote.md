@@ -56,7 +56,7 @@ which is a URL-like string that lets it know where to find your Marty.
 >>> mymarty = Marty('socket://marty.local')
 >>> mymarty.hello()  # Move to zero positions and wink
 True
->>> mymarty.playsound(8000, 200, 1000) # Play a tone
+>>> mymarty.play_sound(8000, 200, 1000) # Play a tone
 {% endhighlight %}
 
 If you're using the Marty remotely, over WiFi, that'll be `socket://` followed by the **IP Address**
@@ -123,7 +123,8 @@ clear and zero
 `move_joint(joint_id, position, move_time)`
 {:.docsubitem#move_joint}
 
-Move a specific joint, selected by `joint_id` (0 to 8) to `position` taking `move_time` milliseconds
+Move a specific joint, selected by `joint_id` (0 to 8) to `position` (0 to 100) taking
+`move_time` milliseconds
 
 
 
@@ -138,6 +139,13 @@ Lean over in a direction, taken from `SIDE_CODES`
 
 Instructs the robot to start walking, with defaults set for all parameters.
 `move_time` is in milliseconds (1/1000 of a second), `step_length` is *roughly* millimetres.
+
+
+`circle_dance()`
+{:.docsubitem#eyes}
+
+TODO
+{:.bigger.text-danger}
 
 
 `eyes(angle)`
