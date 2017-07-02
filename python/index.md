@@ -14,11 +14,12 @@ pip install martypy
 ```
 
 <div>
-<a href="/python/remote/" class="inherit">
+<a href="/python/martypy/" class="inherit">
 <div class="well bigger">
   MartyPy Library Documentation
   <div class="smaller muted">
-    For controlling rick remotely
+    For controlling rick remotely over WiFi, and locally using
+    Serial or I2C
   </div>
 </div>
 </a>
