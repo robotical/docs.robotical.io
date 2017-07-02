@@ -67,6 +67,23 @@ robot can't be found, this step may throw an Exception.
 
 
 
+A Note on Types
+===
+
+When referring to arguments that can be passed into the MartyPy methods, we'll give a C type
+like `int8` or `uint16`. These define the acceptable range for the command (so for `int8`, -128 to 127,
+and for `uint16`, 0 to 65,535.) Any values outside these will raise a Type or encoding exception.
+
+Note that just because a command *can* take 65,535 as an argument that that is not necessarily then
+a good idea nor something Marty can actually do. Experiment and play around!
+
+Lastly, when a method takes `move_time`, this is always a `uint16` representing the number of
+milliseconds (1/1000 of a second) that the commend should take. The nominal value for each movement
+will be slightly different, and most of them have default arguments that seem good starting points
+based on our experimentation with Marty.
+
+<br>
+
 
 
 <a name="main-members"></a> Main Functions and Members
@@ -79,6 +96,9 @@ robot can't be found, this step may throw an Exception.
 
 Class constructor for a Marty client instance, with a default URL given.
 
+When you create a `Marty` instance, the `enable_safeties(True)` and `enable_motors(True)`
+commands are sent to the Robot.
+
 `*args` and `**kwargs` are passed on to the client type, which will be chosen depending on the protocol
 specified the URL. Currently the supported client types are `socket` and `test`.
 
@@ -89,7 +109,10 @@ For more info on extending the available client types via `client_types` see [he
 `hello()`
 {:.docsubitem#hello}
 
-Moves to the zero position and wiggles the eyebrows
+Moves to the zero position and wiggles the eyebrows. Be careful with this, as if the Robot doesn't
+know where it it, it will move as quickly as it can to the zero positions, which can knock the
+robot over. It's best used as the first command you send when you turn the Robot on, where it
+should be close to the zero pose.
 
 
 `discover()`
@@ -97,10 +120,10 @@ Moves to the zero position and wiggles the eyebrows
 
 Look for Martys available over whatever interface you're using, e.g. the `socket` client
 will look for Martyies over the LAN. Return types from this command can be varied, depending
-on the client interface.
+on the client interface. Some interfaces may not support this method.
 
 
-`stop(stop_type=None)`
+`stop(stop_type)`
 {:.docsubitem#stop}
 
 Stop the robot moving. `stop_type` is a str which should be a key in the `Marty.STOP_TYPE` dict.
@@ -139,14 +162,7 @@ Lean over in a direction, taken from `SIDE_CODES`
 
 Instructs the robot to start walking, with defaults set for all parameters.
 `move_time` is in milliseconds (1/1000 of a second), `step_length` is *roughly* millimetres.
-
-
-`circle_dance()`
-{:.docsubitem#eyes}
-
-TODO
-{:.bigger.text-danger}
-
+ 
 
 `eyes(angle)`
 {:.docsubitem#eyes}
@@ -172,15 +188,22 @@ Move the arms to each respective angle, taking `move_time` milliseconds
 Do a little dance, with a given default movement time
 
 
+`circle_dance(side, move_time)`
+{:.docsubitem#circle_dance}
+
+Makes Marty do a little dance in a circular motion. `side` should be a str from `SIDE_CODES`.
+
+
 `sidestep(side, steps, step_length, move_time)`
 {:.docsubitem#sidestep}
 
 Walk sideways to `side` (from `SIDE_CODES`) with *roughly* millimetre `step_length` taking `move_time`
 
 
-`stand_straight(move_time=1000)`
+`stand_straight(move_time)`
 {:.docsubitem#stand_straight}
 
+(Not Implemented)
 Move the robot to the zero positions. Similar to `hello()` but doesn't wiggle the eyes
 
 
@@ -213,10 +236,22 @@ Returns a `float` of the current detected on the `motor_id`'s channel by the con
 
 
 
+`pinmode_gpio(gpio, mode)`
+{:.docsubitem#pinmode_gpio}
+
+Configure a GPIO pin's function. `mode` should be a str from `GPIO_PIN_MODES`.
+
+
 `digitalread_gpio(gpio)`
 {:.docsubitem#digitalread_gpio}
 
 Returns the `HIGH`/`LOW` state of a GPIO pin (0 to 8) as `True` or `False`
+
+
+`write_gpio(gpio, value)`
+{:.docsubitem#write_gpio}
+
+Write a value to a GPIO port. Acceptable value types depend on the GPIO configuration.
 
 
 `enable_motors(enable=True)`
@@ -227,15 +262,35 @@ This is called just before the `Marty` constructor completes.
 
 
 
-`fall_protection(enable)`
+`lifelike_behaviour(enable=True)`
+{:.docsubitem#lifelike_behaviour}
+
+If enabled, Marty will perform a short action every minute or so to remind you that it's on.
+This is disabled by default, but we'd recommend turning it on.
+
+
+
+`enable_safeties(enable=True)`
+{:.docsubitem#enable_safeties}
+
+Enables all of the safety functions (battery voltage, fall, motor current) as well as raising
+the battery voltage alarm so it'll go off a bit sooner. This is enabled by default by this library,
+but is **not** on by default within firmware or potentially other APIs.
+
+Use this as a quick way to enable all the below listed safety features to prevent you from breaking
+your MArty by overstressing a Motor or your Battery
+{:.alert.success.tag}
+
+
+`fall_protection(enable=True)`
 {:.docsubitem#fall_protection}
 
 `enable = True or False` boolean toggle for Fall Protection on the Control board, which automatically
-disables motors when Marty falls over.
+disables motors when Marty falls over. We'd strongly recommend turn leave this on.
 
 
 
-`motor_protection(enable)`
+`motor_protection(enable=True)`
 {:.docsubitem#motor_protection}
 
 `enable = True or False` boolean toggle for Motor Protection on the Control board, which automatically
@@ -249,7 +304,7 @@ We won't cover warranty replacements for motors if you disable protections and t
 {:.alert.warning.tag}
 
 
-`battery_protection(enable)`
+`battery_protection(enable=True)`
 {:.docsubitem#battery_protection}
 
 `enable = True or False` boolean toggle for Battery Protection on the Control board, which automatically
@@ -264,7 +319,7 @@ power it off and charge it if the battery voltage gets this low.
 
 
 
-`buzz_protection(enable)`
+`buzz_protection(enable=True)`
 {:.docsubitem#buzz_protection}
 
 `enable = True or False` boolean toggle for Buzz Protection on the Control board, which is a feature
@@ -281,6 +336,9 @@ Your Robot may interfere with itself (robot speak for hit itself) if you calibra
 This will probably result in a robot unable to walk properly until you recalibrate it.
 {:.alert.warning.tag}
 
+**ProTip:** If you use `buzz_prevention(True)` you'll be able to slowly nudge the motors into
+the correct positions (apart from the eyes), and then save that as the calibration for the Robot.
+{:.alert.success.tag}
 
 
 `ros_command(byte_array)`
@@ -308,12 +366,43 @@ A str, one of `'clear queue'`, `'clear and stop'`, `'clear and disable'`
 and `'clear and zero'`
 
 
+`GPIO_PIN_MODES`
+{:.docsubitem#STOP_TYPE}
+
+A str, one of `'digital in'`, `'analog in'` and `'digital out'`.
+
 
 `_pack_uint16(num)`
 {:.docsubitem#pack_uint16}
 
-Packs a (assumingly unsigned) 16-bit integer `num` into two 8-bit bytes,
+Packs an unsigned 16-bit integer `num` into two 8-bit bytes,
 returned as a tuple `(LSB, MSB)`
+
+
+`_pack_int16(num)`
+{:.docsubitem#pack_int16}
+
+Packs a signed 16-bit integer `num` into two 8-bit bytes,
+returned as a tuple `(LSB, MSB)`
+
+
+`_pack_uint8(num)`
+{:.docsubitem#pack_uint8}
+
+Packs an unsigned 8-bit integer `num` into one 8-bit byte
+
+
+`_pack_int8(num)`
+{:.docsubitem#pack_int8}
+
+Packs a signed 8-bit integer `num` into one 8-bit byte
+
+
+`_pack_float(num)`
+{:.docsubitem#pack_float}
+
+Packs a float `num` into four 8-bit bytes, returned as a tuple from
+least significant byte to most.
 
 
 
@@ -343,6 +432,12 @@ MartyCommandException: Axis must be one of {'x', 'z', 'y'}, not 'abc'
 {:.docitem#MartyConnectException}
 
 Raised if the `Marty` class (and it's client) cannot connect to or locate the robot.
+
+
+`martypy.MartyConfigException`
+{:.docitem#MartyConfigException}
+
+Raised if the `Marty` class (and/or it's client) have a configuration issue.
 
 
 `martypy.ArgumentOutOfRangeException`
@@ -449,3 +544,8 @@ handlers might have some issues working correctly.
 
 
 <br>
+
+
+The `SocketClient` is the main client type used to interface with Marty over WiFi, but the 
+`TestClient` is useful for debugging or developing without having to have a Robot in the loop.
+
