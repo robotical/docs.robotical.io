@@ -55,6 +55,8 @@ See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
   <div>Motor Current 6: <span id="mc6">waiting...</span></div>
   <div>Motor Current 7: <span id="mc7">waiting...</span></div>
   <br/>
+  <div>Chatter: <span id="chatter">waiting...</span></div>
+  <br/>
   <div>Pending requests: <span id="reqs">0</span></div>
   <div>Current time: <span id="time">0.00</span> ms</div>
   <div>Last time: <span id="delay">0.00</span> ms</div>
@@ -77,30 +79,23 @@ See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
 
             function standardDeviation(values){
                 var avg = average(values);
-
                 var squareDiffs = values.map(function(value){
                     var diff = value - avg;
                     var sqrDiff = diff * diff;
                     return sqrDiff;
                 });
-
                 var avgSquareDiff = average(squareDiffs);
-
                 var stdDev = Math.sqrt(avgSquareDiff);
                 return stdDev;
             }
-
             function average(data){
                 var sum = data.reduce(function(sum, value){
                     return sum + value;
                 }, 0);
-
                 var avg = sum / data.length;
                 return avg;
             }
-
             var socket;
-
             function connect() {
                 var ip = document.getElementById("ip").value;
                 socket = new WebSocket("ws://" + ip + ":81/");
@@ -112,7 +107,6 @@ See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
                     targets.shift();
                     update_value(target, event);
                     update("reqs", reqs);
-
                     if (reqs == 0) {
                         var time_new = performance.now();
                         update("delay", (time_new - time_old).toFixed(2));
@@ -121,60 +115,56 @@ See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
                        
                         var avg = average(rtts);
                         var stddev = standardDeviation(rtts);
-
                         update("avg", avg.toFixed(2));
                         update("stddev", stddev.toFixed(2));
-
                         resume();
                     }
                 };
-
                 socket.onopen = function () {
                     resume();
                     setInterval(update_rtt, 100);
                 };
             }
-
-
             var reqs = 0;
             var targets = [];
-
             var interval = {};
             var time_old;
-
             var rtts = [];
-
             function update_value(id, event) {
                 var div = document.getElementById(id);
-                var buf = new Float32Array(event.data);
-                div.innerHTML = buf[0];
+                if (id == "chatter"){
+                    div.innerHTML = String.fromCharCode.apply(null, new Uint8Array(event.data));
+                } else {
+                    var buf = new Float32Array(event.data);
+                    div.innerHTML = buf[0];
+                }
             }
-
             function update(id, value) {
                 var div = document.getElementById(id);
                 div.innerHTML = value;
             }
-
             function send(id, arr) {
                 targets.push(id);
                 socket.send(arr);
                 reqs += 1;
                 update("reqs", reqs);    
             }
-
             function update_rtt() {
                 var time_new = performance.now();
                 update("time", (time_new - time_old).toFixed(2));
             }
-
+            function send_toggle() {
+                socket.send(new Uint8Array([0x02, 0x00, 0x00]));
+            }
+            function send_walk(){
+                socket.send(new Uint8Array([0x02, 0x04, 0x00, 0x13, 0xFF, 0xFF, 0x01]));
+                socket.send(new Uint8Array([0x02, 0x07, 0x00, 0x03, 0x04, 0x00, 0x08, 0x06, 0x2A, 0x00]));
+            }
             function send_all() {
-
                 time_old = performance.now();
                
                 pause();
-
                 send("bat", new Uint8Array([0x01, 0x01, 0x00]));
-
                 send("acc0", new Uint8Array([0x01, 0x02, 0x00]));
                 send("acc1", new Uint8Array([0x01, 0x02, 0x01]));
                 send("acc2", new Uint8Array([0x01, 0x02, 0x02]));
@@ -187,7 +177,6 @@ See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
                 send("mc5", new Uint8Array([0x01, 0x03, 0x05]));
                 send("mc6", new Uint8Array([0x01, 0x03, 0x06]));
                 send("mc7", new Uint8Array([0x01, 0x03, 0x07]));
-
                 send("gpio0", new Uint8Array([0x01, 0x04, 0x00]));
                 send("gpio1", new Uint8Array([0x01, 0x04, 0x01]));
                 send("gpio2", new Uint8Array([0x01, 0x04, 0x02]));
@@ -196,15 +185,15 @@ See also: <a href="/hardware/esp-socket-discovery">Simple Discovery Tool</a>
                 send("gpio5", new Uint8Array([0x01, 0x04, 0x05]));
                 send("gpio6", new Uint8Array([0x01, 0x04, 0x06]));
                 send("gpio7", new Uint8Array([0x01, 0x04, 0x07]));
+                send("chatter", new Uint8Array([0x01, 0x05, 0x00]));
             }
-
             function pause() {
                 clearInterval(interval);
             }
-
             function resume() {
                 interval = setInterval(send_all, 5);
             }
+
             
 
         </script>

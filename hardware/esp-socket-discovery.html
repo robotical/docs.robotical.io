@@ -44,6 +44,7 @@ layout: article
             }
 
             function scanRange() {
+                $('#response').empty()
                 var ip = document.getElementById("ip").value;
                 for (i = 1; i < 255; i++) {
                     sendRequest("http://" + ip + "." + i);

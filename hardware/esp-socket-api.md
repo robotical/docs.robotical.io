@@ -49,6 +49,11 @@ Ports & Services
 | `4000`    | UDP-based service discovery                                     |
 
 
+*Managed* sockets follow the below socket API, while *Unmanaged* sockets are given raw
+pass-through access to the Serial line between the ESP and the main STM446 microcontroller.
+
+In almost all use-cases, the managed socket is what you'll want to use.
+
 <br>
 
 ------------------------------------------------------------------------------------------------
@@ -120,7 +125,6 @@ Bytes in position 4 through M depend on the opcode and command being called.
 | *hello*                | 0x00       | 1    | *-none-*                                                |
 | *lean*                 | 0x01       | 5    | uint8 dir, uint8 amount, uint16 move\_time              |
 | *walk*                 | 0x03       | 7    | uint8 steps, uint8 turn, uint16 move\_time, int8 step\_length, int8 side |
-| *eyes*                 | 0x04       | 2    | uint8 amount                                            |
 | *kick*                 | 0x05       | 5    | uint8 amount, int8 twist, uint16 move\_time             |
 | *celebrate*            | 0x08       | 3    | uint16 move\_time                                       |
 | *arms*                 | 0x0B       | 5    | int8 r\_angle, int8 l\_angle, uint16 move\_time         |
@@ -184,6 +188,70 @@ accel_raw = sock.recv(4)
 accel = struct.unpack('f', accel_raw)[0]
 {% endhighlight %}
 
+
+<br>
+<br>
+
+------------------------------------------------------------------------------------------------
+
+
+Other Endpoints
+===
+
+
+Over Ports 80 & 4000
+---
+{:.subhead}
+
+
+`http://______:80/service-discovery`
+{:.docitem}
+
+A Marty will respond with a `HTTP 200 OK` with `AA` in the body, followed by the
+Robot's name (if configured). The `______` part should be replaced with the Marty's
+IP address as appropriate.
+
+This can be used for 'brute force' discovery of robots by sending the same request to
+all addresses in a range you expect a Marty to be on.
+
+Note that this may not play well with firewalls or routing policies.
+
+
+
+`http://______:80/`
+{:.docitem}
+
+The board will drop into a special 'hotspot mode' if it can't connect to a
+Wireless network. If you then connect to this network (called 'Marty Setup' followed
+by some digits) you'll be presented with the config page.
+
+
+
+`UDP port 4000`
+{:.docitem}
+
+Martys will respond to a Multicast UDP packet `AA`, giving their name and IP.
+Sockets can be fiddly and multicast can be particularly fiddly, so mileage will
+vary based on a combination of operating system, local network settings and hardware.
+The multicast address can also vary.
+
+As a minimal example, this works for us in Python 3:
+
+{% highlight python %}
+import socket
+
+socket_addr = "224.0.0.1"
+socket_port = 4000
+magic_command = b"AA"
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 32)
+sock.sendto(magic_command, (socket_addr, socket_port))
+
+while True:
+    data, addr = sock.recvfrom(1000)
+    print("{}: {}".format(addr, data))
+{% endhighlight %}
 
 <br>
 <br>

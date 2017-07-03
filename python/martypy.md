@@ -53,10 +53,11 @@ which is a URL-like string that lets it know where to find your Marty.
 
 {% highlight python %}
 >>> from martypy import Marty
->>> mymarty = Marty('socket://marty.local')
+>>> mymarty = Marty('socket://192.168.0.2') # Change IP accordingly
 >>> mymarty.hello()  # Move to zero positions and wink
 True
 >>> mymarty.play_sound(8000, 200, 1000) # Play a tone
+>>> mymarty.walk() # Walk
 {% endhighlight %}
 
 If you're using the Marty remotely, over WiFi, that'll be `socket://` followed by the **IP Address**
@@ -91,13 +92,14 @@ based on our experimentation with Marty.
 
 
 
-`martypy.Marty(url='socket://marty.local', client_types=dict(), *args, **kwargs)`
+`martypy.Marty(url='socket://192.168.0._', client_types=dict(), *args, **kwargs)`
 {:.docitem}
 
 Class constructor for a Marty client instance, with a default URL given.
 
 When you create a `Marty` instance, the `enable_safeties(True)` and `enable_motors(True)`
-commands are sent to the Robot.
+commands are sent to the Robot. If the kwarg `default_lifelike` is True, lifelike behaviours will also
+be enabled.
 
 `*args` and `**kwargs` are passed on to the client type, which will be chosen depending on the protocol
 specified the URL. Currently the supported client types are `socket` and `test`.
@@ -123,11 +125,11 @@ will look for Martyies over the LAN. Return types from this command can be varie
 on the client interface. Some interfaces may not support this method.
 
 
-`stop(stop_type)`
+`stop(stop_type=None)`
 {:.docsubitem#stop}
 
 Stop the robot moving. `stop_type` is a str which should be a key in the `Marty.STOP_TYPE` dict.
-If it is none (the default) then `clear and zero` will be assumed. Other options are:
+If it is none (the default) then `'clear and stop'` will be assumed. Other options are:
 
 clear queue
 : clear movement queue only (so finish the current movement)
@@ -141,12 +143,18 @@ clear and disable
 clear and zero
 : clear everything, and make robot return to zero
 
+pause
+: pause, but keep servo and movequeue intact and motors enabled
+
+pause and disable
+: as above, but disable motors too
+
 
 
 `move_joint(joint_id, position, move_time)`
 {:.docsubitem#move_joint}
 
-Move a specific joint, selected by `joint_id` (0 to 8) to `position` (0 to 100) taking
+Move a specific joint, selected by `joint_id` (0 to 8) to `position` (-128 to 127) taking
 `move_time` milliseconds
 
 
@@ -154,7 +162,7 @@ Move a specific joint, selected by `joint_id` (0 to 8) to `position` (0 to 100) 
 `lean(direction, amount, move_time)`
 {:.docsubitem#lean}
 
-Lean over in a direction, taken from `SIDE_CODES`
+Lean over in a direction, taken from `SIDE_CODES` taking `move_time` milliseconds
 
 
 `walk(num_steps=2, start_foot='left', turn=0, step_length=25, move_time=1500)`
@@ -162,30 +170,32 @@ Lean over in a direction, taken from `SIDE_CODES`
 
 Instructs the robot to start walking, with defaults set for all parameters.
 `move_time` is in milliseconds (1/1000 of a second), `step_length` is *roughly* millimetres.
- 
 
-`eyes(angle)`
+
+`eyes(angle, move_time=100)`
 {:.docsubitem#eyes}
 
-Move the eyes to `angle` position. 
+Move the eyes to `angle` position, taking `move_time` milliseconds
 
 
-`kick(side, twist, move_time)`
+`kick(side='right', twist=0, move_time=2000)`
 {:.docsubitem#kick}
 
-Kick with the foot on `side` (again from `SIDE_CODES`) 
+Kick with the foot on `side` (again from `SIDE_CODES`) taking `move_time` milliseconds.
+The `twist` (-128 to 127) argument adds a knee twist to the kick. 0 is straight ahead.
 
 
-`arms(right_angle, left_angle, move_time)`
+`arms(left_angle, right_angle, move_time)`
 {:.docsubitem#arms}
 
 Move the arms to each respective angle, taking `move_time` milliseconds
 
 
-`celebrate(move_time=1000)`
+`celebrate(move_time=4000)`
 {:.docsubitem#celebrate}
 
-Do a little dance, with a given default movement time
+Do a little celebration, taking `move_time` milliseconds. THe default is sensible, though this
+is hilarious/adorable with a move time around 1000.
 
 
 `circle_dance(side, move_time)`
@@ -200,18 +210,11 @@ Makes Marty do a little dance in a circular motion. `side` should be a str from 
 Walk sideways to `side` (from `SIDE_CODES`) with *roughly* millimetre `step_length` taking `move_time`
 
 
-`stand_straight(move_time)`
-{:.docsubitem#stand_straight}
-
-(Not Implemented)
-Move the robot to the zero positions. Similar to `hello()` but doesn't wiggle the eyes
-
-
 `play_sound(freq_start, freq_end, duration)`
 {:.docsubitem#play_sound}
 
 Play a tone that linearly interpolates between the Frequency `freq_start` in Hz to `freq_end`,
-taking `duration` seconds to play.
+taking `duration` milliseconds to play.
 
 
 `get_battery_voltage()`
@@ -254,11 +257,15 @@ Returns the `HIGH`/`LOW` state of a GPIO pin (0 to 8) as `True` or `False`
 Write a value to a GPIO port. Acceptable value types depend on the GPIO configuration.
 
 
-`enable_motors(enable=True)`
+`enable_motors(enable=True, clear_queue=True)`
 {:.docsubitem#enable_motors}
 
 Toggles whether the motors are enabled (allowed to move) or disabled, where they can freely move.
 This is called just before the `Marty` constructor completes.
+
+Enable motors also *unpauses* the movement queue (see [stop](#stop)) so you probably also want to send
+`stop('clear queue')` before enabling motors to prevent a jump. This is done by default with the
+`clear_queue` argument.
 
 
 
@@ -268,6 +275,9 @@ This is called just before the `Marty` constructor completes.
 If enabled, Marty will perform a short action every minute or so to remind you that it's on.
 This is disabled by default, but we'd recommend turning it on.
 
+If Lifelike Behaviours are on, they will **still** happen even if motors are disabled. To prevent
+them from happening you need to explicitly disable Lifelike Behaviours.
+{:.alert.tag.warning}
 
 
 `enable_safeties(enable=True)`
@@ -278,7 +288,7 @@ the battery voltage alarm so it'll go off a bit sooner. This is enabled by defau
 but is **not** on by default within firmware or potentially other APIs.
 
 Use this as a quick way to enable all the below listed safety features to prevent you from breaking
-your MArty by overstressing a Motor or your Battery
+your Marty by overstressing a Motor or your Battery
 {:.alert.success.tag}
 
 
@@ -323,7 +333,9 @@ power it off and charge it if the battery voltage gets this low.
 {:.docsubitem#buzz_protection}
 
 `enable = True or False` boolean toggle for Buzz Protection on the Control board, which is a feature
-that tries to reduce steady-state buzzing from the motors when Marty isn't moving.
+that tries to reduce steady-state buzzing from the motors when Marty isn't moving. This also
+makes the Robot *compliant*, so you can gently move the robot's joints (apart from the eyes)
+into a pose.
 
 
 
@@ -362,8 +374,8 @@ These are relative to Marty's facing direction.
 `STOP_TYPE`
 {:.docsubitem#STOP_TYPE}
 
-A str, one of `'clear queue'`, `'clear and stop'`, `'clear and disable'`
-and `'clear and zero'`
+A str, one of `'clear queue'`, `'clear and stop'`, `'clear and disable'`,
+`'clear and zero'`, `'pause'` and `'pause and disable'`
 
 
 `GPIO_PIN_MODES`
