@@ -91,6 +91,13 @@ based on our experimentation with Marty.
 ===
 
 
+None of the movement commands are *blocking*, meaning that if you tell the robot to
+walk for two seconds, your program will keep running while that's happening rather than wait for
+the walk action to finish. This can have both useful and undesireable side effects, so just
+bear this in mind. Secondly, Marty *queues* actions, so if you send a walk, kick and then another
+walk they will all happen one-agter the other, *not* at the same time or overwriting each-other.
+{:.feature}
+
 
 `martypy.Marty(url='socket://192.168.0._', client_types=dict(), *args, **kwargs)`
 {:.docitem}
@@ -123,6 +130,19 @@ should be close to the zero pose.
 Look for Martys available over whatever interface you're using, e.g. the `socket` client
 will look for Martyies over the LAN. Return types from this command can be varied, depending
 on the client interface. Some interfaces may not support this method.
+
+For instance, with the Socket client type we of course can't create a `Marty` instance before
+we know what it's IP address is. So, the `discover()` method is built into the Client itself,
+and needs to be called like so:
+
+{% highlight python %}
+import martypy
+martys = martypy.SocketClient.discover(timeout=10)
+{% endhighlight %}
+
+See also [the Socket API docs](/hardware/esp-socket-api/) for more information on the limits of discovery, and also
+the [Simple Discovery Tool](/hardware/esp-socket-discovery/) which does a similar thing in JavaScript.
+
 
 
 `stop(stop_type=None)`
@@ -170,6 +190,8 @@ Lean over in a direction, taken from `SIDE_CODES` taking `move_time` millisecond
 
 Instructs the robot to start walking, with defaults set for all parameters.
 `move_time` is in milliseconds (1/1000 of a second), `step_length` is *roughly* millimetres.
+`turn` is an int8 in the range -128 to 127. 0 makes the robot walk straight ahead, negatives
+move to the Robot's *right*, positives to the *left* (i.e. positive Y-Axis direction).
 
 
 `eyes(angle, move_time=100)`
@@ -418,6 +440,13 @@ least significant byte to most.
 
 
 
+`_mute_serial()`
+{:.docsubitem#mute_serial}
+
+This instructs the STM32 microcontroller on the board to stop monitoring the Serial
+line between it and the ESP8266. THis is basically only useful for reprogramming
+the ESP or very specific applications, such as shutting it up if you're using the 
+serial line for something else. Basically, we doubt you'll need this command.
 
 
 
