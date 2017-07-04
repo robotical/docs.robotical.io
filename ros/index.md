@@ -33,6 +33,17 @@ Here you'll find the necessary information to get ROS up and running on your Mar
 </a>
 
 <br class="smaller">
+<a href="http://wiki.ros.org/rosserial" class="inherit">
+<div class="well bigger">
+  ROS Serial Docs
+<div class="smaller muted">
+  (On wiki.ros.org)
+</div>
+</div>
+</a>
+
+
+<br class="smaller">
 </div>
 
 The ROS API source code for Marty can be found on GitHub:

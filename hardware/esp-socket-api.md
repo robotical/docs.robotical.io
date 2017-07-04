@@ -225,6 +225,9 @@ The board will drop into a special 'hotspot mode' if it can't connect to a
 Wireless network. If you then connect to this network (called 'Marty Setup' followed
 by some digits) you'll be presented with the config page.
 
+This enpoint will only be exposed when wither 1) the Marty cannot connect to a WiFi
+network or 2) you press **Bob the Button**, which will make a noise and bring the hotspot
+up.
 
 
 `UDP port 4000`

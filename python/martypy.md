@@ -93,9 +93,9 @@ based on our experimentation with Marty.
 
 None of the movement commands are *blocking*, meaning that if you tell the robot to
 walk for two seconds, your program will keep running while that's happening rather than wait for
-the walk action to finish. This can have both useful and undesireable side effects, so just
+the walk action to finish. This can have both useful and undesirable side effects, so just
 bear this in mind. Secondly, Marty *queues* actions, so if you send a walk, kick and then another
-walk they will all happen one-agter the other, *not* at the same time or overwriting each-other.
+walk they will all happen one-after the other, *not* at the same time or overwriting each-other.
 {:.feature}
 
 
@@ -129,7 +129,7 @@ should be close to the zero pose.
 {:.docsubitem#discover}
 
 Look for Martys available over whatever interface you're using, e.g. the `socket` client
-will look for Martyies over the LAN. Return types from this command can be varied, depending
+will look for Martys over the LAN. Return types from this command can be varied, depending
 on the client interface. Some interfaces may not support this method.
 
 For instance, with the Socket client type we of course can't create a `Marty` instance before
@@ -186,7 +186,7 @@ Move a specific joint, selected by `joint_id` (0 to 8) to `position` (-128 to 12
 Lean over in a direction, taken from `SIDE_CODES` taking `move_time` milliseconds
 
 
-`walk(num_steps=2, start_foot='left', turn=0, step_length=25, move_time=1500)`
+`walk(num_steps=2, start_foot='auto', turn=0, step_length=40, move_time=1500)`
 {:.docsubitem#walk}
 
 Instructs the robot to start walking, with defaults set for all parameters.
@@ -217,7 +217,7 @@ Move the arms to each respective angle, taking `move_time` milliseconds
 `celebrate(move_time=4000)`
 {:.docsubitem#celebrate}
 
-Do a little celebration, taking `move_time` milliseconds. THe default is sensible, though this
+Do a little celebration, taking `move_time` milliseconds. The default is sensible, though this
 is hilarious/adorable with a move time around 1000.
 
 
@@ -311,7 +311,7 @@ the battery voltage alarm so it'll go off a bit sooner. This is enabled by defau
 but is **not** on by default within firmware or potentially other APIs.
 
 Use this as a quick way to enable all the below listed safety features to prevent you from breaking
-your Marty by overstressing a Motor or your Battery
+your Marty by over-stressing a Motor or your Battery
 {:.alert.success.tag}
 
 
@@ -453,7 +453,7 @@ least significant byte to most.
 {:.docsubitem#mute_serial}
 
 This instructs the STM32 microcontroller on the board to stop monitoring the Serial
-line between it and the ESP8266. THis is basically only useful for reprogramming
+line between it and the ESP8266. This is basically only useful for reprogramming
 the ESP or very specific applications, such as shutting it up if you're using the 
 serial line for something else. Basically, we doubt you'll need this command.
 
@@ -520,7 +520,7 @@ the Client's method `execute(*args, **kwargs)`, with the command name as the fir
 and any further arguments as necessary.
 
 `execute` is implemented in `martypy.GenericClient`, which will perform a lookup against
-the `GenericClient.COMMANDS_LUT` lookup-table. All the known commands shoulf be in there,
+the `GenericClient.COMMANDS_LUT` lookup-table. All the known commands should be in there,
 as `None`s, given the generic client just provides interface, not implementation.
 
 If a callback is left as `None` then a `UnavailableCommandException` is raised when `Marty` tries
