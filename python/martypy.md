@@ -16,7 +16,7 @@ The easiest way to install *martypy* is using `pip`, the Python package manager:
 {:.feature}
 
 Also, when starting a new Python project it is **strongly** recommended that you start it
-using a *virtual environment*, with `pyvenv` for Python 3 like so:
+using a *virtual environment*, with `pyvenv` for Python 3:
 {:.feature}
 
     $ pyvenv VENV
@@ -99,7 +99,7 @@ walk they will all happen one-agter the other, *not* at the same time or overwri
 {:.feature}
 
 
-`martypy.Marty(url='socket://192.168.0._', client_types=dict(), *args, **kwargs)`
+`martypy.Marty(url='socket://192.168.0._', client_types=dict(), debug=False, *args, **kwargs)`
 {:.docitem}
 
 Class constructor for a Marty client instance, with a default URL given.
@@ -109,10 +109,11 @@ commands are sent to the Robot. If the kwarg `default_lifelike` is True, lifelik
 be enabled.
 
 `*args` and `**kwargs` are passed on to the client type, which will be chosen depending on the protocol
-specified the URL. Currently the supported client types are `socket` and `test`.
+specified the URL. Currently the natively supported client types are `socket`, `serial`, `ros` and `test`.
 
 For more info on extending the available client types via `client_types` see [here](#client-types).
 
+The `debug` argument can be useful for showing what the client is sending, and other stuff.
 
 
 `hello()`
@@ -375,15 +376,23 @@ the correct positions (apart from the eyes), and then save that as the calibrati
 {:.alert.success.tag}
 
 
-`ros_command(byte_array)`
+`ros_command(*byte_array)`
 {:.docsubitem#ros_command}
 
-*(Generally Specific to the Socket-type client)*
+*(This function may vary with clients)*
 
 Low level proxied access to the ROS Serial API between the modem and main controller.
 Will forward the given `byte_array` (i.e. list of chars/bytes) through to the main controller.
 
+{% highlight python %}
+# For example
+import martypy
+m = martypy.Marty('socket://192.168.0.58', debug=True)
+# This is the *hello* command in ROS Serial Format
+m.ros_command('\xff', '\xfe', '\x01', '\x00', '\xfe', '\x6f', '\x00', '\x00', '\x90')
+{% endhighlight %}
 
+For more info on the ROS Serial format see the [ROS Docs](/ros/)
 
 
 `SIDE_CODES`
