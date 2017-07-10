@@ -99,7 +99,7 @@ walk they will all happen one-after the other, *not* at the same time or overwri
 {:.feature}
 
 
-`martypy.Marty(url='socket://192.168.0._', client_types=dict(), debug=False, *args, **kwargs)`
+`martypy.Marty(url='socket://192.168.0._', client_types=dict(), default_lifelike=True, *args, **kwargs)`
 {:.docitem}
 
 Class constructor for a Marty client instance, with a default URL given.
@@ -111,9 +111,11 @@ be enabled.
 `*args` and `**kwargs` are passed on to the client type, which will be chosen depending on the protocol
 specified the URL. Currently the natively supported client types are `socket`, `serial`, `ros` and `test`.
 
+For instance, the `debug` keyword argument can be useful for showing what the client is sending, and
+other stuff over the Socket API when using the `socket` client type.
+
 For more info on extending the available client types via `client_types` see [here](#client-types).
 
-The `debug` argument can be useful for showing what the client is sending, and other stuff.
 
 
 `hello()`
