@@ -352,13 +352,13 @@ power it off and charge it if the battery voltage gets this low.
 
 
 
-`buzz_protection(enable=True)`
-{:.docsubitem#buzz_protection}
+`buzz_prevention(enable=True)`
+{:.docsubitem#buzz_prevention}
 
-`enable = True or False` boolean toggle for Buzz Protection on the Control board, which is a feature
+`enable = True or False` boolean toggle for Buzz Prevention on the Control board, which is a feature
 that tries to reduce steady-state buzzing from the motors when Marty isn't moving. This also
-makes the Robot *compliant*, so you can gently move the robot's joints (apart from the eyes)
-into a pose.
+makes the Robot kinda *actively compliant*, so you can gently manipulate the robot's joints (apart from
+the eyes!) into a pose.
 
 
 

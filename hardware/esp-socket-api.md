@@ -38,7 +38,8 @@ how Scratch talks to Marty.
 
 
 Ports & Services
----
+===
+
 
 | Number    | Use                                                             |
 |-----------|-----------------------------------------------------------------|
@@ -130,7 +131,7 @@ Here is a summary table of the commands, more detail on specific functions is be
 | Command                | Size | Opcode   | Arguments                                               |
 |:-----------------------|:-----| :--------|:--------------------------------------------------------|
 | [*hello*](#cmdHello)   | 1 (2)| 0x00     | [uint8 type *(default 0)*]                              |
-| [*lean*](#cmdLean)     | 5    | 0x01     | uint8 direction, int8 amount, uint16 move\_time         |
+| [*lean*](#cmdLean)     | 5    | 0x02     | uint8 direction, int8 amount, uint16 move\_time         |
 | [*walk*](#cmdWalk)     | 7    | 0x03     | uint8 steps, uint8 turn, uint16 move\_time, <br />int8 step\_length, int8 side |
 | [*kick*](#cmdKick)     | 5    | 0x05     | uint8 side, int8 twist, uint16 move\_time               |
 | [*celebrate*](#cmdCelebrate)            | 3    | 0x08     | uint16 move\_time                      |
@@ -178,7 +179,7 @@ Here is a summary table of the commands, more detail on specific functions is be
 Move time specifies the number of milliseconds for a movement to take, and is always a uint16 with LSB first. So, to take 1 second, or 1,000 ms, send bytes [0xE8, 0x03].
 
 #### <a name="cmdHello">`hello`</a>
-*`[uint8 type *(default 0)*]`*
+*`uint8 type (default 0)`*
 
 | Type    |    |
 |:--------|:---|
@@ -439,7 +440,10 @@ More information on ROS (and ROS Serial) is given [here](/ros/)
 
 <br>
 
-### Simple Sockets Example in Python 3
+
+Simple Sockets Example in Python 3
+===
+
 
 Just to illustrate how the socket API works, though if you're using Python to communicate
 with Marty  we'd recommend you check out the **MartyPy** api [documented here](/python/remote/)
