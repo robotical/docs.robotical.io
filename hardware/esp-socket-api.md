@@ -257,7 +257,7 @@ play_sound will make the activate the buzzer on Marty, it'll start at `freq_star
 *`uint8 joint_id, int8 position, `[`uint16 move_time`](#cmdMoveTime)*
 
 `joint_id` the specific joint to move
-`position` an int8 from -100 to +100 as a percentage of maximum servo movement. Note that not all motors can physically move through the whole range in Marty
+`position` an int8 from -127 to +127 as a percentage of maximum servo movement. Note that not all motors can physically move through the whole range in Marty
 
 | Joint ID | Joint in Marty             |
 |:---------|:---------------------------|
@@ -385,10 +385,14 @@ Enable safeties will activate fall protection, buzz prevention, and increase the
 #### <a name="cmdSetParameter"></a>`set_parameter`
 *`uint8 paramID, params`*
 
+Note that these parameters are not persistent. They are stored in RAM and will be reset to default when the board is power cycled.
+
 | Param ID | Data                |  Description  | 
 |:---------|:--------------------|:--------------|
 | 0        | `uint8 lean_amount` | Changes amount of side to side movement when walking etc. <br />leanAmount is a percentage of nominal, from 0-200. So setting leanAmount to 100 will revert to normal. |
 | 2        | `uint16_t topicID, uint16_t period` | Rostopic publishing period <br />Period is specified in milliseconds<br />topicID is the rosserial topic ID, so: Accel: 104; GPIO: 106; Battery: 107; Motor currents: 108; Servo positions: 113 |
+| 3        | `uint8 jointID, float32 threshold` | Change the instantaneous current limit for a particular motor. Currently strong motors have a threshold of 0.022 by default, and weak motors of 0.017 |
+| 4        | `uint8 jointID, float32 threshold` | Change the threshold on the leaky integrator for continuous overcurrent detection. Currently strong motors have a threshold of 12.0 by default, and weak motors of 9.0 |
 {:.tt}
 
 #### <a name="cmdGetFirmwareVersion"></a>`get_firmware_version`
