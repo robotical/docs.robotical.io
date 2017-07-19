@@ -242,6 +242,11 @@ Play a tone that linearly interpolates between the Frequency `freq_start` in Hz 
 taking `duration` milliseconds to play.
 
 
+`i2c_write(*byte_array)`
+{:.docsubitem#i2c_write}
+
+Writes a bytestream to the i2c port. The first byte should be the address, following from that the datagram folows standard i2c spec.
+
 `get_battery_voltage()`
 {:.docsubitem#get_battery_voltage}
 
@@ -456,7 +461,7 @@ least significant byte to most.
 
 This instructs the STM32 microcontroller on the board to stop monitoring the Serial
 line between it and the ESP8266. This is basically only useful for reprogramming
-the ESP or very specific applications, such as shutting it up if you're using the 
+the ESP or very specific applications, such as shutting it up if you're using the
 serial line for something else. Basically, we doubt you'll need this command.
 
 
@@ -473,7 +478,7 @@ mymarty.get_accelerometer('abc')
     291             raise MartyCommandException("Axis must be one of {}, not {}"
 --> 292                                         "".format(self.ACCEL_AXES.keys(), axis))
     293         return self.client.execute('accel', ax)
-    294 
+    294
 
 MartyCommandException: Axis must be one of {'x', 'z', 'y'}, not 'abc'
 ```
@@ -598,6 +603,5 @@ handlers might have some issues working correctly.
 <br>
 
 
-The `SocketClient` is the main client type used to interface with Marty over WiFi, but the 
+The `SocketClient` is the main client type used to interface with Marty over WiFi, but the
 `TestClient` is useful for debugging or developing without having to have a Robot in the loop.
-
