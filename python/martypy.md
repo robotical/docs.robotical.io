@@ -383,6 +383,28 @@ the correct positions (apart from the eyes), and then save that as the calibrati
 {:.alert.success.tag}
 
 
+`clear_calibration()`
+{:.docsubitem#clear_calibration}
+
+Clears the calibration.
+
+Your Robot may interfere with itself (robot speak for hit itself) if it is not calibrated.
+This will probably result in a robot unable to walk properly until you recalibrate it.
+{:.alert.warning.tag}
+
+The frimware v1.0.0 requires the robot to be turned off then on for this command to take effect.
+{:.alert.warning.tag}
+
+
+`set_parameter(*byte_array)`
+{:.docsubitem#set_parameter}
+
+Sets board parameters such as lean amount and current limit.
+
+Takes in input in as a list in the following format `[paramID, params]`.  
+For more information about board parameters, check the [Socket API](http://docs.robotical.io/hardware/esp-socket-api/#cmdSetParameter)
+
+
 `ros_command(*byte_array)`
 {:.docsubitem#ros_command}
 
@@ -400,6 +422,18 @@ m.ros_command('\xff', '\xfe', '\x01', '\x00', '\xfe', '\x6f', '\x00', '\x00', '\
 {% endhighlight %}
 
 For more info on the ROS Serial format see the [ROS Docs](/ros/)
+
+
+`get_chatter()`
+{:.docsubitem#get_chatter}
+
+Returns the data in the chatter.
+
+
+`get_firmware_version()`
+{:.docsubitem#get_firmware_version}
+
+Prints the firmware version over chatter.
 
 
 `SIDE_CODES`
