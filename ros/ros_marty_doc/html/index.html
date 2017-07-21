@@ -21,21 +21,40 @@
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="intro_sec"></a>
 Marty the Robot</h1>
-<p>The ros_marty stack provides an interface for <a href="http://robotical.io">Marty the Robot</a> to utilise ROS, both through roscpp and rospy. <br />
+<p>This is the package to enable <a href="http://robotical.io">Marty the Robot</a> to utilise ROS, both through roscpp and rospy. <br />
 <br />
  There are two core classes that enable this:</p><ul>
 <li><a href="./classMartyCore.html">MartyCore</a>, which handles servo initialisation and instantiates the Marty ROS node, as well as providing access to core methods such as setting servo positions.</li>
 <li><a href="./classCmdServer.html">CmdServer</a>, which allows the Marty to execute commands sent to it remotely, via a socket open on a predefined port.</li>
 </ul>
-<p>Also contained within this package is a command line calibration script, <a href="./classCalibration.html">Calibration</a>. This is used to set the initial positions of the servos on startup. <br />
- Within the package are three launch files. To start the ROS stack, <code>startup.launch</code> should be used, as this instantiates the required nodes. <br />
-<code>calibration.launch</code> is used to execute the servo calibration script and should be used before doing any development.</p>
 <h1><a class="anchor" id="Topics"></a>
 Topics</h1>
+<h2><a class="anchor" id="core"></a>
+Core Topics</h2>
 <ul>
 <li>/diagnostics - provides diagnostics information</li>
 <li>/marty/accel - provides X, Y, Z accelerometer data</li>
 <li>/marty/battery - returns the current battery voltage</li>
+<li>/marty/chatter - returns miscellaneous information from the Rick</li>
+<li>/marty/enable_motors - used to determine when to enable/disable ALL servos, Boolean (true = servos enabled, false = servos disabled)</li>
+<li>/marty/enable_motors_array - used to selectively enable/disable servos, Bool array (size 9)</li>
+<li>/marty/falling - returns current stability of the robot (true = robot is falling/has fallen, false = stable)</li>
+<li>/marty/gpios - returns the current state of the GPIOs within the robot</li>
+<li>/marty/joint_states - returns the current state of the robot's joints</li>
+<li>/marty/keyframe_file - used to specify a filename containing some servo keyframes</li>
+<li>/marty/keyframes - used to set desired servo actuation frames</li>
+<li>/marty/motor_currents - returns the current servo motor currents</li>
+<li>/marty/servo - used to specify a servo ID and a corresponding command for it to move</li>
+<li>/marty/servo_array - used to specify a map of servo IDs with corresponding commands</li>
+<li>/marty/servo_positions - returns an array of current servo positions</li>
+<li>/marty/servos_enabled - returns a Bool array of enabled servos</li>
+<li>/marty/socket_cmd - used to communicate low-level socket commands to the Rick via rosserial</li>
+<li>/marty/sound - used to output a desired speaker tonal range and duration</li>
+<li>/marty/sound_file - used to set the name of a sound file to play</li>
+</ul>
+<h2><a class="anchor" id="additional"></a>
+Other Topics</h2>
+<p>If you have a camera plugged in:</p><ul>
 <li>/marty/camera/camera_info - provides meta information for the camera</li>
 <li>/marty/camera/image - provides raw camera image</li>
 <li>/marty/camera/image/compressed - provides a compressed image</li>
@@ -47,17 +66,10 @@ Topics</h1>
 <li>/marty/camera/image/theora - provides a camera image with the Theora codec</li>
 <li>/marty/camera/image/theora/parameter_descriptions - provides meta information for the Theora encoding parameters</li>
 <li>/marty/camera/image/theora/parameter_updates - as above</li>
-<li>/marty/enable_motors - subcriber topic that listens for a Boolean (true = servos enabled, false = servos disabled)</li>
-<li>/marty/falling - publishes the current stability of the robot (true = robot is falling/has fallen, false = stable)</li>
-<li>/marty/gpios - publishes the current state of the GPIOs within the robot</li>
-<li>/marty/joint_states - publishes the current state of the robot's joints</li>
-<li>/marty/keyframe_file - subscriber topic that listens for the filename containing some servo keyframes</li>
-<li>/marty/keyframes - publishes desired servo actuation frames</li>
-<li>/marty/motor_currents - publishes the current servo motor currents</li>
-<li>/marty/servo - subscriber topic that listens for a servo ID and a corresponding command for it to move</li>
-<li>/marty/servo_array - subscriber topic that listens for a map of servo IDs with corresponding commands</li>
-<li>/marty/sound - publishes a desired speaker tonal range and duration</li>
-<li>/marty/sound_file - subscriber topic that can be fed a sound file to play </li>
+</ul>
+<p>Dependencies for other packages (<a href="https://github.com/robotical/marty_football">marty_football</a> and <a href="https://github.com/robotical/marty_joy">marty_joy</a>)</p><ul>
+<li>/marty/ball_pos</li>
+<li>/marty/joy </li>
 </ul>
 </div></div><!-- contents -->
 
@@ -65,7 +77,7 @@ Topics</h1>
 <hr size="1"><div style="align: right;">
 <a href="http://wiki.ros.org/ros_marty">ros_marty</a><br />
 Author(s): Alejandro Bordallo <alex.bordallo@robotical.io></br />
-<small>autogenerated on Mon Jun 19 2017 12:27:30</small>
+<small>autogenerated on Fri Jul 21 2017 14:51:45</small>
 </div>
 </body>
 </html>
