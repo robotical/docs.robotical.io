@@ -35,7 +35,7 @@ Here you'll find the necessary information to get ROS up and running on your Mar
 <br class="smaller">
 <a href="http://wiki.ros.org/rosserial" class="inherit">
 <div class="well bigger">
-  ROS Serial Docs
+  rosserial Docs
 <div class="smaller muted">
   (On wiki.ros.org)
 </div>

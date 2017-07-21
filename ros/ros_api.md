@@ -37,8 +37,8 @@ Here you can find the documentation for the ros_marty stack
 <br class="smaller">
 </div>
 
-ROS topic map
-===
+<!-- ROS topic map
+=== -->
 
-<img src="/ros/rosgraph.svg" alt="ROS graph" style="width: 700px;"/>
+<!-- <img src="/ros/rosgraph.svg" alt="ROS graph" style="width: 700px;"/> -->
 <!-- ![ROS nodes](/ros/rosgraph.svg =100x200) -->
