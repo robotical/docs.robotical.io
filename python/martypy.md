@@ -245,7 +245,7 @@ taking `duration` milliseconds to play.
 `i2c_write(*byte_array)`
 {:.docsubitem#i2c_write}
 
-Writes a bytestream to the i2c port. The first byte should be the address, following from that the datagram folows standard i2c spec.
+Writes a bytestream to the i2c port. The first byte should be the address, following from that the datagram follows standard i2c spec.
 
 `get_battery_voltage()`
 {:.docsubitem#get_battery_voltage}
@@ -392,7 +392,7 @@ Your Robot may interfere with itself (robot speak for hit itself) if it is not c
 This will probably result in a robot unable to walk properly until you recalibrate it.
 {:.alert.warning.tag}
 
-The frimware v1.0.0 requires the robot to be turned off then on for this command to take effect.
+The firmware v1.0.0 requires the robot to be turned off then on for this command to take effect.
 {:.alert.warning.tag}
 
 
