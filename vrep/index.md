@@ -17,21 +17,51 @@ toggle between the two.
 <div>
 
 <br class="smaller">
-<a href="/vrep/getting_started" class="inherit">
+<a href="http://www.coppeliarobotics.com/helpFiles/en/apisOverview.htm" class="inherit">
 <div class="well bigger">
-  Getting Started
+  V-REP API framework
 <div class="smaller muted">
-  Before doing anything else, take a look here
+  Take a look at the official API doc from Coppelia
 </div>
 </div>
 </a>
 
 <br class="smaller">
-<a href="/vrep/tutorial" class="inherit">
+<a href="http://www.coppeliarobotics.com/helpFiles/en/apiOverview.htm" class="inherit">
 <div class="well bigger">
-  Tutorial
+  V-REP Regular API
 <div class="smaller muted">
-  Let's get Marty ROSing around
+  Official regular API docs from Coppelia
+</div>
+</div>
+</a>
+
+<br class="smaller">
+<a href="http://www.coppeliarobotics.com/helpFiles/en/remoteApiOverview.htm" class="inherit">
+<div class="well bigger">
+  V-REP Remote API
+<div class="smaller muted">
+  Official remote API docs from Coppelia
+</div>
+</div>
+</a>
+
+<br class="smaller">
+<a href="http://www.coppeliarobotics.com/helpFiles/en/rosInterf.htm" class="inherit">
+<div class="well bigger">
+  RosInterface docs
+<div class="smaller muted">
+  An explanation of the RosInterface plugin
+</div>
+</div>
+</a>
+
+<br class="smaller">
+<a href="/vrep/ros_topics" class="inherit">
+<div class="well bigger">
+  Simulation ROS topics
+<div class="smaller muted">
+  List of ROS topics used in simulation
 </div>
 </div>
 </a>

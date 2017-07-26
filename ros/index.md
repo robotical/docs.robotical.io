@@ -12,7 +12,7 @@ Here you'll find the necessary information to get ROS up and running on your Mar
 
 <div>
 
-<br class="smaller">
+<!-- <br class="smaller">
 <a href="/ros/getting_started" class="inherit">
 <div class="well bigger">
   Getting Started
@@ -20,7 +20,7 @@ Here you'll find the necessary information to get ROS up and running on your Mar
   Before doing anything else, take a look here
 </div>
 </div>
-</a>
+</a> -->
 
 <br class="smaller">
 <a href="/ros/ros_api" class="inherit">
@@ -35,7 +35,7 @@ Here you'll find the necessary information to get ROS up and running on your Mar
 <br class="smaller">
 <a href="http://wiki.ros.org/rosserial" class="inherit">
 <div class="well bigger">
-  ROS Serial Docs
+  rosserial Docs
 <div class="smaller muted">
   (On wiki.ros.org)
 </div>

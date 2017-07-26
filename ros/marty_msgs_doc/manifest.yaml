@@ -10,6 +10,8 @@ description: Marty_msgs package containing ROS messages for Marty the Robot
 license: Apache
 maintainers: Alejandro Bordallo <alex.bordallo@robotical.io>
 msgs:
+- ByteArray
+- ServosEnabled
 - Accelerometer
 - MotorCurrents
 - Sound
@@ -19,7 +21,9 @@ msgs:
 - SoundArray
 - GPIOs
 - ServoMsgArray
+- CentroidMsg
 - Keyframe
+- ServoPositions
 package_type: package
 repo_url: ''
 srvs:
