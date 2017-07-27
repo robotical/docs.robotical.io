@@ -1,0 +1,230 @@
+---
+title: Marty Calibration
+layout: article
+---
+
+<script src="https://cdn.robotical.io/static/js/marty.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.robotical.io/static/js/martyScan.js"></script>
+<script type="text/javascript">
+
+// Need to disable Raven + Sentry first:
+try {
+  Raven.uninstall();
+} catch (e) {
+  console.log(e);
+}
+
+martylist = [];
+function scanForMartys(){
+    $('#MartyList').empty();
+    $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i></span>");
+    scanRange("192.168.0", martylist);
+    setTimeout(listMartys, 5000);
+}
+
+function listMartys(){
+    $('#MartyList').empty();
+    if (martylist.length){
+        for (var m in martylist){
+            //$('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <a href=\"#\" onlick=\"calibrate('" + martylist[m][0] + "', '" + martylist[m][1] + "');\">Calibrate?</a><br /><a onclick=\"console.log('hello');\">hello</a>");
+            $('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"calibrateMarty('" + martylist[m][0] + "', '" + martylist[m][1] + "', -1);\">Calibrate</button><br />");
+        }
+    } else {
+        $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys();\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+    }
+}
+
+
+var mlist = [];
+function addMartyCallback(){
+    if (mlist.length > 0){
+        calibrateMarty(mlist[0][0], mlist[0][1], -1);
+    } else {
+        var ip = document.getElementById("martyIp").value;
+        $('#MartyList').empty();
+        $('#MartyList').append("No Marty found at" + ip + " :-(. <button class=\"btn warning\" onclick=\"console.log('scanning...');scanForMartys();\">Re-scan?</button><br />Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+    }
+}
+
+function add_marty_by_ip(){
+    mlist = [];
+    sendRequest(document.getElementById("martyIp").value, mlist);
+    setTimeout(addMartyCallback, 3000);
+}
+
+var m;
+function calibrateMarty(ip, name, stage){
+    document.getElementById("calibration").style.visibility = 'visible';
+    switch (stage){
+        case -1:
+            document.getElementById("calibrationWarning").style.visibility = "visible";
+            setTimeout(function(){calibrateMarty(ip, name, 0);}, 2000);
+            break;
+        case 0:
+            m = new Marty(ip, name);
+            // allow time for connection
+            setTimeout(function(){calibrateMarty(ip, name, 1);}, 1000);
+            break;
+        case 1:
+            document.getElementById("calibrationWarning").style.visibility = "hidden";
+            // TODO: check for successful connection
+            m.enable_motors();
+            m.hello();
+            m.lifelike_behaviours(false);
+            m.fall_protection(false);
+            setTimeout(function(){calibrateMarty(ip, name, 2);}, 100);
+            break;
+        case 2:
+            for (let i=0; i<9; i++){        
+                var sname = "mp" + i;
+                var enabled = m.get_sensor("enabled" + i);
+                var mp = m.get_sensor(sname);
+                if (enabled == false){
+                    m.enable_motors();
+                    if (mp != null){
+                        m.move_joint(i, mp);
+                    } else {
+                        m.move_joint(i, 0);
+                    }
+                    mp = "disabled!";
+                }
+                document.getElementById(sname).innerHTML = mp;
+            }
+            document.getElementById("chatter").innerHTML = m.get_sensor("chatter");
+            setTimeout(function(){calibrateMarty(ip, name, 2);}, 100);
+            break;
+    }
+
+}
+
+function adjustJoint(id, amount){
+    var oldPos = m.get_sensor("mp" + id);
+    if (oldPos === null){
+        setTimeout(function(){adjustJoint(id, amount);}, 200);
+        return;
+    }
+    m.move_joint(id, oldPos + amount);
+    return;
+}
+
+//scanForMartys();
+</script>
+
+<p>
+    <div id="MartyList" class="text-center">
+      <button onclick="scanForMartys();" class="btn bitbigger rounded"><i class="fa fa-fw fa-search"></i> &nbsp; Scan for Martys</button>
+    </div>
+</p>
+
+<div style="text-align:center;visibility:hidden" id="calibrationWarning">
+    <div class="alert danger tag"><b>Warning!</b><br />Marty might move quickly - please move fingers away!</div>
+</div>
+<p>
+<div id="calibration" style="visibility:hidden">
+    Calibration:
+        <span id="martyname"></span>
+<br />
+<table>
+    <tr>
+        <td>Left hip: </td>
+        <td width="100"><span id="mp0">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(0,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(0, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(0,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(0,5)" class="btn smaller">+5</button> <br /></td>
+    </tr>
+    <tr>
+        <td>Left twist: </td>
+        <td><span id="mp1">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(1,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(1, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(1,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(1,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+    <tr>
+        <td>Left knee: </td>
+        <td><span id="mp2">waiting...</span> </td>
+        <td class="smaller">
+            <button onclick="adjustJoint(2,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(2, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(2,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(2,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+    <tr>
+        <td>Right hip: </td>
+        <td><span id="mp3">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(3,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(3, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(3,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(3,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+    <tr>
+        <td>Right twist: </td>
+        <td><span id="mp4">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(4,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(4, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(4,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(4,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+    <tr>
+        <td>Right knee: </td>
+        <td><span id="mp5">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(5,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(5, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(5,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(5,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+    <tr>
+        <td>Left arm: </td>
+        <td><span id="mp6">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(6,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(6, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(6,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(6,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+    <tr>
+        <td>Right arm:</td>
+        <td><span id="mp7">waiting...</span></td>
+        <td class="smaller">
+            <button onclick="adjustJoint(7,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(7, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(7,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(7,5)" class="btn smaller">+5</button>
+        </td>
+    </tr>
+    <tr>
+        <td><b class="text-danger">DO NOT MOVE EYES BY HAND</b><br>Eyes: </td>
+        <td><span id="mp8">waiting...</span> </td>
+        <td class="smaller">
+            <button onclick="adjustJoint(8,-5)" class="btn smaller">-5</button>
+            <button onclick="adjustJoint(8, -1);" class="btn smaller">-1</button> /
+            <button onclick="adjustJoint(8,1)" class="btn smaller">+1</button>
+            <button onclick="adjustJoint(8,5)" class="btn smaller">+5</button> <br /></td>
+        </td>
+    </tr>
+</table>
+</p>
+<p>
+Chatter: <span id="chatter">waiting...</span>
+</p>
+<button class="btn success" onclick="m.save_calibration()"><i class="fa fa-fw fa-check"></i> &nbsp; Save Calibration!</button>
+
+<p>
+    <button class="btn complement" onclick="m.walk(2, 0, 1500, 50);">Walk Forward</button> <button class="btn complement" onclick="m.stand_straight(2000);">Zero joints</button>
+</p>
+</div>
+

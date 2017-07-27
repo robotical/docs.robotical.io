@@ -35,6 +35,11 @@ how Scratch talks to Marty.
         <i class="fa fa-fw fa-search muted"></i> &nbsp; Simple Discovery Tool
     </a>
 </div>
+<div class="center">
+    <a href="/calibration/" class="btn rounded">
+        <i class="fa fa-fw fa-wrench muted"></i> &nbsp; Marty Calibration Tool 
+    </a>
+</div>
 
 
 Ports & Services
