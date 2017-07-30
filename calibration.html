@@ -3,7 +3,7 @@ title: Marty Calibration
 layout: article
 ---
 
-<script src="https://cdn.robotical.io/static/js/marty.js"></script>
+<script src="https://cdn.robotical.io/static/js/marty.js?v20170730"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.robotical.io/static/js/martyScan.js?v20170730"></script>
@@ -72,13 +72,21 @@ function calibrateMarty(ip, name, stage){
             setTimeout(function(){calibrateMarty(ip, name, 1);}, 1000);
             break;
         case 1:
-            document.getElementById("calibrationWarning").style.visibility = "hidden";
-            // TODO: check for successful connection
-            m.enable_motors();
-            m.hello();
-            m.lifelike_behaviours(false);
-            m.fall_protection(false);
-            setTimeout(function(){calibrateMarty(ip, name, 2);}, 100);
+            var battery = m.get_sensor("battery");
+            if (battery === null){
+                setTimeout(function(){calibrateMarty(ip, name, 1);}, 500);
+            } else if (battery < 7.6){
+                document.getElementById("calibrationWarning").innerHTML = "MARTY'S BATTERY IS LOW! :-( <br /> please plug in the charger and then try calibration again in a few mins";
+            } else {
+                document.getElementById("calibrationWarning").style.visibility = "hidden";
+                // TODO: check for successful connection
+                m.enable_motors();
+                m.hello();
+                m.lifelike_behaviours(false);
+                m.fall_protection(false);
+                setTimeout(function(){calibrateMarty(ip, name, 2);}, 100);
+            }
+            console.log("battery: " + battery);
             break;
         case 2:
             for (let i=0; i<9; i++){        
