@@ -38,29 +38,31 @@ It's also worth checking out the [Intro to Marty Behaviour](/learn/article/Intro
 
 This section will give details on each block available through the Scratch interface.
 
-| Action Blocks                     | Sensor Blocks           | Marty Selector         |
-|:----------------------------------|:------------------------|:-----------------------|
-| [Circle dance](#circle_dance)     | Accelerometer           | Select Marty           |
-| [Enable motors](#enable_motors)   | Battery Voltage         | Select Marty on IP     |
-| [Eyes](#eyes)                     | Input                   |                        |
-| [Get Ready](#get_ready)           | Motor current           |                        |
-| [Kick](#kick)                     | TODO: motor position    |                        |
-| [Lean](#lean)                     | TODO: motor enabled     |                        |
-| [Lift leg](#lift_leg)             |                         |                        |
-| [Lower leg](#lower_leg)           |                         |                        |
-| Move joint                        |                         |                        |
-| Move leg forward/backward         |                         |                        |
-| Play sound                        |                         |                        |
-| Set blocking mode                 |                         |                        |
-| Stand straight                    |                         |                        |
-| Stop                              |                         |                        |
-| Turn                              |                         |                        |
-| Turn off motors                   |                         |                        |
-| Walk                              |                         |                        |
-| Walk backward                     |                         |                        |
-| Walk forward                      |                         |                        |
-| Wiggle                            |                         |                        |
+| Action Blocks                     | Sensor Blocks                      | Marty Selector         |
+|:----------------------------------|:-----------------------------------|:-----------------------|
+| [Circle dance](#circle_dance)     | [Accelerometer](#accelerometer)    | [Select Marty](#select_marty)           |
+| [Enable motors](#enable_motors)   | [Battery Voltage](#battery_voltage)| [Select Marty on IP](#select_marty_ip)  |
+| [Eyes](#eyes)                     | [Input](#input)                    |                        |
+| [Get Ready](#get_ready)           | [Motor current](#motor_current)    |                        |
+| [Kick](#kick)                     | TODO: motor position               |                        |
+| [Lean](#lean)                     | TODO: motor enabled                |                        |
+| [Lift leg](#lift_leg)             |                                    |                        |
+| [Lower leg](#lower_leg)           |                                    |                        |
+| [Move joint](#move_joint)         |                                    |                        |
+| [Move leg forward/backward](#move_leg_forward) |                       |                        |
+| [Play sound](#play_sound)         |                                    |                        |
+| [Set blocking mode](#set_blocking_mode) |                              |                        |
+| [Stand straight](#stand_straight) |                                    |                        |
+| [Stop](#stop)                     |                                    |                        |
+| [Turn](#turn)                     |                                    |                        |
+| [Turn off motors](#turn_off_motors) |                                  |                        |
+| [Walk](#walk)                     |                                    |                        |
+| [Walk backward](#walk_backward)   |                                    |                        |
+| [Walk forward](#walk_forward)     |                                    |                        |
+| [Wiggle](#wiggle)                 |                                    |                        |
 {:.tt}
+
+### Action Blocks
 
 <a name="circle_dance"></a>
 #### Circle Dance ![Circle dance block](/img/blocks/circle_dance.png)
@@ -181,16 +183,133 @@ That'll avoid any slight timing differences due to network lag.
 
 It'll move them simultaneously over 2 seconds.
 
+<a name="stop"></a>
+#### Stop ![Stop block](/img/blocks/stop.png)
+
+Stop will let you stop or pause the movements of a Marty. It's especially useful in [non-blocking mode](#set_blocking_mode)
+
+There are several options types of stop:
+
+| Stop type                | Effect                                                                 |
+|:-------------------------|:-----------------------------------------------------------------------|
+| finish move              | Clear movement queue only (so finish the current step/wiggle/movement) |
+| freeze                   | Clear movement queue and servo queues (freeze where you are)           |
+| disable motors           | Clear everything and disable motors                                    |
+| return to zero           | Clear everything, and make robot return to zero                        |
+| pause                    | Pause, but keep servo and movequeue intact and motors enabled          |
+| pause and disable motors | As pause, but disable motors too                                       |
+{:.tt}
+
+<a name="turn"></a>
+#### Turn ![turn block](/img/blocks/turn.png)
+
+Turn will make Marty turn on the spot in the left or right direction. For faster turning try using the [walk block](#walk) to set your own parameters
+
+<a name="turn_off_motors"></a>
+#### Turn off motors ![turn off motors block](/img/blocks/turn_off_motors.png)
+
+The `Turn off motors` block will disable all of Marty's servos. That'll make them moveable by hand, and you'll need to re-enable them with an [`enable motors`](#enable_motors) or [`Get ready`](#get_ready) block before they'll move again
+
+<a name="walk"></a>
+#### Walk ![walk block](/img/blocks/walk.png)
+
+The `walk` block lets you set specific parameters for walking. 
+
+The step length is a percentage of maximum, from -100 to +100. Negative step sizes will make Marty walk backwards.
+
+Turn is also a percentage of maximum.
+
+Step time is in seconds, down to a minimum of 0.5s.
+
+<a name="walk_backward"></a>
+#### Walk backward ![walk backward block](/img/blocks/walk_backward.png)
+
+This block will make Marty take a specified number of steps backwards. It defaults to a step length of -40 and a step time of 1.8 seconds.
+
+<a name="walk_forward"></a>
+#### Walk forward ![walk forward block](/img/blocks/walk_forward.png)
+
+This  block will make Marty take a specified number of steps forwards. It defaults to a step length of 40 and a step time of 1.8 seconds.
+
+<a name="wiggle"></a>
+#### Wiggle ![wiggle block](/img/blocks/wiggle.png)
+
+This'll make Marty wiggle.
+
+### Sensor blocks
+
+<a name="accelerometer"></a>
+#### Accelerometer (tilt sensing) ![Accelerometer block](/img/blocks/accelerometer.png)
+
+The `accelerometer` block lets you read from Marty's three axis accelerometer. This can tell you information about acceleration, but also about tilt.
+
+There are three axes:
+
+| Axis       | Marty dimension             |
+|:-----------|:----------------------------|
+| Z-axis     | Vertical                    |
+| Y-axis     |                             |
+| X-axis     |                             |
+
+Each axis will give a number representing the acceleration in that direction, but will also show the direction gravity is pulling. That's because accelerometers are basically little weights attached to springs, and while acceleration causes the weights to move, so does gravity.
+
+When Marty is standing straight and not moving, the Z-axis should read around 1.0. 
+
+The Z-axis of the accelerometer is also used for fall detection.
+
+To measure tilt, you could try doing something like this:
+
+![measuring tilt](/img/blocks/calculate_tilt.png)
+
+That'll set tilt to around 0 normally, going up to 100 if Marty is horizontal. You could also use the X and/or Y axis to measure tilt in a particular direction
+
+<a name="battery_voltage"></a>
+#### Battery Voltage ![battery block](/img/blocks/battery_voltage.png)
+
+This block will tell you Marty's battery voltage, which can be pretty useful to let you know when you should recharge.
+
+It gives back the actual voltage. About 8.4 is fully charged, and 7.4 is getting low.
+
+<a name="input"></a>
+#### Input ![input block](/img/blocks/input.png)
+
+The `input` block reads one of Marty's GPIO channels.
+
+For example, you can connect a bump switch to one of the channels, and the input block will return with a 1 if it's pressed, or a 0 otherwise.
+
+The ports are labelled on Marty's control board, and bump switches connect up the same way as the motors do, with the white cable at the top
+
+<!-- TODO: graphic of connecting bump switch -->
+
+So, to wait until a switch connected to port 0 is pressed you could do:
+
+![wait until input](/img/blocks/wait_until_input.png)
+
+<a name="motor_current"></a>
+#### Motor current ![motor current block](/img/blocks/motor_current.png)
+
+The `motor current` block lets you read the electrical current going through one of the motors. That gives an estimate of the force on the motor.
+
+It's normally a very small number, so it might be easier to multiply it. To react to somebody pressing Marty's arm, you could do this:
+
+![measuring torque](/img/blocks/measuring_torque.png)
 
 
-| Stand straight                    |                         |                        |
-| Stop                              |                         |                        |
-| Turn                              |                         |                        |
-| Turn off motors                   |                         |                        |
-| Walk                              |                         |                        |
-| Walk backward                     |                         |                        |
-| Walk forward                      |                         |                        |
-| Wiggle     
+### Marty Selector
+
+<a name="select_marty"></a>
+#### Select Marty ![select marty block](/img/blocks/select_marty.png)
+
+When the Marty scanner detects more than one Marty on the network, this block will give you the option to pick which Marty you'd like to control.
+
+Note - you need to double click the block to run it, or run it as part of a chain of blocks, before it will work!
+
+<a name="select_marty_ip"></a>
+#### Select Marty by IP ![select marty by ip](/img/blocks/select_marty_ip.png)
+
+If the Marty scanner doesn't detect your Marty (or even if it does), you can select a Marty by IP.
+
+Again, you'll need to run the block by double clicking it or having it a chain of blocks, for it to have effect
 
 <!-- table of blocks with links -->
 <!-- how to read a sensor -->
