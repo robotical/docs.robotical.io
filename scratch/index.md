@@ -129,6 +129,69 @@ This function currently doesn't take into account hip angles, so you might get u
 <a name="move_joint"></a>
 #### Move joint ![Move joint block](/img/blocks/move_joint.png)
 
+`Move joint` will move a single one of Marty's joints to a specified angle in a specified time.
+
+The angle is given as a percentage of max for that joint.
+
+By default queuing up `move joint` blocks will make the movements happen sequentially, one after the other. If you want to tell multiple joints to move simultaneously, you can disable blocking using the [set blocking mode](#set_blocking_mode) block.
+
+
+<a name="move_leg_forward"></a>
+#### Move leg forward/backward ![Move leg forward /backward block](/img/blocks/move_leg_forward.png)
+
+The `Move leg` block will move either the left or right leg forwards or backwards, by moving the hip joint.
+
+> Note that forward or backward is relative to Marty - so moving a leg backwards can move the rest of Marty forwards!
+
+<a name="play_sound"></a>
+#### Play sound ![Play sound block](/img/blocks/play_sound.png)
+
+This block will make Marty's buzzer make a noise. It takes three parameters, the starting frequency, end frequency, and the duration. The frequency of the output will be linearly moved between the start and end frequencies, so you can make chirps. You can also set the start frequency and end frequency to be the same to generate single tones.
+
+Marty will queue up multiple sound commands, so you can send whole tunes across to be played. 
+
+The play sound block will return straight away (it won't pause operation while the sound is played).
+
+<a name="set_blocking_mode"></a>
+#### Set blocking mode ![set blocking mode block](/img/blocks/set_blocking_mode.png)
+
+The `Set blocking mode` block affects the operation of all other movement blocks. 
+
+By default, blocking is enabled - and that means that a movement block (like a walk or move joint block) will take the same time to execute as the movement takes. So if you say to lean left in two seconds, that block will take two seconds to finish, before the next block is executed.
+
+However, if blocking is disabled, movement commands will be sent to Marty, but operation will continue immediately.
+
+This is most useful if you want to combine movements. For example, if you had three move joint blocks in a row like this:
+
+![multiple movement blocks](/img/blocks/multiple_movejoints.png)
+
+With blocking *enabled*, Marty would move the right hip, then the left hip, then the arm.
+With blocking *disabled*, Marty would move all three joints near simultaneously.
+
+If timing is really really critical, you might want to pause operation, queue up some movements on Marty, and then set them all off at the same time, like this:
+
+![Precise timing with pausing and enabling](/img/blocks/multiple_movejoints_pause.png)
+
+That'll avoid any slight timing differences due to network lag.
+
+<a name="stand_straight"></a>
+#### Stand straight ![Stand straight block](/img/blocks/stand_straight.png)
+
+`Stand straight` will return all of Marty's joints (including the eyes and the arms) to their zero positions.
+
+It'll move them simultaneously over 2 seconds.
+
+
+
+| Stand straight                    |                         |                        |
+| Stop                              |                         |                        |
+| Turn                              |                         |                        |
+| Turn off motors                   |                         |                        |
+| Walk                              |                         |                        |
+| Walk backward                     |                         |                        |
+| Walk forward                      |                         |                        |
+| Wiggle     
+
 <!-- table of blocks with links -->
 <!-- how to read a sensor -->
 
