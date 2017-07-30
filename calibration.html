@@ -122,6 +122,12 @@ function adjustJoint(id, amount){
     return;
 }
 
+function save_calibration(){
+    m.save_calibration();
+    document.getElementById("walkButton").disabled = false;
+    document.getElementById("zeroButton").disabled = false;
+}
+
 function clear_calibration(){
     m.clear_calibration();
     document.getElementById("calibrationWarning").innerHTML = "Calibration cleared. Please reset your Marty for this to take effect";
@@ -241,12 +247,12 @@ function clear_calibration(){
 <p>
 Chatter: <span id="chatter">waiting...</span>
 </p>
-<button class="btn success" onclick="m.save_calibration()"><i class="fa fa-fw fa-check"></i> &nbsp; Save Calibration!</button>
+<button class="btn success" onclick="save_calibration()"><i class="fa fa-fw fa-check"></i> &nbsp; Save Calibration!</button>
 &nbsp; &nbsp;
 <button class="btn danger" onclick="clear_calibration();">Clear Calibration (requires reset)</button>
 
 <p>
-    <button class="btn complement" onclick="m.walk(2, 0, 1500, 50);">Walk Forward</button> <button class="btn complement" onclick="m.stand_straight(2000);">Zero joints</button>
+    <button class="btn complement" onclick="m.walk(2, 0, 1500, 50);" id="walkButton" disabled>Walk Forward</button> <button class="btn complement" onclick="m.stand_straight(2000);" id="zeroButton" disabled>Zero joints</button>
 </p>
 </div>
 
