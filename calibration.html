@@ -63,6 +63,7 @@ function calibrateMarty(ip, name, stage){
     document.getElementById("calibration").style.visibility = 'visible';
     switch (stage){
         case -1:
+            document.getElementById("calibrationWarning").innerHTML = "<div class=\"alert danger tag\"><b>Warning!</b><br />Marty might move quickly - please move fingers away!</div>";
             document.getElementById("calibrationWarning").style.visibility = "visible";
             setTimeout(function(){calibrateMarty(ip, name, 0);}, 2000);
             break;
@@ -119,6 +120,13 @@ function adjustJoint(id, amount){
     }
     m.move_joint(id, oldPos + amount);
     return;
+}
+
+function clear_calibration(){
+    m.clear_calibration();
+    document.getElementById("calibrationWarning").innerHTML = "Calibration cleared. Please reset your Marty for this to take effect";
+    document.getElementById("calibrationWarning").style.visibility = "visible";
+    alert("Please turn your robot off and on again for calibration clear to take effect.");
 }
 
 //scanForMartys();
@@ -234,6 +242,8 @@ function adjustJoint(id, amount){
 Chatter: <span id="chatter">waiting...</span>
 </p>
 <button class="btn success" onclick="m.save_calibration()"><i class="fa fa-fw fa-check"></i> &nbsp; Save Calibration!</button>
+&nbsp; &nbsp;
+<button class="btn danger" onclick="clear_calibration();">Clear Calibration (requires reset)</button>
 
 <p>
     <button class="btn complement" onclick="m.walk(2, 0, 1500, 50);">Walk Forward</button> <button class="btn complement" onclick="m.stand_straight(2000);">Zero joints</button>
