@@ -6,7 +6,7 @@ layout: article
 <script src="https://cdn.robotical.io/static/js/marty.js?v20170730"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.robotical.io/static/js/martyScan.js?v20170730"></script>
+<script src="https://cdn.robotical.io/static/js/martyScan.js?v20170731"></script>
 <script type="text/javascript">
 
 // Need to disable Raven + Sentry first:
@@ -16,14 +16,82 @@ try {
   console.log(e);
 }
 
+// local IP discovery tool from net.ipcalf.com
+
+var localIP = null;
+
+// NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
+var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+
+if (RTCPeerConnection) (function () {
+    var rtc = new RTCPeerConnection({iceServers:[]});
+    if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
+        rtc.createDataChannel('', {reliable:false});
+    };
+    
+    rtc.onicecandidate = function (evt) {
+        // convert the candidate to SDP so we can run it through our general parser
+        // see https://twitter.com/lancestout/status/525796175425720320 for details
+        if (evt.candidate) grepSDP("a="+evt.candidate.candidate);
+    };
+    rtc.createOffer(function (offerDesc) {
+        grepSDP(offerDesc.sdp);
+        rtc.setLocalDescription(offerDesc);
+    }, function (e) { console.warn("offer failed", e); });
+    
+    
+    var addrs = Object.create(null);
+    addrs["0.0.0.0"] = false;
+    function updateDisplay(newAddr) {
+        if (newAddr in addrs) return;
+        else addrs[newAddr] = true;
+        var displayAddrs = Object.keys(addrs).filter(function (k) { return addrs[k]; });
+        document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
+    }
+    
+    function grepSDP(sdp) {
+        var hosts = [];
+        sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
+            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+                    addr = parts[4],
+                    type = parts[7];
+                //if (type === 'host') updateDisplay(addr);
+                console.log("1: addr: " + addr + " || type: " + type);
+                if (type === 'host' && addr != "0.0.0.0" && addr.length < 16){
+                    localIP = addr;
+                }
+            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+                var parts = line.split(' '),
+                    addr = parts[2];
+                console.log("2: addr: " + addr);
+                if (addr != "0.0.0.0" && addr.length < 16){ localIP = addr;}
+                updateDisplay(addr);
+            }
+        });
+    }
+})();
+
+
+
+
 martylist = [];
 function scanForMartys(ip){
-    if (ip === undefined){ ip = "192.168.0";}
+    if (ip === undefined){ 
+        if (localIP != null){
+            var ip_parts = localIP.split(".");
+            ip_parts.pop();
+            ip = ip_parts.join(".");
+            console.log("gonna scan: " + ip);
+        } else {
+            ip = "192.168.0";
+        }
+    }
     $('#MartyList').empty();
     $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i></span>");
     console.log("scanning: " + ip);
-    scanRange(ip, martylist);
-    setTimeout(listMartys, 10000, ip);
+    scanRange(ip, martylist, 15000);
+    setTimeout(listMartys, 16000, ip);
 }
 
 function listMartys(ip){
@@ -33,6 +101,8 @@ function listMartys(ip){
             //$('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <a href=\"#\" onlick=\"calibrate('" + martylist[m][0] + "', '" + martylist[m][1] + "');\">Calibrate?</a><br /><a onclick=\"console.log('hello');\">hello</a>");
             $('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"calibrateMarty('" + martylist[m][0] + "', '" + martylist[m][1] + "', -1);\">Calibrate</button><br />");
         }
+    } else if (localIP != null){
+        scanForMartys("192.168.0");
     } else if (ip == "192.168.0"){
         scanForMartys("192.168.1");
     } else {
