@@ -319,10 +319,11 @@ Chatter: <span id="chatter">waiting...</span>
 </p>
 <button class="btn success" onclick="save_calibration()"><i class="fa fa-fw fa-check"></i> &nbsp; Save Calibration!</button>
 &nbsp; &nbsp;
-<button class="btn danger" onclick="clear_calibration();">Clear Calibration (requires reset)</button>
+<button class="btn danger" onclick="clear_calibration();">Clear Calibration (requires power cycle)</button>
 
 <p>
-    <button class="btn complement" onclick="m.walk(2, 0, 1500, 50);" id="walkButton" disabled>Walk Forward</button> <button class="btn complement" onclick="m.stand_straight(2000);" id="zeroButton" disabled>Zero joints</button>
+  <button class="btn complement" onclick="m.walk(2, 0, 1500, 50);" id="walkButton" disabled>Walk Forward</button>
+  <button class="btn complement" onclick="m.stand_straight(2000);" id="zeroButton">Zero joints (Reset)</button>
 </p>
 </div>
 
