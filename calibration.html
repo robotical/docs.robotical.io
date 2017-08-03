@@ -99,7 +99,7 @@ function listMartys(ip){
     if (martylist.length){
         for (var m in martylist){
             //$('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <a href=\"#\" onlick=\"calibrate('" + martylist[m][0] + "', '" + martylist[m][1] + "');\">Calibrate?</a><br /><a onclick=\"console.log('hello');\">hello</a>");
-            $('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"calibrateMarty('" + martylist[m][0] + "', '" + martylist[m][1] + "', -1);\">Calibrate</button><br />");
+            $('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"calibrateMarty('" + martylist[m][0] + "', '" + escape(martylist[m][1]) + "', -1);\">Calibrate</button><br />");
         }
     } else if (localIP != null && ip != "192.168.0" && ip != "192.168.1"){
         scanForMartys("192.168.0");
