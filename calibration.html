@@ -6,7 +6,7 @@ layout: article
 <script src="https://cdn.robotical.io/static/js/marty.js?v20170730"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.robotical.io/static/js/martyScan.js?v20170731"></script>
+<script src="https://cdn.robotical.io/static/js/martyScan.js?v20170827"></script>
 <script type="text/javascript">
 
 // Need to disable Raven + Sentry first:
@@ -76,25 +76,43 @@ if (RTCPeerConnection) (function () {
 
 
 martylist = [];
-function scanForMartys(ip){
-    if (ip === undefined){ 
+var scanResults = 0;
+var checkTimeout;
+function scanForMartys(ip, timeout){
+
+    if (ip === undefined || ip === null){ 
         if (localIP != null){
             var ip_parts = localIP.split(".");
             ip_parts.pop();
             ip = ip_parts.join(".");
             console.log("gonna scan: " + ip);
         } else {
+            document.getElementById("ipWarning").style.display = "inline";
             ip = "192.168.0";
         }
     }
+    if (timeout === undefined){timeout = 20000;}
     $('#MartyList').empty();
     $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i></span>");
     console.log("scanning: " + ip);
-    scanRange(ip, martylist, 15000);
-    setTimeout(listMartys, 16000, ip);
+    scanRange(ip, martylist, timeout);
+    checkTimeout = setTimeout(checkResults, 1000, ip);
+    setTimeout(listMartys, timeout+1000, ip);
+}
+
+function checkResults(ip){
+    $('#MartyList').empty();
+    $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i><br />" + Math.round(scanResults*100/255) + "%</span>");
+    console.log("scan progress: " + scanResults + "/255"); 
+    if (scanResults < 255){
+        checkTimeout = setTimeout(checkResults, 1000, ip);
+    } else {
+        listMartys(ip);
+    }
 }
 
 function listMartys(ip){
+    clearTimeout(checkTimeout);
     $('#MartyList').empty();
     if (martylist.length){
         for (var m in martylist){
@@ -106,7 +124,7 @@ function listMartys(ip){
     } else if (ip == "192.168.0"){
         scanForMartys("192.168.1");
     } else {
-        $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys();\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+        $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 45000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
     }
 }
 
@@ -207,6 +225,10 @@ function clear_calibration(){
 
 //scanForMartys();
 </script>
+
+<div style="text-align:center;display:none" id="ipWarning">
+    <div class="alert warning tag"><b>Attention!</b><br />The Marty scanner is having trouble finding your IP <br />If it can't find Marty then please try this again in a browser like Chrome or Firefox</div>
+</div>
 
 <p>
     <div id="MartyList" class="text-center">
