@@ -124,7 +124,7 @@ function listMartys(ip){
     } else if (ip == "192.168.0"){
         scanForMartys("192.168.1");
     } else {
-        $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 45000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+        $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 60000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
     }
 }
 
