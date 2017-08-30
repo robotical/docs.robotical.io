@@ -432,7 +432,7 @@ For more info on the ROS Serial format see the [ROS Docs](/ros/)
 `ros_serial_formatter(topicID, *message, send)`
 {:.docsubitem#ros_serial_formatter}
 
-This function can thought of as a higher level of the `ros_command` function. It formats the `message` given into the [ROS Serial](/ros/) format.
+This function can thought of as a higher level of the `ros_command` function. It formats the `message` given into the [ROS Serial](http://wiki.ros.org/rosserial/Overview/Protocol) format.
 
 The function takes in the ROS topic ID, `topicID`, the `message` and returns the formatted message. If the `send` argument is True, `ros_command` is called with the formatted message.
 
