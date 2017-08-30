@@ -247,6 +247,11 @@ taking `duration` milliseconds to play.
 
 Writes a bytestream to the i2c port. The first byte should be the address, following from that the datagram follows standard i2c spec.
 
+`i2c_write_to_rick(address, byte_array)`
+{:.docsubitem#i2c_write_to_rick}
+
+Write a formatted bytestream to the i2c port. The bytestream is formatted in the ROS serial format.
+
 `get_battery_voltage()`
 {:.docsubitem#get_battery_voltage}
 
@@ -423,6 +428,21 @@ m.ros_command('\xff', '\xfe', '\x01', '\x00', '\xfe', '\x6f', '\x00', '\x00', '\
 
 For more info on the ROS Serial format see the [ROS Docs](/ros/)
 
+
+`ros_serial_formatter(topicID, *message, send)`
+{:.docsubitem#ros_serial_formatter}
+
+This function can thought of as a higher level of the `ros_command` function. It formats the `message` given into the [ROS Serial](/ros/) format.
+
+The function takes in the ROS topic ID, `topicID`, the `message` and returns the formatted message. If the `send` argument is True, `ros_command` is called with the formatted message.
+
+
+`keyframe(time, num_of_msgs, msgs)`
+{:.docsubitem#keyframe}
+
+Takes in information about movements and generates a keyframe, which is returned as a list of bytes. Keyframe is the format used to send movement messages to Marty. A keyframe consists of the duration of the movement sequence, the IDs of the motors to be moved as well as their desired positions.
+
+`time` is given in seconds. `num_of_msgs` is the number of commands to be sent to the motors. These commands are the `msgs`, which follows the format: [(ID CMD), (ID CMD), etc...]
 
 `get_chatter()`
 {:.docsubitem#get_chatter}
