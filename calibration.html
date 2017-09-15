@@ -3,7 +3,7 @@ title: Marty Calibration
 layout: article
 ---
 
-<script src="https://cdn.robotical.io/static/js/marty.js?v20170730"></script>
+<script src="https://cdn.robotical.io/static/js/marty.js?v20170915"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.robotical.io/static/js/martyScan.js?v20170827"></script>
@@ -178,7 +178,8 @@ function calibrateMarty(ip, name, stage){
             console.log("battery: " + battery);
             break;
         case 2:
-            for (let i=0; i<9; i++){        
+            var i = 0;
+            for (i=0; i<9; i++){        
                 var sname = "mp" + i;
                 var enabled = m.get_sensor("enabled" + i);
                 var mp = m.get_sensor(sname);
