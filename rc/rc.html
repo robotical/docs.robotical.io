@@ -21,14 +21,16 @@
   <style>
 #controller{
   text-align: center;
+  width:100%;
+  height:100%;
 }
 
 #buttons{
-  display: inline-block;
+  display: inline-table;
 }
 
 #arrows{
-  display: inline-block;
+  display: inline-table;
 }
 
 .rc-button {
@@ -383,13 +385,15 @@ function scanForMartys(ip, timeout){
     console.log("scanning: " + ip);
     scanRange(ip, martylist, timeout);
     checkTimeout = setTimeout(checkResults, 1000, ip);
-    setTimeout(listMartys, timeout+1000, ip);
+    //setTimeout(listMartys, timeout+1000, ip);
 }
 
 function checkResults(ip){
     $('#MartyList').empty();
     $('#MartyList').append("<p><span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i><br />" + Math.round(scanResults*100/255) + "%</span></p>");
-    listMartys(ip);
+    if (martylist.length){
+      listMartys(ip);
+    }
     console.log("scan progress: " + scanResults + "/255"); 
     if (scanResults < 255){
         checkTimeout = setTimeout(checkResults, 1000, ip);
