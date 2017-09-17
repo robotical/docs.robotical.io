@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<head>
+  <title>Robotical :: Remote Control</title>
+
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffda61">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.robotical.io/static/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="nipplejs.js"></script>
+  <script type="text/javascript" src="https://cdn.robotical.io/static/js/marty.js?v=20170915"></script>
+  <script src="https://cdn.robotical.io/static/js/martyScan.js?v20170915"></script>
+
+  <style>
+#controller{
+  text-align: center;
+}
+
+#buttons{
+  display: inline-block;
+}
+
+#arrows{
+  display: inline-block;
+}
+
+.rc-button {
+  font-size:2em;
+  border-radius: 1.0rem;
+  display: table-cell;
+  padding: 0.1em 0.1em;
+  margin: 0.1em 0.1em;
+  color: #222;
+  background-color: #ffda61;
+  border-color: #fabf00;
+  box-shadow: none;
+  border:none;
+  width:25vw;
+  height:30vh;
+}
+
+.arrow {
+  margin: 0.5em;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 7vw solid transparent;
+  border-right: 7vw solid transparent;
+  border-bottom: 20vh solid #ffda61;
+}
+
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 7vw solid transparent;
+  border-right: 7vw solid transparent;
+  border-top: 20vh solid #ffda61;
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 13vh solid transparent;
+  border-bottom: 13vh solid transparent;
+  border-left: 11vw solid #ffda61;
+}
+
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-top: 13vh solid transparent;
+  border-bottom: 13vh solid transparent; 
+  
+  border-right:11vw solid #ffda61; 
+}
+
+
+@media all and (orientation:portrait){
+  .rc-button{
+    width:45vw;
+    height: 15vh;
+  }
+  .arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 16vw solid transparent;
+    border-right: 16vw solid transparent;
+    border-bottom: 13vh solid #ffda61;
+  }
+
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 16vw solid transparent;
+    border-right: 16vw solid transparent;
+    border-top: 13vh solid #ffda61;
+  }
+
+  .arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 9vh solid transparent;
+    border-bottom: 9vh solid transparent;
+    border-left: 25vw solid #ffda61;
+  }
+
+  .arrow-left {
+    width: 0;
+    height: 0;
+    border-top: 9vh solid transparent;
+    border-bottom: 9vh solid transparent; 
+    border-right:25vw solid #ffda61; 
+  }
+}
+
+.overlay{
+  display:table; width:100%;height:100%;vertical-align:middle;text-align:center;position: fixed;top: 0;left: 0;z-index:1000;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+}
+
+.centerMessage{
+  width: 100%;
+  height: 100%;
+  display:table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#MartyList{
+
+}
+</style>
+</head>
+
+<body>
+  <script type="text/javascript">
+    var m;
+    function setup(marty){
+      marty.enable_motors();
+    }
+
+    function forward(marty) {
+      marty.walk(1, 0, 1500, 40, "any");
+    }
+
+    function backward(marty) {
+      marty.walk(1, 0, 1500, -40, "any");
+    }
+
+    function right(marty) {
+      marty.sidestep("right", 1, 1500, 100);
+    }
+
+    function left(marty) {
+      marty.sidestep("left", 1, 1500, 100);
+    }
+
+    function dance(marty){
+      marty.circle_dance("left", 1500);
+    }
+
+    var eyebrow_iterator = 0;
+    function eyebrows(marty){
+      var eyebrow_pos = [0, 70, -20, -50];
+      eyebrow_iterator++;
+      if (eyebrow_iterator>=eyebrow_pos.length){
+        eyebrow_iterator = 0;
+      }
+      marty.move_joint(8, eyebrow_pos[eyebrow_iterator], 100);
+    }
+
+    function right_arm(marty){
+      marty.move_joint(7, -127, 300);
+      marty.move_joint(7, 127, 300);
+      marty.move_joint(7, 0, 300);
+    }
+
+    function left_arm(marty){
+      marty.move_joint(6, -127, 300);
+      marty.move_joint(6, 127, 300);
+      marty.move_joint(6, 0, 300);
+    }
+
+    function right_foot(marty){
+      marty.kick("right", 0, 2000);
+    }
+
+    function left_foot(marty){
+      marty.kick("left", 0, 2000);
+    }
+
+  </script>
+
+
+<div id="controller">
+  <div id="buttons">
+    <button class="rc-button" id="dance" onclick="dance(m)"> Dance</button>
+    <button class="rc-button" id="wiggle_eyes" onclick="eyebrows(m)">Eyes</button><br />
+    <button class="rc-button" id="left_foot" onclick="left_foot(m)">Kick Left<br /> Foot</button>
+    <button class="rc-button" id="right_foot" onclick="right_foot(m)">Kick Right<br /> Foot</button><br />
+    <button class="rc-button" id="left_arm" onclick="left_arm(m)">Move Left<br /> Arm</button>
+    <button class="rc-button" id="right_arm" onclick="right_arm(m)">Move Right<br /> Arm</button>
+
+
+  </div>
+
+  <div id="arrows">
+    <table>
+      <tr>
+        <td></td>
+        <!--<td><input class="arrow" type="image" id="up" src="up.svg" alt="Up Arrow" onclick="forward(m)"/></td>-->
+        <td><div class="arrow arrow-up" onclick="forward(m)"> </div></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><div class="arrow arrow-left" onclick="left(m)"> </div></td>
+        <td><div id="static" style="position:relative;width:100%; height:100%"> </div></td>
+        <td><div class="arrow arrow-right" onclick="right(m)"> </div></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><div class="arrow arrow-down" onclick="backward(m)"> </div></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="3">    <button class="rc-button" style="height:auto;" onclick="m.hello(1)"> Get Ready</button>
+    </table>
+  </div>
+</div>
+
+<script>
+    var static = nipplejs.create({
+        zone: document.getElementById('static'),
+        mode: 'static',
+        position: {left: '50%', top: '50%'},
+        color: 'blue'
+    });
+
+    function printPos(){
+      console.log(static[0].frontPosition);
+    }
+
+    /*static.on('0:move', function(evt, moveData){
+      //console.log(moveData);
+      console.log(static[0].frontPosition);
+    })*/
+
+    var joy_move_interval;
+  function joy_move(){
+    var step_length = 0-static[0].frontPosition.y;
+    var turn = -2*static[0].frontPosition.x;
+    var step_time = 1500;
+    console.log("walk: step length " + step_length + ", turn: " + turn + ", step_time " + step_time);
+    m.walk(1, turn, step_time, step_length, "any");
+    joy_move_interval = setTimeout(joy_move, step_time);
+  }
+
+    static.on('0:start', function(evt, data){
+      console.log("start");
+      joy_move_interval = setTimeout(joy_move, 200);
+    })
+
+    static.on('0:end', function(evt, data){
+      clearTimeout(joy_move_interval);
+      console.log('end');
+    })
+
+    //setInterval(printPos, 500);
+</script>
+
+<div class="overlay" id="messageOverlay">
+
+  <div class="centerMessage" style="text-align:center;display:none" id="ipWarning">
+      <div class="alert warning tag"><b>Attention!</b><br />The Marty scanner is having trouble finding your IP <br />If it can't find Marty then please try this again in a browser like Chrome or Firefox</div>
+  </div>
+
+  <div class="centerMessage" style="display:none" id="messageWarning">
+      <div class="alert danger tag" style="height:100px"><b>Warning!</b><br />Marty might move quickly - please move fingers away!</div>
+  </div>
+
+  <div class="centerMessage" id="MartyList">
+    <p><button onclick="scanForMartys();" class="btn bitbigger rounded"><i class="fa fa-fw fa-search"></i> &nbsp; Scan for Martys</button></p>
+    <p>Or add by IP: <input type="text" id="martyIp"> <button class="btn" onclick="add_marty_by_ip();">Add</button></p>
+  </div>
+
+
+</div>
+
+
+<script type="text/javascript">
+// Need to disable Raven + Sentry first:
+try {
+  Raven.uninstall();
+} catch (e) {
+  console.log(e);
+}
+
+// local IP discovery tool from net.ipcalf.com
+
+var localIP = null;
+
+// NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
+var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+
+if (RTCPeerConnection) (function () {
+    var rtc = new RTCPeerConnection({iceServers:[]});
+    if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
+        rtc.createDataChannel('', {reliable:false});
+    };
+    
+    rtc.onicecandidate = function (evt) {
+        // convert the candidate to SDP so we can run it through our general parser
+        // see https://twitter.com/lancestout/status/525796175425720320 for details
+        if (evt.candidate) grepSDP("a="+evt.candidate.candidate);
+    };
+    rtc.createOffer(function (offerDesc) {
+        grepSDP(offerDesc.sdp);
+        rtc.setLocalDescription(offerDesc);
+    }, function (e) { console.warn("offer failed", e); });
+    
+    
+    var addrs = Object.create(null);
+    addrs["0.0.0.0"] = false;
+    function updateDisplay(newAddr) {
+        if (newAddr in addrs) return;
+        else addrs[newAddr] = true;
+        var displayAddrs = Object.keys(addrs).filter(function (k) { return addrs[k]; });
+        document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
+    }
+    
+    function grepSDP(sdp) {
+        var hosts = [];
+        sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
+            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+                    addr = parts[4],
+                    type = parts[7];
+                //if (type === 'host') updateDisplay(addr);
+                console.log("1: addr: " + addr + " || type: " + type);
+                if (type === 'host' && addr != "0.0.0.0" && addr.length < 16){
+                    localIP = addr;
+                }
+            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+                var parts = line.split(' '),
+                    addr = parts[2];
+                console.log("2: addr: " + addr);
+                if (addr != "0.0.0.0" && addr.length < 16){ localIP = addr;}
+                updateDisplay(addr);
+            }
+        });
+    }
+})();
+
+martylist = [];
+var scanResults = 0;
+var checkTimeout;
+function scanForMartys(ip, timeout){
+
+    if (ip === undefined || ip === null){ 
+        if (localIP != null){
+            var ip_parts = localIP.split(".");
+            ip_parts.pop();
+            ip = ip_parts.join(".");
+            console.log("gonna scan: " + ip);
+        } else {
+            document.getElementById("ipWarning").style.display = "inline";
+            ip = "192.168.0";
+        }
+    }
+    if (timeout === undefined){timeout = 20000;}
+    $('#MartyList').empty();
+    $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i></span>");
+    console.log("scanning: " + ip);
+    scanRange(ip, martylist, timeout);
+    checkTimeout = setTimeout(checkResults, 1000, ip);
+    setTimeout(listMartys, timeout+1000, ip);
+}
+
+function checkResults(ip){
+    $('#MartyList').empty();
+    $('#MartyList').append("<p><span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i><br />" + Math.round(scanResults*100/255) + "%</span></p>");
+    listMartys(ip);
+    console.log("scan progress: " + scanResults + "/255"); 
+    if (scanResults < 255){
+        checkTimeout = setTimeout(checkResults, 1000, ip);
+    } else {
+        $('#MartyList').empty();
+        listMartys(ip);
+    }
+}
+
+function listMartys(ip){
+    clearTimeout(checkTimeout);
+//    $('#MartyList').empty();
+    if (martylist.length){
+        for (var m in martylist){
+            //$('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <a href=\"#\" onlick=\"calibrate('" + martylist[m][0] + "', '" + martylist[m][1] + "');\">Calibrate?</a><br /><a onclick=\"console.log('hello');\">hello</a>");
+            $('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"selectMarty('" + martylist[m][0] + "', '" + escape(martylist[m][1]) + "', -1);\">Select</button><br />");
+        }
+    } else if (localIP != null && ip != "192.168.0" && ip != "192.168.1"){
+        scanForMartys("192.168.0");
+    } else if (ip == "192.168.0"){
+        scanForMartys("192.168.1");
+    } else {
+        $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 60000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+    }
+}
+
+
+var mlist = [];
+function addMartyCallback(){
+    if (mlist.length > 0){
+        selectMarty(mlist[0][0], mlist[0][1], -1);
+    } else {
+        var ip = document.getElementById("martyIp").value;
+        $('#MartyList').empty();
+        $('#MartyList').append("No Marty found at" + ip + " :-(. <button class=\"btn warning\" onclick=\"console.log('scanning...');scanForMartys();\">Re-scan?</button><br />Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+    }
+}
+
+function add_marty_by_ip(){
+    mlist = [];
+    sendRequest(document.getElementById("martyIp").value, mlist);
+    setTimeout(addMartyCallback, 3000);
+}
+
+function selectMarty(ip, name, stage){
+    switch (stage){
+        case -1:
+            document.getElementById("MartyList").style.display = "none";
+            document.getElementById("messageWarning").innerHTML = "<div class=\"alert danger tag\"><b>Warning!</b><br />Marty might move quickly - please move fingers away!</div>";
+            document.getElementById("messageWarning").style.display = "table-cell";
+            setTimeout(function(){selectMarty(ip, name, 0);}, 2000);
+            break;
+        case 0:
+            m = new Marty(ip, name);
+            // allow time for connection
+            setTimeout(function(){selectMarty(ip, name, 1);}, 1000);
+            break;
+        case 1:
+            var battery = m.get_sensor("battery");
+            if (battery === null){
+                setTimeout(function(){selectMarty(ip, name, 1);}, 500);
+            } else if (battery < 7.6){
+                document.getElementById("messageWarning").innerHTML = "MARTY'S BATTERY IS LOW! :-( <br /> please plug in the charger and then try again in a few mins";
+            } else {
+                document.getElementById("messageWarning").style.display = "none";
+                // TODO: check for successful connection
+                m.enable_motors();
+                m.hello();
+                m.lifelike_behaviours(false);
+                document.getElementById("messageOverlay").style.visibility = "hidden";
+            }
+            console.log("battery: " + battery);
+            break;
+    }
+
+}
+
+</script>
+</body>
