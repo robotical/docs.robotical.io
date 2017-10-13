@@ -1,10 +1,10 @@
----
+<!---
 title: Physical Connection Guide
 layout: article
 breadcrumbs:
  - name: 'Hardware'
    url: '/hardware'
----
+--->
 
 
 **TODO:** be very clear that `M_GND` pins should *not* be connected together ever and that

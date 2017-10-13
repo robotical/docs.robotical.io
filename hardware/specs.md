@@ -4,6 +4,9 @@ breadcrumbs:
  - name: 'Hardware'
    url: '/hardware'
 layout: article
+versions:
+ - name: 'Rick Control Poard PCB'
+   value: 'v.1.0.0'
 ---
 
 
@@ -18,7 +21,12 @@ has a nominal charged voltage **8.4v**. The battery's capacity is **1400mAh**.
 The supplied cable can provide adequate voltage to charge the battery through rick, but
 using an equivalent mains-powered 9v DC charger the battery can charge faster.
 For the fastest charging an external LiPo battery charger, commonly used for Remote-Control applications
-can be used to charge the battery.
+can be used to charge the battery, but you do this at your own risk, and should *always* read
+the charger manufacturer's instructions.
+
+Our batteries are equipped with a **Low Voltage Cutout** safety feature, meaning that when discharged below
+a level of around **6v** the battery will cut-out and register 0V. The charger on-board Rick can
+recover the battery by slowly trickle charging it.
 
 Lithium polymer batteries (LiPo) can be dangerous if abused. Do not overcharge the battery
 or discharge it below the minimum safe voltage of **6.4v**. Don't disassemble or pierce the

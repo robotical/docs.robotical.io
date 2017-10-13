@@ -9,8 +9,6 @@ versions:
    value: 'v.1.0.0'
 ---
 
-**TODO:** Board layout, serial, I2C and WiFi interfaces
-{:.text-danger}
 
 Schematics
 ===

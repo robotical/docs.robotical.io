@@ -45,7 +45,7 @@ kramdown:
 
 permalink: pretty
 highlighter: rouge
-gems: [jekyll-paginate]
+plugins: [jekyll-paginate]
 sass:
   style: compressed
 
