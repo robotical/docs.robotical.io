@@ -53,6 +53,7 @@ Ports & Services
 | `80`      | "Marty Setup" functionality, JavaScript-based service discovery |
 | `81`      | Websockets                                                      |
 | `4000`    | UDP-based service discovery                                     |
+{:.table}
 
 
 *Managed* sockets follow the below socket API, while *Unmanaged* sockets are given raw
@@ -98,7 +99,7 @@ Currently there are 4 types of sensor queryable: Battery voltage, Accelerometer,
 | *Chatter*        | 0x05       | *(undefined)*     | *Not applicable*    | int32 length, string |
 | *Motor Position* | 0x06       | [0x00, ..., 0x08] | Motors 0 through 8  | int8        |
 | *Motor Enabled*  | 0x07       | [0x00, ..., 0x08] | Motors 0 through 8  | bool        |
-{:.tt}
+{:.tt.table}
 
 Battery, Accelerometer, Motor current, and GPIO readings returned after a `GET` request are a 4 Byte Little-Endian float, i.e. the
 LSB is first, the MSB last.
@@ -164,7 +165,7 @@ Here is a summary table of the commands, more detail on specific functions is be
 | [*mute\_esp\_serial*](#cmdMuteESPSerial)    | 1    | 0x21     | *-none-*                           |
 | [*clear\_calibration*](#cmdClearCalibration)   | 1    | 0xFE     | *-none-*                        |
 | [*save\_calibration*](#cmdSaveCalibration)    | 1    | 0xFF     | *-none-*                         |
-{:.tt}
+{:.tt.table}
 
 <br>
 
@@ -177,7 +178,7 @@ Here is a summary table of the commands, more detail on specific functions is be
 | 0x02 | Forward  |
 | 0x03 | Backward |
 | 0x04 | *Any*    |
-{:.tt}
+{:.tt.table}
 
 ### <a name="cmdMoveTime"></a>move_time
 
@@ -190,7 +191,7 @@ Move time specifies the number of milliseconds for a movement to take, and is al
 |:--------|:---|
 | 0       | Default, move joints to zero position and wiggle eyebrows |
 | 1       | Try to force enable. If Marty is out of position, this will try to<br /> ensure that Marty ends up centred with motors enabled. |
-{:.tt}
+{:.tt.table}
 
 #### <a name="cmdLean"></a>`lean`
 *[`uint8 direction`](#cmdDirectionCodes)`, int8 amount, `[`uint16 move_time`](#cmdMoveTime)*
@@ -256,7 +257,7 @@ play_sound will make the activate the buzzer on Marty, it'll start at `freq_star
 | 3    | Clear everything, and make robot return to zero                        |
 | 4    | Pause, but keep servo and movequeue intact and motors enabled          |
 | 5    | As 4, but disable motors too                                           |
-{:.tt}
+{:.tt.table}
 
 #### <a name="cmdMoveJoint"></a>`move_joint`
 *`uint8 joint_id, int8 position, `[`uint16 move_time`](#cmdMoveTime)*
@@ -275,7 +276,7 @@ play_sound will make the activate the buzzer on Marty, it'll start at `freq_star
 | 6        | Left arm                   |
 | 7        | Right arm                  |
 | 8        | Eyes                       |
-{:.tt}
+{:.tt.table}
 
 
 #### <a name="cmdEnableMotors"></a>`enable_motors`
@@ -398,7 +399,7 @@ Note that these parameters are not persistent. They are stored in RAM and will b
 | 2        | `uint16_t topicID, uint16_t period` | Rostopic publishing period <br />Period is specified in milliseconds<br />topicID is the rosserial topic ID, so: Accel: 104; GPIO: 106; Battery: 107; Motor currents: 108; Servo positions: 113 |
 | 3        | `uint8 jointID, float32 threshold` | Change the instantaneous current limit for a particular motor. Currently strong motors have a threshold of 0.022 by default, and weak motors of 0.017 |
 | 4        | `uint8 jointID, float32 threshold` | Change the threshold on the leaky integrator for continuous overcurrent detection. Currently strong motors have a threshold of 12.0 by default, and weak motors of 9.0 |
-{:.tt}
+{:.tt.table}
 
 #### <a name="cmdGetFirmwareVersion"></a>`get_firmware_version`
 *-no parameters-*
