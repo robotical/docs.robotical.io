@@ -103,33 +103,39 @@ function scanForMartys(ip, timeout){
     console.log("scanning: " + ip);
     scanRange(ip, martylist, timeout);
     checkTimeout = setTimeout(checkResults, 1000, ip);
-    setTimeout(listMartys, timeout+1000, ip);
+    //setTimeout(listMartys, timeout+1000, ip);
 }
 
 function checkResults(ip){
     $('#MartyList').empty();
-    $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i><br />" + Math.round(scanResults*100/255) + "%</span>");
+    $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys (" + ip +") &nbsp; <i class=\"fa fa-spin fa-spinner\"></i><br />" + Math.round(scanResults*100/255) + "%</span><p>");
     console.log("scan progress: " + scanResults + "/255"); 
     if (scanResults < 255){
+        listMartys(ip, false);
         checkTimeout = setTimeout(checkResults, 1000, ip);
     } else {
-        listMartys(ip);
+        clearTimeout(checkTimeout);
+        $('#MartyList').empty();
+        listMartys(ip, true);
+        if (!martylist.length){
+            if (localIP != null && ip != "192.168.0" && ip != "192.168.1"){
+                scanForMartys("192.168.0");
+            } else if (ip == "192.168.0"){
+                scanForMartys("192.168.1");
+            }
+        }
     }
 }
 
-function listMartys(ip){
-    clearTimeout(checkTimeout);
-    $('#MartyList').empty();
-    if (martylist.length){
+function listMartys(ip, finishedRange){
+    //clearTimeout(checkTimeout);
+    //$('#MartyList').empty();
+     if (martylist.length){
         for (var m in martylist){
             //$('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <a href=\"#\" onlick=\"calibrate('" + martylist[m][0] + "', '" + martylist[m][1] + "');\">Calibrate?</a><br /><a onclick=\"console.log('hello');\">hello</a>");
             $('#MartyList').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"calibrateMarty('" + martylist[m][0] + "', '" + escape(martylist[m][1]) + "', -1);\">Calibrate</button><br />");
         }
-    } else if (localIP != null && ip != "192.168.0" && ip != "192.168.1"){
-        scanForMartys("192.168.0");
-    } else if (ip == "192.168.0"){
-        scanForMartys("192.168.1");
-    } else {
+    } else if (finishedRange){
         $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 60000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
     }
 }
