@@ -1,0 +1,172 @@
+---
+title: Marty Dashboard
+layout: article
+---
+
+<script src="https://content.robotical.io/static/js/marty.js?v20180416"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://content.robotical.io/static/js/martyScan.js?v20170827"></script>
+<script type="text/javascript">
+
+// Need to disable Raven + Sentry first:
+try {
+  Raven.uninstall();
+} catch (e) {
+  console.log(e);
+}
+
+// local IP discovery tool from net.ipcalf.com
+
+var localIP = null;
+
+// NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
+var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+
+if (RTCPeerConnection) (function () {
+    var rtc = new RTCPeerConnection({iceServers:[]});
+    // Edge browser has partial implementation and currently (2018-03-07) no createDataChannel
+    try{
+        if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
+            rtc.createDataChannel('', {reliable:false});
+        };
+    }
+    catch(err){
+        console.log(err.message);
+    }
+    
+    rtc.onicecandidate = function (evt) {
+        // convert the candidate to SDP so we can run it through our general parser
+        // see https://twitter.com/lancestout/status/525796175425720320 for details
+        if (evt.candidate) grepSDP("a="+evt.candidate.candidate);
+    };
+    rtc.createOffer(function (offerDesc) {
+        grepSDP(offerDesc.sdp);
+        rtc.setLocalDescription(offerDesc);
+    }, function (e) { console.warn("offer failed", e); });
+    
+    
+    var addrs = Object.create(null);
+    addrs["0.0.0.0"] = false;
+    function updateDisplay(newAddr) {
+        if (newAddr in addrs) return;
+        else addrs[newAddr] = true;
+        var displayAddrs = Object.keys(addrs).filter(function (k) { return addrs[k]; });
+        document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
+    }
+    
+    function grepSDP(sdp) {
+        var hosts = [];
+        sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
+            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+                    addr = parts[4],
+                    type = parts[7];
+                //if (type === 'host') updateDisplay(addr);
+                console.log("1: addr: " + addr + " || type: " + type);
+                if (type === 'host' && addr != "0.0.0.0" && addr.length < 16){
+                    localIP = addr;
+                }
+            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+                var parts = line.split(' '),
+                    addr = parts[2];
+                console.log("2: addr: " + addr);
+                if (addr != "0.0.0.0" && addr.length < 16){ localIP = addr;}
+                updateDisplay(addr);
+            }
+        });
+    }
+})();
+
+
+
+
+martylist = [];
+var scanResults = 0;
+var checkTimeout;
+var m;
+function scanForMartys(ip, timeout){
+
+    if (ip === undefined || ip === null){ 
+        if (localIP != null){
+            var ip_parts = localIP.split(".");
+            ip_parts.pop();
+            ip = ip_parts.join(".");
+            console.log("gonna scan: " + ip);
+        } else {
+            document.getElementById("ipWarning").style.display = "inline";
+            ip = "192.168.0";
+        }
+    }
+    if (timeout === undefined){timeout = 20000;}
+    $('#MartyList').empty();
+    $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys &nbsp; <i class=\"fa fa-spin fa-spinner\"></i></span>");
+    console.log("scanning: " + ip);
+    scanRange(ip, martylist, timeout);
+    checkTimeout = setTimeout(checkResults, 1000, ip);
+    //setTimeout(listMartys, timeout+1000, ip);
+}
+
+function checkResults(ip){
+    $('#MartyList').empty();
+    if (scanResults < 255){
+        checkTimeout = setTimeout(checkResults, 1000, ip);
+        $('#MartyList').append("<span class=\"bitbigger tt muted\">Scanning for Martys (" + ip +") &nbsp; <i class=\"fa fa-spin fa-spinner\"></i><br />" + Math.round(scanResults*100/255) + "%</span><p>");
+    } else {
+        clearTimeout(checkTimeout);
+        if (!martylist.length){
+            if (localIP != null && ip != "192.168.0" && ip != "192.168.1"){
+                scanForMartys("192.168.0");
+                return;
+            } else if (ip == "192.168.0"){
+                scanForMartys("192.168.1");
+                return;
+            } else {
+                $('#MartyList').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 60000);\">Re-scan?</button>");
+            }
+        }
+    }
+    var martylist_html = "<table style='margin:5px' width='100%'><tr><td width=\"35%\"><em>Name</em></td><td width=\"20%\"><em>IP</em></td><td width=\"20%\"><em>WiFi Reset</em></td><td width=\"30%\" colspan=\"2\"><em>Battery</em></td></tr>";
+    for (var m in martylist){
+        martylist_html += "<tr><td>" + martylist[m][1] + "</td><td>" + martylist[m][0] + "</td><td><button class=\"btn smaller danger\" onclick=\"resetWiFi('" + martylist[m][0] + "', '" + escape(martylist[m][1]) + "');\">Reset WiFi</button></td><td><div id=\"battery" + m + "\"></div></td><td><button class=\"btn smaller success\" onclick=\"checkBattery(" + m + ", '" + martylist[m][0] + "');\">Check Battery</button></td></tr>";
+    }  
+    martylist_html += "</table>";
+    console.log("scan progress: " + scanResults + "/255"); 
+
+    $('#MartyList').append(martylist_html);
+}
+
+
+function resetWiFi(ip, name){
+    if (confirm("Are you sure you want to reset the wifi on " + name + " (" + ip + ")?")){
+        m = new Marty(ip, name);
+        setTimeout(function(){m.reset_wifi();}, 1000);
+    }
+}
+
+function checkBattery(id, ip){
+    m = new Marty(ip, "Marty");
+    setTimeout(function(){
+        m.get_sensor("battery");
+        setTimeout(function(){
+            document.getElementById("battery" + id).innerHTML = Math.round(100*m.get_sensor("battery"))/100 + 'v';
+            //alert('battery' + id +': ' + Math.round(100*m.get_sensor("battery"))/100 + 'v');
+        }, 500);
+    }, 1000);
+}
+
+
+</script>
+
+<div style="text-align:center;display:none" id="ipWarning">
+    <div class="alert warning tag"><b>Attention!</b><br />The Marty scanner is having trouble finding your IP <br />If it can't find Marty then please try this again in a browser like Chrome or Firefox</div>
+</div>
+
+<p>
+    <div id="MartyList" class="text-center">
+      <button onclick="scanForMartys();" class="btn bitbigger rounded"><i class="fa fa-fw fa-search"></i> &nbsp; Scan for Martys</button>
+    </div>
+</p>
+
+
+
