@@ -10,7 +10,9 @@ a program from blocks.
 
 
 <div class="center bitbigger padder">
-<a href="http://docs.robotical.io/scratchx/?url=http://robotical.github.io/scratchx/scratch_extensions/martyExtended.js#scratch" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch &times; Marty</a>
+<p><a href="http://scratchx.org/?url=http://robotical.github.io/scratchx/scratch_extensions/martyExtended.js#scratch" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch &times; Marty</a></p>
+<p><a href="http://docs.robotical.io/scratchx/?url=http://robotical.github.io/scratchx/scratch_extensions/martyExtended.js#scratch" class="btn rounded warning smaller" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Mirror (if above link doesn't work)</a></p>
+
 </div>
 
 Scratch needs to connect to Marty over your WiFi network to send instructions, so Marty must be on your WiFi network. If you haven't already, then check out the [WiFi setup guide](https://robotical.io/learn/article/Marty%20Setup%2C%20Calibration%20%26%20Troubleshooting%20Guide/WiFi%20Setup)
@@ -19,6 +21,7 @@ When you open Scratch, it'll try and find Martys on your network. Have a look at
 
 <div class="center bitbigger padder">
 <a href="https://robotical.io/learn/article/Get%20Started%20with%20Scratch/Introduction" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Getting started with Scratch</a>
+
 &nbsp;&nbsp;
 <!--
 TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
