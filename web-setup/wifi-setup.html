@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Marty Scanner</title>
+
+
+    <script src="js/marty.js"></script>
+  <script src="js/martyScan.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
+
+  <script>
+function pingESP(){
+  $.ajax({
+        type:'GET',
+        url:"http://192.168.4.1/wifilist", 
+        success:function(data) {
+            // Something replied!
+            console.log(data);
+            
+
+        },
+        cache: false,
+        error:function(jqXHR, textStatus, errorThrown) {
+            // Nothing there
+            //$('#response').append("[ ] " + requestIp + "<br/>");
+            if (typeof scanResults === "number"){
+                scanResults++;
+            }
+        },
+        timeout: 2000 // we want to give the ESP a fair chance of replying
+    });
+}
+
+pingESP();
+  </script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+    .overlay{
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #37abc8;
+      z-index: 100;
+    }
+    #overlay-content{
+      
+    }
+
+    .step-content{
+      display:inline-table;
+      vertical-align: middle;
+      color:#ececec;
+      font-size: 20pt;	
+    }
+
+    .statusBox{
+    	font-size:1rem;
+    	border:0.1rem solid #000000;
+    	text-align:center;
+    	display:inline-table;
+    	vertical-align: middle;
+    	width:100%;
+    	padding-top: 1rem;
+    	padding-bottom: 1rem;
+    }
+
+    .statusOk {
+    	background-color: #d7f4d7ff;
+    	color: #000000;
+    }
+
+    .statusError {
+    	background-color: #e9afafff;
+    	color: #000000;
+
+    }
+
+  </style>
+</head>
+<body>
+  <div class="overlay" id="connect-screen">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="overlay-content" class="step-content">
+            Hello
+
+            <input type="button" onclick="document.getElementById('setupWindow').src='http://192.168.4.1'" value="Setup">
+          </div>
+
+          <iframe id="setupWindow" width="60%" height="60%"></iframe>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Marty Scanner</title>
+
+
+    <script src="js/marty.js"></script>
+  <script src="js/martyScan.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
+
+  <script type="text/javascript">
+
+// query string parsing
+function parse_query_string(query) {
+  var vars = query.split("&");
+  var query_string = {};
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    var key = decodeURIComponent(pair[0]);
+    var value = decodeURIComponent(pair[1]);
+    // If first entry with this name
+    if (typeof query_string[key] === "undefined") {
+      query_string[key] = decodeURIComponent(value);
+      // If second entry with this name
+    } else if (typeof query_string[key] === "string") {
+      var arr = [query_string[key], decodeURIComponent(value)];
+      query_string[key] = arr;
+      // If third or later entry with this name
+    } else {
+      query_string[key].push(decodeURIComponent(value));
+    }
+  }
+  return query_string;
+}
+
+var query_string = window.location.search.substr(1);
+var parsed_qs = parse_query_string(query_string);
+console.log(parsed_qs.ip);
+// ----------------
+
+var m;
+var motorStateInterval;
+var motorStateDisplay = null;
+var saveCalibrationButton = null;
+var waitTimeout = null;
+var motorAdvancedDisplay = null;
+
+function connectToMarty(ip, name, state){
+	var chatter;
+	var battery;
+	switch (state){
+		case 0:
+			$('#overlay-content').empty();
+    		$('#overlay-content').append("Connecting to " + name + "...<br>");
+    		m = new Marty(ip, name);
+    		setTimeout(connectToMarty, 1500, ip, name, 1);
+    		break;
+    	case 1:
+    		// ws readyState is 0 for connecting, 1 for connected, 2 for closing, and 3 for closed.
+    		// anything greater than 1 means an error has occurred - e.g. Marty not found
+    		if (m.socket.readyState > 1){
+    			$('#overlay-content').append("<br>Error connecting to Marty.<br/>Please check the IP address and that there is no firewall blocking port 81");
+    			return;
+    		}
+    		chatter = m.get_sensor('chatter');
+    		if (chatter === null || chatter.substr(0,1) != "v"){
+    			setTimeout(connectToMarty, 500, ip, name, 1);
+    			m.get_firmware_version();
+    		} else {
+				$('#overlay-content').append('<br >Marty found.<br >Firmware version: ' + chatter + '<br >');
+				battery = m.get_sensor('battery');
+				m.fall_protection(false);
+				setTimeout(connectToMarty, 1500, ip, name, 2);
+				// activate state monitor
+				motorStateInterval =  setInterval(motorStateMonitor,500);
+			}
+    		
+    		break;
+    	case 2:
+    		battery = m.get_sensor('battery');
+    		if (battery === null){
+    			setTimeout(connectToMarty, 500, ip, name, 2);
+    			return;
+    		}
+    		$('#overlay-content').append('Battery voltage: ' + Math.round(100*battery)/100 + 'v<br >');
+    		if (battery < 7.4){
+    			$('#overlay-content').append('That\'s a bit low. Please charge your Marty and try again shortly<br >');
+    			return;
+    		} else if (battery < 7.8){
+    			$('#overlay-content').append('Should be just charged enough for calibration<br >');
+    		} else {
+    			$('#overlay-content').append('That\'s very well charged<br >');
+    		}
+    		setTimeout(function(){
+    			$('#overlay-content').append('<br>Activating Eyebrows...');	
+    			setTimeout(activateMarty, 2000, 0);
+    		},1000);
+	}
+}
+
+function activateMarty(state){
+	var joints = ['Left hip', 'Left twist', 'Left knee', 'Right hip', 'Right twist', 'Right knee', 'Left arm', 'Right arm', 'Eyes'];
+	var motorID;
+	var chatter;
+	var acc0;
+	switch (state){
+		case 0:
+			document.getElementById("connect-screen").style.visibility = 'hidden';
+			document.getElementById("eyes-screen").style.visibility = 'visible';
+			document.getElementById("save-calibration-screen").style.visibility = 'hidden';
+			document.getElementById("no-walk-screen").style.visibility = 'hidden';
+			document.getElementById("calibration-default-screen").style.visibility = 'hidden';
+			m.enable_motor(8);	// enable eyes
+			m.move_joint(8,0, 1.0);	// move eyes to zero position
+			break;
+		case 1:
+			$('#overlay-content').empty();
+			document.getElementById("connect-screen").style.visibility = 'visible';
+			document.getElementById("eyes-screen").style.visibility = 'hidden';
+			if (allMotorsEnabled() == true){
+				activateMarty(2);
+				return;
+			}
+			$('#overlay-content').append('Ready to activate legs and arms.<br>Please lay Marty down facing up<br><span style="font-size:10pt"><a onclick="clearTimeout(waitTimeout);activateMarty(2)">Skip</a></span>');
+			acc0 = m.get_sensor('acc0');
+			waitUntilReadyToActivate();
+			break;
+		case 2:
+			$('#overlay-content').empty();
+			document.getElementById("connect-screen").style.visibility = 'visible';
+			document.getElementById("eyes-screen").style.visibility = 'hidden';
+			$('#overlay-content').append('Activating Right Hand...');
+			m.enable_motor(7);
+			m.move_joint(7,0,1.0);
+			chatter = m.get_sensor('chatter');
+			$('#overlay-content').append('<br>' + chatter);
+			setTimeout(activateMarty,1000,3);
+			break;
+		case 3: 	//left hand
+		case 4: 	// right knee
+		case 5: 	// right twist
+		case 6: 	// right hip
+		case 7: 	// left knee
+		case 8: 	// left twist
+		case 9: 	// left hip
+			motorID = 9-state;
+			$('#overlay-content').empty();
+			$('#overlay-content').append('Activating ' + joints[motorID] + '...');
+			m.enable_motor(motorID);
+			m.move_joint(motorID,0,1.0);
+			chatter = m.get_sensor('chatter');
+			//$('#overlay-content').append('<br>' + chatter);
+			setTimeout(activateMarty,500,state+1);
+			break;
+		case 10:
+		{
+			$('#overlay-content').empty();
+			var i = 0;
+			var allEnabled = true;
+            for (i=0; i<9; i++){        
+                var enabled = m.get_sensor("enabled" + i);
+                if (enabled == false){
+                	allEnabled = false;
+                	$('#overlay-content').append(joints[i] + ' is not enabled. ');
+                }
+            }
+            if (allEnabled === true){
+            	$('#overlay-content').empty();
+				$('#overlay-content').append('Marty is activated! Please stand Marty up again');
+				waitUntilReadyToCalibrate();
+            } else {
+            	$('#overlay-content').empty();
+				$('#overlay-content').append('One or more motors did not activate.<br>Trying again...');
+				setTimeout(activateMarty,2500,2);
+            }
+        }
+			/*
+			$('#overlay-content').empty();
+			chatter = m.get_sensor('chatter');
+			$('#overlay-content').append('<br>' + chatter);
+			setTimeout(activateMarty,500,9);
+			*/
+			break;
+	}
+}
+
+function waitUntilReadyToActivate(){
+	var acc0;	
+	acc0 = m.get_sensor('acc0');
+	console.log(acc0);
+	if (acc0 < -0.8){
+		$('#overlay-content').empty();
+		$('#overlay-content').append('Ok!<br><br>Keep your hands clear<br>Marty is about to move');
+		waitTimeout = setTimeout(activateMarty,4000,2);	// marty is laying down
+	} else {
+		waitTimeout = setTimeout(waitUntilReadyToActivate,200);
+	}
+}
+
+function waitUntilReadyToCalibrate(){
+	var acc2;	
+	acc2 = m.get_sensor('acc2');
+	console.log(acc2);
+	if (acc2 > 0.9){
+		$('#overlay-content').empty();
+		$('#overlay-content').append('Ok!<br><br>Let\'s calibrate Marty!');
+		setTimeout(calibrateJoints,4000);	// marty is laying down
+	} else {
+		setTimeout(waitUntilReadyToCalibrate,200);
+	}
+}
+
+function calibrateJoints(){
+	document.getElementById("connect-screen").style.visibility = 'hidden';
+	document.getElementById("save-calibration-screen").style.visibility = 'hidden';
+	document.getElementById("no-walk-screen").style.visibility = 'hidden';
+	document.getElementById("calibration-default-screen").style.visibility = 'visible';
+	motorStateDisplay = "calibration-default-status";
+	saveCalibrationButton = "calibration-default-save";
+}
+
+function adjustJoint(jointID){
+	switch (jointID){
+		case 8:
+			m.move_joint(8, document.getElementById('slider-eyes').value, 0);
+			break;
+		default:
+			m.move_joint(jointID, document.getElementById('slider-' + jointID).value, 0);
+			break;
+	}
+}
+
+// run on an interval once Marty is activated. Keeps the values of motor enabled and motor positions being read.
+function motorStateMonitor(){
+	var joints = ['Left hip', 'Left twist', 'Left knee', 'Right hip', 'Right twist', 'Right knee', 'Left arm', 'Right arm', 'Eyes'];
+	var i = 0;
+	var disabledJoints = [];
+	var chatter = m.get_sensor('chatter');
+    for (i=0; i<9; i++){        
+        var sname = "mp" + i;
+        var enabled = m.get_sensor("enabled" + i);
+        var mp = m.get_sensor(sname);
+        if (enabled == false){
+        	disabledJoints.push(i);
+        }
+    }
+    if (motorStateDisplay != null){
+    	$('#' + motorStateDisplay).empty();
+    	if (disabledJoints.length == 0){
+    		$('#' + motorStateDisplay).append('All motors enabled :)');
+    		document.getElementById(motorStateDisplay).className = "statusBox statusOk";
+    		if (saveCalibrationButton != null){
+    			document.getElementById(saveCalibrationButton).disabled = false;
+    		}
+    	} else {
+    		document.getElementById(motorStateDisplay).className = "statusBox statusError";
+    		for (dID in disabledJoints){
+    			var motorID = disabledJoints[dID];
+    			$('#' + motorStateDisplay).append(joints[motorID] + ' motor is disabled! <button onclick=\'reenableMotor(' + motorID + ')\' class="calButton">Re-enable</button><br>');
+    		}
+    		$('#' + motorStateDisplay).append('<br> Please don\'t push Marty\'s joints too hard! <br><br>Marty says: ' + chatter);
+    		if (saveCalibrationButton != null){
+    			document.getElementById(saveCalibrationButton).disabled = true;
+    		}
+    	}
+    	if (motorAdvancedDisplay != null){
+	    	for (i=0; i<9;i++){
+	    		var mp = m.get_sensor("mp" + i);
+	    		if (mp != null){
+	    			document.getElementById("slider-" + i).value = mp;
+	    		}
+	    	}
+	    }
+    }
+
+}
+
+function allMotorsEnabled(){
+	for (i=0;i<9;i++){
+		var enabled = m.get_sensor("enabled" + i);
+		if (enabled == false){
+			return false;
+		}	
+	}
+	return true;
+}
+
+function reenableMotor(motorID){
+	m.enable_motor(motorID);
+	m.move_joint(motorID,m.get_sensor('mp' + motorID),1.0);	
+}
+
+function saveCalibration(){
+	m.save_calibration();
+	document.getElementById("calibration-default-screen").style.visibility = 'hidden';
+	document.getElementById("save-calibration-screen").style.visibility = 'visible';
+	document.getElementById("save-calibration-saved").style.display = "none";
+	motorStateDisplay = "save-calibration-status";
+	saveCalibrationButton = null;
+	document.getElementById("save-calibration-save-status").innerHTML = "Saving...";
+	setTimeout(function(){
+		var chatter = m.get_sensor('chatter');
+		document.getElementById("save-calibration-save-status").innerHTML = chatter;
+		if (chatter.includes("Calibration saved")){
+			document.getElementById("save-calibration-saved").style.display = "inline-block";
+		} else {
+			document.getElementById("save-calibration-save-status").innerHTML = chatter + "<p>Calibration doesn't seem to have saved. </p><button class='calButton' onclick='calibrateJoints()'>Try again</button>";
+		}
+		
+	},2000);
+}
+
+function walk(){
+	m.walk(2,0,1800,50);
+}
+
+function fineTune(){
+	if (document.getElementById("calibration-advanced").style.display == "inline-block"){
+		document.getElementById("calibration-advanced").style.display = "none";
+		motorAdvancedDisplay = null;
+		document.getElementById("button-fineTune").value = "Show more options";
+	} else {
+		document.getElementById("calibration-advanced").style.display = "inline-block";
+		motorAdvancedDisplay = "calibration-advanced";
+		document.getElementById("button-fineTune").value = "Hide options";
+	}
+}
+
+function walkthrough(stage){
+	var joints = ['Left hip', 'Left twist', 'Left knee', 'Right hip', 'Right twist', 'Right knee', 'Left arm', 'Right arm', 'Eyes'];
+	document.getElementById("calibration-default-screen").style.visibility = 'hidden';
+	document.getElementById("calibration-walkthrough-screen").style.visibility = 'visible';
+	motorStateDisplay = "calibration-walkthrough-status";
+	switch (stage){
+		case -1:
+		case 9:
+			document.getElementById("calibration-default-screen").style.visibility = 'visible';
+			document.getElementById("calibration-walkthrough-screen").style.visibility = 'hidden';
+			motorStateDisplay = "calibration-default-status";
+		default:
+			document.getElementById("calibration-walthrough-graphic").innerHTML = "<img src='calibration-joint-" + stage + ".jpg' style='width:100%'><p>" + joints[stage];
+			document.getElementById("calibration-walkthrough-text").innerHTML = "<p>Use the buttons below to move Marty's " + joints[stage] + " until it lines up, like in the picture</p><p><input type='button' class='calButton' onclick='incJoint(" + stage + ",-5)' value='<<'> &nbsp; <input type='button' class='calButton' onclick='incJoint(" + stage + ",-1)' value='<'> &nbsp; <input type='button' class='calButton' onclick='incJoint(" + stage + ",1)' value='>'> &nbsp; <input type='button' class='calButton' onclick='incJoint(" + stage + ",5)' value='>>'></p><p><input type='button' class='calButton' onclick='walkthrough(" + (stage-1) + ")' value='Back'> &nbsp; <input type='button' class='calButton' onclick='walkthrough(" + (parseInt(stage)+1) + ")' value='Next'></p>";
+			break;
+
+	}
+
+}
+
+function incJoint(jointID, inc){
+	m.move_joint(jointID, m.get_sensor("mp" + jointID)+inc);
+}
+
+function noWalk(){
+	document.getElementById("save-calibration-screen").style.visibility = "hidden";
+	document.getElementById("no-walk-screen").style.visibility = "visible";
+}
+
+setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
+
+  </script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+    .overlay{
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #37abc8;
+      z-index: 100;
+    }
+    #overlay-content{
+      
+    }
+
+    .step-content{
+      display:inline-table;
+      vertical-align: middle;
+      color:#ececec;
+      font-size: 20pt;	
+    }
+
+    .statusBox{
+    	font-size:1rem;
+    	border:0.1rem solid #000000;
+    	text-align:center;
+    	display:inline-table;
+    	vertical-align: middle;
+    	width:100%;
+    	padding-top: 1rem;
+    	padding-bottom: 1rem;
+    	border-radius: 0.5rem;
+    	-webkit-border-radius: 0.5rem;
+    }
+
+    .statusOk {
+    	background-color: #d7f4d7ff;
+    	color: #000000;
+    }
+
+    .statusError {
+    	background-color: #e9afafff;
+    	color: #000000;
+
+    }
+
+    #calibration-advanced{
+    	display:none;
+    }
+
+    .calButton{
+    	background-color: #ececec;
+    	color: #000000;
+    	padding: 0.5em 2em;
+    	border: none;
+    	border-bottom: 2px solid #27788c;
+    	border-radius: 0.2rem;
+    	-webkit-border-radius: 0.2rem;
+    }
+
+    .rounded-image{
+    	width:100%;border-radius: 0.5rem;
+    	-webkit-border-radius: 0.5rem;"
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="connect-screen">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="overlay-content" class="step-content">
+            Hello
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="overlay" id="eyes-screen" style="visibility:hidden">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="eyes-content">
+
+          	<div style="width:45%" class="step-content">
+          		<p><img src="eye-graphic.png" width="100%"></p>
+            	<p><input type="range" min="-100" max="100" value="0" id="slider-eyes" onchange="adjustJoint(8)"></p>
+            </div>
+            <div style="width:45%;" class="step-content">
+            	<p>Use the slider to move Marty's eyebrows until they're flat</p>
+
+            	<p><button onclick="activateMarty(1)" class="calButton">Next!</button></p>
+            </div>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+    <div class="overlay" id="calibration-default-screen" style="visibility:hidden">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="calibration-default-content">
+
+          	<div style="width:45%" class="step-content">
+          		<p><img src="calibration_joints.jpg" class="rounded-image"></p>
+
+          		<div id="calibration-default-status" class="statusBox statusOk"></div>
+
+          		
+         	
+            </div>
+            <div style="width:45%;" class="step-content">
+				<p><input type="button" class="calButton" onclick="fineTune()" id="button-fineTune" value="Show more options"> &nbsp;&nbsp; <button onclick="walkthrough(0)" class="calButton">More Help</button></p>           	
+
+				<div id="calibration-advanced" class="statusBox">
+					<table>
+						<tr>
+							<td>Eyes</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-8" onchange="adjustJoint(8)"></td>
+						</tr>
+						<tr>
+							<td>Left Arm</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-6" onchange="adjustJoint(6)"></td>
+						</tr>
+						<tr>
+							<td>Right Arm</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-7" onchange="adjustJoint(7)"></td>
+						</tr>
+						<tr>
+							<td>Left Hip</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-0" onchange="adjustJoint(0)"></td>
+						</tr>
+						<tr>
+							<td>Left Twist</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-1" onchange="adjustJoint(1)"></td>
+						</tr>
+						<tr>
+							<td>Left Knee</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-2" onchange="adjustJoint(2)"></td>
+						</tr>
+						<tr>
+							<td>Right Hip</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-3" onchange="adjustJoint(3)"></td>
+						</tr>
+						<tr>
+							<td>Right Twist</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-4" onchange="adjustJoint(4)"></td>
+						</tr>
+						<tr>
+							<td>Right Knee</td>
+							<td><input type="range" min="-100" max="100" value="0" id="slider-5" onchange="adjustJoint(5)"></td>
+						</tr>
+					</table>
+
+				</div>
+
+				<p>Using your hands, gently move Marty's legs and arms until Marty is standing straight, like shown in the picture</p>
+
+            	<p><button onclick="activateMarty(0)" class="calButton">Back to Eyes</button> &nbsp; &nbsp; <button onclick="saveCalibration()" class="calButton" id="calibration-default-save">Next!</button></p>
+            </div>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+
+  <div class="overlay" id="save-calibration-screen" style="visibility:hidden">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="calibration-default-content">
+
+          	<div style="width:45%" class="step-content">
+          		<p><img src="try_walking.jpg" width="100%" class="rounded-image"></p>
+         	
+            </div>
+            <div style="width:45%;" class="step-content">
+
+            	<div id="save-calibration-save-status">
+            		Saving...
+            	</div>
+
+
+            	<div id="save-calibration-saved" style="display:none">
+	            	<p>Ok! Let's try walking. Click the buttons below to try a few movements with Marty</p>
+
+	            	<div id="save-calibration-status"></div>
+
+	            	<p><button onclick="walk()" class="calButton">Walk Forward</button></p>
+
+	            	<p>Did Marty walk ok? <button onclick="window.location.href='/rc/rc.html'" class="calButton">Yes</button> &nbsp; <button onclick="noWalk()" class="calButton">No</button>
+	            	</p>
+	            </div>
+            </div>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="overlay" id="calibration-walkthrough-screen" style="visibility:hidden">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="calibration-default-content">
+
+          	<div style="width:45%" class="step-content">
+          		<div id="calibration-walthrough-graphic">
+          			
+          		</div>
+          		<div id="calibration-walkthrough-status" class="statusBox statusOk"></div>
+         	
+            </div>
+            <div style="width:45%;" class="step-content" id="calibration-walkthrough-text">
+
+            </div>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="overlay" id="no-walk-screen" style="visibility:hidden">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="calibration-default-content">
+
+          	<div style="width:45%" class="step-content">
+          			<p><img src="legsCheck.png" width="100%" class="rounded-image"></p>
+         	
+            </div>
+            <div style="width:45%;" class="step-content">
+            	<p>Please check that Marty is assembled correctly, like shown in the picture here</p>
+
+            	<p><button onclick="activateMarty(0)" class="calButton">Try again</button></p>
+            </div>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</body>
+</html>
