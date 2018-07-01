@@ -1,0 +1,119 @@
+---
+title: Marty WiFi Set Up
+layout: article
+---
+
+<p>Marty is controlled and programmed over WiFi, so when you first use Marty in a new place you'll need to connect it to the WiFi network there.</p>
+
+<p>
+More information on Marty's WiFi specification and the kind of networks that are supported can be found <a href="https://eduwiki.robotical.io/doku.php?id=wiki:marty:wifi">here</a>
+</p>
+
+<h3>The Marty Setup WiFi network</h3>
+<p>When turned on, Marty will try to connect to the last WiFi network it was connected to. If it can't connect to that, or it's the first time Marty has been turned on, Marty will broadcast a <em>Marty Setup</em> WiFi network. If Marty successfully connects to an existing WiFi network, it will not create the <em>Marty Setup</em> network</p>
+
+<p>
+	You can connect to the Marty Setup network to provide login details to the WiFi network you would like Marty to use. More information is in the next section
+</p>
+
+<div style="display:inline-block;padding:0em 1rem;width:40%">
+<video autoplay loop style="width:100%">
+	<source src="/web-setup/wifi-setup-blink.mp4" type="video/mp4">
+	<a href="/web-setup/wifi-setup-blink.mp4">Click here to view video</a>
+</video>
+</div>
+<div style="display:inline-block;width:50%">
+	<p><b>Is Marty connected?</b></p>
+	<p>If the blue light highlighted here is blinking slowly like this, Marty is not connected and will be producing a <em>Marty Setup</em> network</p>
+</div>
+
+<h3>Connecting Marty to a WiFi network</h3>
+
+<p>There are two ways to connect Marty to an existing WiFi network, one is to use the Marty the Robot app for Android and iOS, and the other is to use the web-based versions.</p>
+
+<h4>Marty the Robot app</h4>
+
+<p><a href="https://robotical.io/learn/article/14/Get%20Started%20with%20Marty/Get%20up%20and%20Running/">Click here to get more information on the Marty the Robot app</a>. The app will walk you through the process of setting up your Marty.</p>
+
+<h4>Web Based Set Up</h4>
+
+<p>Alternatively you can use the browser on your computer, laptop or tablet to set up Marty.</p>
+
+<ol>
+	<li><p><b>Connect your computer to the <em>Marty Setup</em> network</b></p>
+
+		<p>Make sure Marty is turned on (the white light is on inside his head) and then go into your devices WiFi settings. You should see a network called <em>Marty Setup</em> with some numbers after it. Connect to that network</p>
+
+		<p><em>If there's no Marty Setup network</em>
+			<ol>
+				<li>Make sure Marty is charged up and turned on</li>
+				<li>If there's still no Marty Setup network, it usually means Marty is already connected to your WiFi network. That means you don't need to do this step again, and can get on with <a href="/scratch">Programming Marty!</a>. If you assembled your own Marty and you've never done it, you will also need to <a href="/calibrate_new">calibrate your Marty</a></li>
+				<li>Check the blue light pictured above, if it's flashing there should be a Marty Setup wifi. Double check with a different computer or phone</li>
+			</ol>
+		</p></li>
+	<li>
+		<p><b>Go to <a href="http://192.168.4.1" target="_blank">192.168.4.1</a> (Opens in a new window)</b></p>
+
+		<p>Then follow the instructions. You'll see a list of WiFi networks, click on the one you want to connect Marty to and type in the password for that network in the box below</p>
+
+		<p>
+			<img src="/web-setup/wifi-setup-web-1.png" style="width:45%">
+			<img src="/web-setup/wifi-setup-web-2.png" style="width:45%">
+		</p>
+
+		<p>You can also give your Marty a name of its own!</p>
+
+		<p>Once you've put in the details, click on the "Save" button, you'll see a different screen</p>
+	</li>
+	<li>
+		<p><b>Wait for Marty to connect to your WiFi network</b></p>
+
+		<p>Wait for a bit for Marty to try to connect. Keep an eye on the WiFi indicator shown in the video above. If it keeps on flashing slowly, try clicking the Refresh button in your browser on the in the other window with the set up screen</p>
+
+		<div style="display:inline-block;padding:0em 1rem;width:40%">
+		<video autoplay loop style="width:100%">
+			<source src="/web-setup/wifi-setup-blink.mp4" type="video/mp4">
+			<a href="/web-setup/wifi-setup-blink.mp4">Click here to view video</a>
+		</video>
+		</div>
+		<div style="display:inline-block;width:50%">
+			<img src="/web-setup/wifi-setup-web-2-refresh.png" style="width:75%">
+			<p><b>Light still flashing? Try clicking the Refresh button in this window</b></p>
+		</div>
+	</li>
+	<li>
+		<p><b>Ok! What next?</b></p>
+		<p>Once Marty is connected to your WiFi network, you can connect to it to program and remote control Marty</p>
+
+		<p>If you built your own Marty, the first time you use it you will need to calibrate the motors. <a href="/calibrate_new" target="_blank">Click here to go to the calibration tool</a> which will walk you through the process</p>
+
+		<p><a href="/rc/rc.html" target="_blank">Click here to go the Marty remote control</a></p>
+
+		<p><a href="/" target="_blank">And click here to go back to the main page</a> where there are links on how to program Marty. A good place to start is <a href="/scratch/" target="_blank">Scratch</a>, and <a href="https://eduwiki.robotical.io/doku.php?id=wiki:scratch" target="_blank">Here are some resources and examples of things you can do with Scratch</a></p>
+	</li>
+	<li>
+		<p><b>Troubleshooting</b></p>
+		<p>If Marty is connected to your WiFi network, but the Marty scanner in the calibration, remote control, or Scratch tools aren't finding it, you may need to enter Marty's IP address directly.</p>
+		<p><a href="https://robotical.io/forum/thread/44.3u3myNb3xY8yjQlm8TQrHs7Ww1E" target="_blank">Check here for instructions on how you can do that</a></p>
+	</li>
+</ol>
+
+<h4>Marty's MAC address</h4>
+<p>For some networks you may need to know Marty's MAC address before you can get it up and running on your network. When connected to the <em>Marty Setup</em> network, go to 196.168.4.1/info to see this</p>
+
+<h4>Disconnecting Marty from WiFi</h4>
+<p>If you want to change which WiFi network Marty is on, or take it somewhere new, you'll want to disconnect from the WiFi.</p>
+
+<p><b>Using the Marty the Robot app</b><br>
+In the app, select "Scan for Marty", select the Marty you want, and then click the "Reset WiFi" button, and confirm that you want to disconnect.
+</p>
+
+<p><b>Via the web</b><br>
+Go to <a href="/dashboard/" target="_blank">docs.robotical.io/dashboard</a> and scan for Martys. Once scanning has finished, click the WiFi reset button next to the relevant Marty.
+</p>
+
+
+
+
+
+
