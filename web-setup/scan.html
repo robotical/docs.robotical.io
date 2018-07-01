@@ -135,12 +135,17 @@ function listMartys(ip, finishedRange){
             $('#overlay-content').append("Found <b>" + martylist[m][1] + "</b> on the IP: " + martylist[m][0] + ". <button class=\"btn smaller success\" onclick=\"calibrate('" + martylist[m][0] + "', '" + escape(martylist[m][1]) + "');\">Calibrate</button><br />");
         }
     } else if (finishedRange){
-        $('#overlay-content').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 60000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"add_marty_by_ip();\">Add</button>");
+        $('#overlay-content').append("No Martys found :-(<br><button class=\"btn complement\" onclick=\"console.log('scanning...');scanForMartys(null, 60000);\">Re-scan?</button><br><br>Or add by IP: <input type=\"text\" id=\"martyIp\"> <button class=\"btn\" onclick=\"calibrate_marty_by_ip();\">Calibrate</button>");
     }
 }
 
 function calibrate(ip, name){
 	window.location.href='calibrate.html?ip=' + ip + '&name=' + name;
+}
+
+function calibrate_marty_by_ip(){
+  var ip = document.getElementById("martyIp").value;
+  calibrate(ip, "Marty");
 }
 
 function checkMartys(ip){
