@@ -127,6 +127,8 @@ function activateMarty(state){
 			waitUntilReadyToActivate();
 			break;
 		case 2:
+      // ensure eyes are on, since sometimes we skip straight to this state
+      m.enable_motor(8);  // enable eyes
 			$('#overlay-content').empty();
 			document.getElementById("connect-screen").style.visibility = 'visible';
 			document.getElementById("eyes-screen").style.visibility = 'hidden';
@@ -220,15 +222,19 @@ function calibrateJoints(){
 	saveCalibrationButton = "calibration-default-save";
 }
 
-function adjustJoint(jointID){
-	switch (jointID){
-		case 8:
-			m.move_joint(8, document.getElementById('slider-eyes').value, 0);
-			break;
-		default:
-			m.move_joint(jointID, document.getElementById('slider-' + jointID).value, 0);
-			break;
-	}
+function adjustJoint(jointID, newval = null){
+  if (newval != null){
+    m.move_joint(jointID, newval, 0);
+  } else {
+  	switch (jointID){
+  		case 8:
+  			m.move_joint(8, document.getElementById('slider-eyes').value, 0);
+  			break;
+  		default:
+  			m.move_joint(jointID, document.getElementById('slider-' + jointID).value, 0);
+  			break;
+  	}
+  }
 }
 
 // run on an interval once Marty is activated. Keeps the values of motor enabled and motor positions being read.
@@ -340,7 +346,7 @@ function walkthrough(stage){
 			motorStateDisplay = "calibration-default-status";
 		default:
 			document.getElementById("calibration-walthrough-graphic").innerHTML = "<img src='calibration-joint-" + stage + ".jpg' style='width:100%'><p>" + joints[stage];
-			document.getElementById("calibration-walkthrough-text").innerHTML = "<p>Use the buttons below to move Marty's " + joints[stage] + " until it lines up, like in the picture</p><p><input type='button' class='calButton' onclick='incJoint(" + stage + ",-5)' value='<<'> &nbsp; <input type='button' class='calButton' onclick='incJoint(" + stage + ",-1)' value='<'> &nbsp; <input type='button' class='calButton' onclick='incJoint(" + stage + ",1)' value='>'> &nbsp; <input type='button' class='calButton' onclick='incJoint(" + stage + ",5)' value='>>'></p><p><input type='button' class='calButton' onclick='walkthrough(" + (stage-1) + ")' value='Back'> &nbsp; <input type='button' class='calButton' onclick='walkthrough(" + (parseInt(stage)+1) + ")' value='Next'></p>";
+			document.getElementById("calibration-walkthrough-text").innerHTML = "<p>Use the buttons below to move Marty's " + joints[stage] + " until it lines up, like in the picture</p><p><input type='button' class='calButton adjustButton' onclick='incJoint(" + stage + ",-5)' value='<<'> &nbsp; <input type='button' class='calButton adjustButton' onclick='incJoint(" + stage + ",-2)' value='<'> &nbsp; <input type='button' class='calButton adjustButton' onclick='incJoint(" + stage + ",2)' value='>'> &nbsp; <input type='button' class='calButton adjustButton' onclick='incJoint(" + stage + ",5)' value='>>'></p><p><input type='button' class='calButton' onclick='walkthrough(" + (stage-1) + ")' value='Back'> &nbsp; <input type='button' class='calButton' onclick='walkthrough(" + (parseInt(stage)+1) + ")' value='Next'></p>";
 			break;
 
 	}
@@ -426,9 +432,105 @@ setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
     	-webkit-border-radius: 0.2rem;
     }
 
+    .adjustButton{
+      background-color: #f9eebe;
+      padding: 0.5em 1em;
+    }
+
     .rounded-image{
     	width:100%;border-radius: 0.5rem;
     	-webkit-border-radius: 0.5rem;"
+    }
+
+    .joint-slider{
+      width:100%;
+    }
+
+    /* Special styling for WebKit/Blink */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border: 1px solid #000000;
+      height: 16px;
+      width: 16px;
+      border-radius: 3px;
+      background: #ffffff;
+      cursor: pointer;
+      margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+    }
+
+    /* All the same stuff for Firefox */
+    input[type=range]::-moz-range-thumb {
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      border: 1px solid #000000;
+      height: 16px;
+      width: 16px;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    /* All the same stuff for IE */
+    input[type=range]::-ms-thumb {
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      border: 1px solid #000000;
+      height: 16px;
+      width: 16px;
+      border-radius: 3px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8.4px;
+      cursor: pointer;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      background: #3071a9;
+      border-radius: 1.3px;
+      border: 0.2px solid #010101;
+    }
+
+    input[type=range]:focus::-webkit-slider-runnable-track {
+      background: #367ebd;
+    }
+
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 8.4px;
+      cursor: pointer;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+      background: #3071a9;
+      border-radius: 1.3px;
+      border: 0.2px solid #010101;
+    }
+
+    input[type=range]::-ms-track {
+      width: 100%;
+      height: 8.4px;
+      cursor: pointer;
+      background: transparent;
+      border-color: transparent;
+      border-width: 16px 0;
+      color: transparent;
+    }
+    input[type=range]::-ms-fill-lower {
+      background: #2a6495;
+      border: 0.2px solid #010101;
+      border-radius: 2.6px;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    }
+    input[type=range]:focus::-ms-fill-lower {
+      background: #3071a9;
+    }
+    input[type=range]::-ms-fill-upper {
+      background: #3071a9;
+      border: 0.2px solid #010101;
+      border-radius: 2.6px;
+      box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    }
+    input[type=range]:focus::-ms-fill-upper {
+      background: #367ebd;
     }
   </style>
 </head>
@@ -456,7 +558,7 @@ setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
 
           	<div style="width:45%" class="step-content">
           		<p><img src="eye-graphic.png" width="100%"></p>
-            	<p><input type="range" min="-100" max="100" value="0" id="slider-eyes" onchange="adjustJoint(8)"></p>
+            	<p><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-eyes" onchange="adjustJoint(8)" oninput="adjustJoint(8)" style="width:100%"></p>
             </div>
             <div style="width:45%;" class="step-content">
             	<p>Use the slider to move Marty's eyebrows until they're flat</p>
@@ -490,42 +592,42 @@ setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
 				<p><input type="button" class="calButton" onclick="fineTune()" id="button-fineTune" value="Show more options"> &nbsp;&nbsp; <button onclick="walkthrough(0)" class="calButton">More Help</button></p>           	
 
 				<div id="calibration-advanced" class="statusBox">
-					<table>
+					<table style="width:80%">
 						<tr>
-							<td>Eyes</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-8" onchange="adjustJoint(8)"></td>
+							<td style="width:60">Eyes</td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-8" onchange="adjustJoint(8, this.value)" oninput="adjustJoint(8, this.value)"></td>
 						</tr>
 						<tr>
 							<td>Left Arm</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-6" onchange="adjustJoint(6)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-6" onchange="adjustJoint(6)" oninput="adjustJoint(6)"></td>
 						</tr>
 						<tr>
 							<td>Right Arm</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-7" onchange="adjustJoint(7)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-7" onchange="adjustJoint(7)" oninput="adjustJoint(7)"></td>
 						</tr>
 						<tr>
 							<td>Left Hip</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-0" onchange="adjustJoint(0)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-0" onchange="adjustJoint(0)" oninput="adjustJoint(0)"></td>
 						</tr>
 						<tr>
 							<td>Left Twist</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-1" onchange="adjustJoint(1)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-1" onchange="adjustJoint(1)" oninput="adjustJoint(1)"></td>
 						</tr>
 						<tr>
 							<td>Left Knee</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-2" onchange="adjustJoint(2)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-2" onchange="adjustJoint(2)" oninput="adjustJoint(2)"></td>
 						</tr>
 						<tr>
 							<td>Right Hip</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-3" onchange="adjustJoint(3)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-3" onchange="adjustJoint(3)" oninput="adjustJoint(3)"></td>
 						</tr>
 						<tr>
 							<td>Right Twist</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-4" onchange="adjustJoint(4)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-4" onchange="adjustJoint(4)" oninput="adjustJoint(4)"></td>
 						</tr>
 						<tr>
 							<td>Right Knee</td>
-							<td><input type="range" min="-100" max="100" value="0" id="slider-5" onchange="adjustJoint(5)"></td>
+							<td><input type="range" class="joint-slider" min="-100" max="100" value="0" id="slider-5" onchange="adjustJoint(5)" oninput="adjustJoint(5)"></td>
 						</tr>
 					</table>
 
