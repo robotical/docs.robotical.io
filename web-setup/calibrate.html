@@ -42,9 +42,11 @@ console.log(parsed_qs.ip);
 var m;
 var motorStateInterval;
 var motorStateDisplay = null;
+var motorStateDisplayMode = "calibration";
 var saveCalibrationButton = null;
 var waitTimeout = null;
 var motorAdvancedDisplay = null;
+var firmwareVersion = null;
 
 function connectToMarty(ip, name, state){
 	var chatter;
@@ -68,13 +70,14 @@ function connectToMarty(ip, name, state){
     			setTimeout(connectToMarty, 500, ip, name, 1);
     			m.get_firmware_version();
     		} else {
-				$('#overlay-content').append('<br >Marty found.<br >Firmware version: ' + chatter + '<br >');
-				battery = m.get_sensor('battery');
-				m.fall_protection(false);
-				setTimeout(connectToMarty, 1500, ip, name, 2);
-				// activate state monitor
-				motorStateInterval =  setInterval(motorStateMonitor,500);
-			}
+          firmwareVersion = chatter.substr(1,5);
+  				$('#overlay-content').append('<br >Marty found.<br >Firmware version: ' + chatter + '<br >');
+  				battery = m.get_sensor('battery');
+  				m.fall_protection(false);
+  				setTimeout(connectToMarty, 1500, ip, name, 2);
+  				// activate state monitor
+  				motorStateInterval =  setInterval(motorStateMonitor,500);
+  			}
     		
     		break;
     	case 2:
@@ -219,6 +222,7 @@ function calibrateJoints(){
 	document.getElementById("no-walk-screen").style.visibility = 'hidden';
 	document.getElementById("calibration-default-screen").style.visibility = 'visible';
 	motorStateDisplay = "calibration-default-status";
+  motorStateDisplayMode = "calibration";
 	saveCalibrationButton = "calibration-default-save";
 }
 
@@ -265,7 +269,29 @@ function motorStateMonitor(){
     			var motorID = disabledJoints[dID];
     			$('#' + motorStateDisplay).append(joints[motorID] + ' motor is disabled! <button onclick=\'reenableMotor(' + motorID + ')\' class="calButton">Re-enable</button><br>');
     		}
-    		$('#' + motorStateDisplay).append('<br> Please don\'t push Marty\'s joints too hard! <br><br>Marty says: ' + chatter);
+        if (motorStateDisplayMode == "calibration"){
+    		  $('#' + motorStateDisplay).append('<br> Please don\'t push Marty\'s joints too hard! <br><br>Marty says: ' + chatter);
+        } else {
+          if (disabledJoints.includes(2)){
+            $('#' + motorStateDisplay).append('<br>Marty\'s left knee has turned off.');
+            if (firmwareVersion == "1.1.2"){
+              $('#' + motorStateDisplay).append('Would you like to try and automatically fix this problem? <button onclick=\'fixKneeOverextend(2)\' class="calButton">Try auto-fix</button>');
+            }
+          }
+          if (disabledJoints.includes(5)){
+            $('#' + motorStateDisplay).append('<br>Marty\'s right knee has turned off.');
+            if (firmwareVersion == "1.1.2"){
+              $('#' + motorStateDisplay).append('Would you like to try and automatically fix this problem? <button onclick=\'fixKneeOverextend(5)\' class="calButton">Try auto-fix</button>');
+            }
+          }
+          if (disabledJoints.includes(6)){
+            $('#' + motorStateDisplay).append('<br>Marty\'s left arm has turned off. It might be screwed on too tight, please loosen it slightly and try again');
+          }
+          if (disabledJoints.includes(7)){
+            $('#' + motorStateDisplay).append('<br>Marty\'s right arm has turned off. It might be screwed on too tight, please loosen it slightly and try again');
+          }
+
+        }
     		if (saveCalibrationButton != null){
     			document.getElementById(saveCalibrationButton).disabled = true;
     		}
@@ -303,6 +329,7 @@ function saveCalibration(){
 	document.getElementById("save-calibration-screen").style.visibility = 'visible';
 	document.getElementById("save-calibration-saved").style.display = "none";
 	motorStateDisplay = "save-calibration-status";
+  motorStateDisplayMode = "walk";
 	saveCalibrationButton = null;
 	document.getElementById("save-calibration-save-status").innerHTML = "Saving...";
 	setTimeout(function(){
@@ -318,7 +345,23 @@ function saveCalibration(){
 }
 
 function walk(){
+  document.getElementById("walkYes").disabled = true;
+  document.getElementById("walkNo").disabled = true;
+  if (!allMotorsEnabled()){
+    m.enable_motors();
+    m.stand_straight(500);
+    setTimeout(walk, 500);
+    return;
+  }
+
 	m.walk(2,0,1800,50);
+  setTimeout(function(){
+    if (allMotorsEnabled){
+      document.getElementById("walkOkQuestion").style.visibility = "visible";
+      document.getElementById("walkYes").disabled = false;
+      document.getElementById("walkNo").disabled = false;
+    }
+  }, 3600);
 }
 
 function fineTune(){
@@ -338,6 +381,7 @@ function walkthrough(stage){
 	document.getElementById("calibration-default-screen").style.visibility = 'hidden';
 	document.getElementById("calibration-walkthrough-screen").style.visibility = 'visible';
 	motorStateDisplay = "calibration-walkthrough-status";
+  motorStateDisplayMode = "calibration";
 	switch (stage){
 		case -1:
 		case 9:
@@ -360,6 +404,74 @@ function incJoint(jointID, inc){
 function noWalk(){
 	document.getElementById("save-calibration-screen").style.visibility = "hidden";
 	document.getElementById("no-walk-screen").style.visibility = "visible";
+}
+
+function yesWalk(){
+  document.getElementById("save-calibration-screen").style.visibility = "hidden";
+  document.getElementById("troubleshoot-screen").style.visibility = "visible";  
+}
+
+// function to set lower servo multipliers for the knee joint, where the blue servos might be hitting the hard stop
+// should only be called if the firmware version has been checked, or if the user has verified they have blue motors
+function fixKneeOverextend(jointID, state){
+  if (state === undefined){state=0;}
+  switch (state){
+    case 0:
+      m.enable_motors();
+      m.stand_straight(500);
+      setTimeout(fixKneeOverextend, 500, jointID, 1);
+      break;
+    case 1:
+      if (!allMotorsEnabled){
+        fixKneeOverextend(jointID, 0);
+        return;
+      }
+      // check robot is zeroed, we don't want to save a bad calibration
+      for (var i=0; i<9; i++){
+        if (m.get_sensor("mp" + i) < -2 || m.get_sensor("mp" + i) > 2){
+          fixKneeOverextend(jointID, 0);
+          return;
+        }
+      }
+      //adjust offending joint in the way slightly, and set multiplier slightly lower than the 1.5 default on v1.1.2 first issue
+      if (jointID == 2){
+        m.move_joint(2, 5, 100);
+        m.set_servo_mult(2, 1.45);
+      } else if (jointID == 5){
+        m.move_joint(5, -5, 100);
+        m.set_servo_mult(5, 1.45);
+      }
+      
+      setTimeout(fixKneeOverextend, 200, jointID, 2);
+      break;
+    case 2:
+      if (!allMotorsEnabled){
+        fixKneeOverextend(jointID, 0);
+      } else {
+        saveCalibration();
+      }
+  }
+}
+
+function fixEyesTooWide(state){
+  if (!allMotorsEnabled()){
+    m.enable_motors();
+    m.stand_straight(500);
+    setTimeout(fixEyesTooWide, 500);
+    return;
+  }
+  // check robot is zeroed, we don't want to save a bad calibration
+  for (var i=0; i<9; i++){
+    if (m.get_sensor("mp" + i) < -2 || m.get_sensor("mp" + i) > 2){
+      m.stand_straight(100);
+      setTimeout(fixEyesTooWide, 150);
+      return;
+    }
+  }
+  m.move_joint(8, 100, 0);
+  setTimeout(function(){
+    m.save_calibration();
+  }, 250);
 }
 
 setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
@@ -671,8 +783,10 @@ setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
 
 	            	<p><button onclick="walk()" class="calButton">Walk Forward</button></p>
 
-	            	<p>Did Marty walk ok? <button onclick="window.location.href='/rc/rc.html'" class="calButton">Yes</button> &nbsp; <button onclick="noWalk()" class="calButton">No</button>
-	            	</p>
+                <div id="walkOkQuestion" style="visibility: hidden">
+  	            	<p>Did Marty walk ok? <button onclick="yesWalk()" class="calButton" id="walkYes">Yes</button> &nbsp; <button onclick="noWalk()" class="calButton" id="walkNo">No</button>
+  	            	</p>
+                </div>
 	            </div>
             </div>
 
@@ -723,6 +837,47 @@ setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
             	<p>Please check that Marty is assembled correctly, like shown in the picture here</p>
 
             	<p><button onclick="activateMarty(0)" class="calButton">Try again</button></p>
+            </div>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="overlay" id="troubleshoot-screen" style="visibility:hidden">
+    <table width="100%" height="100%">
+      <tr>
+        <td valign="middle" align="center">
+
+          <div id="calibration-default-content">
+
+            <div style="width:45%" class="step-content">
+                <p><img src="try_walking.jpg" width="100%" class="rounded-image"></p>
+          
+            </div>
+            <div style="width:45%;" class="step-content">
+              <p>Is everything else ok with Marty?</p>
+
+
+              <p><button onclick="window.location.href='/rc/rc.html'" class="calButton">Everything is Good</button></p>
+
+
+
+              <table style="font-size:12pt">
+                <tr>
+                  <td colspan="2"><b>Troubleshooting:</b></td>
+                </tr>
+                <tr>
+                  <td>Marty's eyes are too wide!</td>
+                  <td> <a href="#" onclick="fixEyesTooWide()" style="color:#FFFFFF">Fix</a></td>
+                </tr>
+                <tr>
+                  <td>Marty's eyebrows hit each other</td>
+                  <td><a href="https://www.youtube.com/watch?v=UJKOaEQe7xs" target="_blank" style="color:#FFFFFF">Video of how to fix</a></td>
+                </tr>
+              </table>
             </div>
 
           </div>
