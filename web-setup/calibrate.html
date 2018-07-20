@@ -402,11 +402,13 @@ function incJoint(jointID, inc){
 }
 
 function noWalk(){
+  document.getElementById("walkOkQuestion").style.visibility = "hidden";
 	document.getElementById("save-calibration-screen").style.visibility = "hidden";
 	document.getElementById("no-walk-screen").style.visibility = "visible";
 }
 
 function yesWalk(){
+  document.getElementById("walkOkQuestion").style.visibility = "hidden";
   document.getElementById("save-calibration-screen").style.visibility = "hidden";
   document.getElementById("troubleshoot-screen").style.visibility = "visible";  
 }
@@ -441,7 +443,7 @@ function fixKneeOverextend(jointID, state){
         m.move_joint(5, -5, 100);
         m.set_servo_mult(5, 1.45);
       }
-      
+      m.move_joint(8, 30, 0);
       setTimeout(fixKneeOverextend, 200, jointID, 2);
       break;
     case 2:
