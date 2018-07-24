@@ -74,45 +74,87 @@ function Marty(IP, name){
 
   // websocket stuff
   // TODO: generalise to allow other connection types - e.g. i2c for microbit
-  this.socket = new WebSocket("ws://" + IP + ":81/");
-  this.socket.binaryType = 'arraybuffer';
-  this.socket.requests = [];
-  this.socket.parent = this;
+
+  this.url = "ws://" + IP + ":81/";
+
+  this.connect = function(){
+    this.socket = new WebSocket("ws://" + IP + ":81/");
+    this.socket.binaryType = 'arraybuffer';
+    this.socket.requests = [];
+    this.socket.parent = this;
+    this.alive = false;
+    // set the number of requests that can be pending before we class the connection as dead and attempt to reconnect
+    this.requests_limit = 200;
 
 
-  this.socket.onmessage = function (event){
-    var thisSensor = this.requests[0];
-    this.requests.shift();
-    var buf;
-    switch (this.parent.sensors[thisSensor].type){
-      case "chatter":
-        var chatter = new Uint8Array(event.data);
-        this.parent.sensors[thisSensor].value = String.fromCharCode.apply(null, chatter.slice(4, chatter.length));
-        break;
-      case "motorPosition":
-      case "enabled":
-        buf = new Int8Array(event.data);
-        this.parent.sensors[thisSensor].value = buf[0];
-        break;
-      case "gpio":
-      default:
-        buf = new Float32Array(event.data);
-        this.parent.sensors[thisSensor].value = buf[0];
-        break;
+    this.socket.onmessage = function (event){
+      var thisSensor = this.requests[0];
+      this.requests.shift();
+      this.parent.alive = true;
+      var buf;
+      switch (this.parent.sensors[thisSensor].type){
+        case "chatter":
+          var chatter = new Uint8Array(event.data);
+          this.parent.sensors[thisSensor].value = String.fromCharCode.apply(null, chatter.slice(4, chatter.length));
+          break;
+        case "motorPosition":
+        case "enabled":
+          buf = new Int8Array(event.data);
+          this.parent.sensors[thisSensor].value = buf[0];
+          break;
+        case "gpio":
+        default:
+          buf = new Float32Array(event.data);
+          this.parent.sensors[thisSensor].value = buf[0];
+          break;
+      }
+      this.parent.sensors[thisSensor].lastRead = Date.now();
+      //update(thisSensor, buf[0]);
+
     }
-    this.parent.sensors[thisSensor].lastRead = Date.now();
-    //update(thisSensor, buf[0]);
 
+    this.socket.onopen = function () {
+      this.parent.enable_safeties();
+      //this.parent.lifelike_behaviours(true);
+      this.parent.get_firmware_version();
+      this.parent.get_sensor("chatter");
+      //sensorInt = setInterval(update_sensors, 100);
+      if (this.parent.sensorInt){
+        clearInterval(this.parent.sensorInt);
+      }
+      this.parent.sensorInt = setInterval(this.parent.update_sensors, 100, this.parent);
+      this.parent.alive=true;
+      this.requests = [];
+    };
+
+    this.socket.onclose = function(e){
+      switch (e.code){
+      case 1000:  // CLOSE_NORMAL
+        console.log("WebSocket: closed");
+        break;
+      default:  // Abnormal closure
+        this.parent.reconnect(e);
+        break;
+      }
+      this.parent.alive=false;
+      clearInterval(this.parent.sensorInt);
+    };
+  }
+  this.connect();
+
+  this.autoReconnectInterval = 1000;
+  this.reconnect = function(e){
+    if (this.sensorInt){
+      clearInterval(this.sensorInt);
+    }
+    console.log(`WebSocketClient: retry in ${this.autoReconnectInterval}ms`,e);
+    var that = this;
+    setTimeout(function(){
+      console.log("WebSocketClient: reconnecting...");
+      that.connect();
+    },this.autoReconnectInterval);
   }
 
-  this.socket.onopen = function () {
-    this.parent.enable_safeties();
-    //this.parent.lifelike_behaviours(true);
-    this.parent.get_firmware_version();
-    this.parent.get_sensor("chatter");
-    //sensorInt = setInterval(update_sensors, 100);
-    this.parent.sensorInt = setInterval(this.parent.update_sensors, 100, this.parent);
-  };
 
 
   this.update_sensors = function(marty){
@@ -123,6 +165,14 @@ function Marty(IP, name){
         marty.socket.requests.push(marty.sensors[s].name);
         marty.socket.send(req[marty.sensors[s].name]);
       }
+    }
+    // check to see if requests are getting responses. If not, connection is probably dead
+    if (marty.socket.requests.length > marty.requests_limit){
+      console.log('max requests hit. assuming connection dead');
+      clearInterval(marty.sensorInt);
+      marty.alive = false;
+      marty.reconnect('not receiving responses. requests_limit hit');
+      
     }
   }
 

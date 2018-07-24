@@ -5,9 +5,10 @@
   <title>Marty Scanner</title>
 
 
-    <script src="js/marty.js"></script>
-  <script src="js/martyScan.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
+  <script src="js/marty.js?v=20180724"></script>
+  <script src="js/martyScan.js"></script>
+  
 
   <script type="text/javascript">
 
@@ -56,6 +57,8 @@ function connectToMarty(ip, name, state){
 			$('#overlay-content').empty();
     		$('#overlay-content').append("Connecting to " + name + "...<br>");
     		m = new Marty(ip, name);
+        // we send a lot of data during calibration, so increase the auto-reset limit
+        m.requests_limit = 500;
     		setTimeout(connectToMarty, 1500, ip, name, 1);
     		break;
     	case 1:
@@ -247,64 +250,77 @@ function motorStateMonitor(){
 	var i = 0;
 	var disabledJoints = [];
 	var chatter = m.get_sensor('chatter');
-    for (i=0; i<9; i++){        
-        var sname = "mp" + i;
-        var enabled = m.get_sensor("enabled" + i);
-        var mp = m.get_sensor(sname);
-        if (enabled == false){
-        	disabledJoints.push(i);
-        }
-    }
-    if (motorStateDisplay != null){
-    	$('#' + motorStateDisplay).empty();
-    	if (disabledJoints.length == 0){
-    		$('#' + motorStateDisplay).append('All motors enabled :)');
-    		document.getElementById(motorStateDisplay).className = "statusBox statusOk";
-    		if (saveCalibrationButton != null){
-    			document.getElementById(saveCalibrationButton).disabled = false;
-    		}
-    	} else {
-    		document.getElementById(motorStateDisplay).className = "statusBox statusError";
-    		for (dID in disabledJoints){
-    			var motorID = disabledJoints[dID];
-    			$('#' + motorStateDisplay).append(joints[motorID] + ' motor is disabled! <button onclick=\'reenableMotor(' + motorID + ')\' class="calButton">Re-enable</button><br>');
-    		}
-        if (motorStateDisplayMode == "calibration"){
-    		  $('#' + motorStateDisplay).append('<br> Please don\'t push Marty\'s joints too hard! <br><br>Marty says: ' + chatter);
-        } else {
-          if (disabledJoints.includes(2)){
-            $('#' + motorStateDisplay).append('<br>Marty\'s left knee has turned off.');
-            if (firmwareVersion == "1.1.2"){
-              $('#' + motorStateDisplay).append('Would you like to try and automatically fix this problem? <button onclick=\'fixKneeOverextend(2)\' class="calButton">Try auto-fix</button>');
-            }
-          }
-          if (disabledJoints.includes(5)){
-            $('#' + motorStateDisplay).append('<br>Marty\'s right knee has turned off.');
-            if (firmwareVersion == "1.1.2"){
-              $('#' + motorStateDisplay).append('Would you like to try and automatically fix this problem? <button onclick=\'fixKneeOverextend(5)\' class="calButton">Try auto-fix</button>');
-            }
-          }
-          if (disabledJoints.includes(6)){
-            $('#' + motorStateDisplay).append('<br>Marty\'s left arm has turned off. It might be screwed on too tight, please loosen it slightly and try again');
-          }
-          if (disabledJoints.includes(7)){
-            $('#' + motorStateDisplay).append('<br>Marty\'s right arm has turned off. It might be screwed on too tight, please loosen it slightly and try again');
-          }
+  var goodData = true;
 
+  for (i=0; i<9; i++){        
+      var sname = "mp" + i;
+      var enabled = m.get_sensor("enabled" + i);
+      var mp = m.get_sensor(sname);
+      if (enabled == false){
+      	disabledJoints.push(i);
+      }
+      if (enabled === null){ goodData = false;}
+  }
+  if (motorStateDisplay != null && (goodData || !m.alive)){
+  	$('#' + motorStateDisplay).empty();
+  	if (disabledJoints.length == 0 && m.alive){
+  		$('#' + motorStateDisplay).append('All motors enabled :)');
+  		document.getElementById(motorStateDisplay).className = "statusBox statusOk";
+  		if (saveCalibrationButton != null){
+  			document.getElementById(saveCalibrationButton).disabled = false;
+  		}
+  	} else if (!m.alive){
+  		document.getElementById(motorStateDisplay).className = "statusBox statusError";
+      if (!m.alive){
+        $('#' + motorStateDisplay).append("Connection to Marty lost... attempting to reconnect. <br /><br /> If this doesn't work please refresh and try again");
+      } 
+    } else {
+      document.getElementById(motorStateDisplay).className = "statusBox statusError";
+      if (disabledJoints.length > 8){
+        // too many joints turned off. go back to activation stage
+        $('#' + motorStateDisplay).append('All Marty\'s motors are turned off! <button onclick="motorStateDisplay=null;connectToMarty(\'' + parsed_qs.ip + '\', \'' + parsed_qs.name + '\', 1);document.getElementById(\'' + motorStateDisplay + '\').innerHTML = \'Please wait...\';" class="calButton">Re-activate Marty</button><br>');
+        return;
+      }
+  		for (dID in disabledJoints){
+  			var motorID = disabledJoints[dID];
+  			$('#' + motorStateDisplay).append(joints[motorID] + ' motor is disabled! <button onclick=\'reenableMotor(' + motorID + ')\' class="calButton">Re-enable</button><br>');
+  		}
+      if (motorStateDisplayMode == "calibration"){
+  		  $('#' + motorStateDisplay).append('<br> Please don\'t push Marty\'s joints too hard! <br><br>Marty says: ' + chatter);
+      } else {
+        if (disabledJoints.includes(2)){
+          $('#' + motorStateDisplay).append('<br>Marty\'s left knee has turned off.');
+          if (firmwareVersion == "1.1.2"){
+            $('#' + motorStateDisplay).append('Would you like to try and automatically fix this problem? <button onclick=\'fixKneeOverextend(2)\' class="calButton">Try auto-fix</button>');
+          }
         }
-    		if (saveCalibrationButton != null){
-    			document.getElementById(saveCalibrationButton).disabled = true;
+        if (disabledJoints.includes(5)){
+          $('#' + motorStateDisplay).append('<br>Marty\'s right knee has turned off.');
+          if (firmwareVersion == "1.1.2"){
+            $('#' + motorStateDisplay).append('Would you like to try and automatically fix this problem? <button onclick=\'fixKneeOverextend(5)\' class="calButton">Try auto-fix</button>');
+          }
+        }
+        if (disabledJoints.includes(6)){
+          $('#' + motorStateDisplay).append('<br>Marty\'s left arm has turned off. It might be screwed on too tight, please loosen it slightly and try again');
+        }
+        if (disabledJoints.includes(7)){
+          $('#' + motorStateDisplay).append('<br>Marty\'s right arm has turned off. It might be screwed on too tight, please loosen it slightly and try again');
+        }
+
+      }
+  		if (saveCalibrationButton != null){
+  			document.getElementById(saveCalibrationButton).disabled = true;
+  		}
+  	}
+  	if (motorAdvancedDisplay != null){
+    	for (i=0; i<9;i++){
+    		var mp = m.get_sensor("mp" + i);
+    		if (mp != null){
+    			document.getElementById("slider-" + i).value = mp;
     		}
     	}
-    	if (motorAdvancedDisplay != null){
-	    	for (i=0; i<9;i++){
-	    		var mp = m.get_sensor("mp" + i);
-	    		if (mp != null){
-	    			document.getElementById("slider-" + i).value = mp;
-	    		}
-	    	}
-	    }
     }
+  }
 
 }
 
