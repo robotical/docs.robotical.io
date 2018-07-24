@@ -323,25 +323,34 @@ function reenableMotor(motorID){
 	m.move_joint(motorID,m.get_sensor('mp' + motorID),1.0);	
 }
 
-function saveCalibration(){
-	m.save_calibration();
-	document.getElementById("calibration-default-screen").style.visibility = 'hidden';
-	document.getElementById("save-calibration-screen").style.visibility = 'visible';
-	document.getElementById("save-calibration-saved").style.display = "none";
-	motorStateDisplay = "save-calibration-status";
-  motorStateDisplayMode = "walk";
-	saveCalibrationButton = null;
-	document.getElementById("save-calibration-save-status").innerHTML = "Saving...";
-	setTimeout(function(){
-		var chatter = m.get_sensor('chatter');
-		document.getElementById("save-calibration-save-status").innerHTML = chatter;
-		if (chatter.includes("Calibration saved")){
-			document.getElementById("save-calibration-saved").style.display = "inline-block";
-		} else {
-			document.getElementById("save-calibration-save-status").innerHTML = chatter + "<p>Calibration doesn't seem to have saved. </p><button class='calButton' onclick='calibrateJoints()'>Try again</button>";
-		}
-		
-	},2000);
+function saveCalibration(state){
+  if (state === undefined){state=0;}
+  switch (state){
+    case 0:
+    	m.save_calibration();
+    	document.getElementById("calibration-default-screen").style.visibility = 'hidden';
+    	document.getElementById("save-calibration-screen").style.visibility = 'visible';
+    	document.getElementById("save-calibration-saved").style.display = "none";
+    	motorStateDisplay = "save-calibration-status";
+      motorStateDisplayMode = "walk";
+    	saveCalibrationButton = null;
+    	document.getElementById("save-calibration-save-status").innerHTML = "Saving...";
+    	setTimeout(saveCalibration, 2000, 1);
+      break;
+    case 1:
+  		var chatter = m.get_sensor('chatter');
+      if (chatter == null){
+        setTimeout(saveCalibration, 250, 1);
+        break;
+      }
+  		document.getElementById("save-calibration-save-status").innerHTML = chatter;
+  		if (chatter.includes("Calibration saved")){
+  			document.getElementById("save-calibration-saved").style.display = "inline-block";
+  		} else {
+  			document.getElementById("save-calibration-save-status").innerHTML = chatter + "<p>Calibration doesn't seem to have saved. </p><button class='calButton' onclick='calibrateJoints()'>Try again</button>";
+  		}
+  	  break;
+    }
 }
 
 function walk(){
@@ -424,7 +433,7 @@ function fixKneeOverextend(jointID, state){
       setTimeout(fixKneeOverextend, 500, jointID, 1);
       break;
     case 1:
-      if (!allMotorsEnabled){
+      if (!allMotorsEnabled()){
         fixKneeOverextend(jointID, 0);
         return;
       }
@@ -475,6 +484,7 @@ function fixEyesTooWide(state){
     m.save_calibration();
   }, 250);
 }
+
 
 setTimeout(connectToMarty, 1000, parsed_qs.ip, parsed_qs.name, 0);
 
