@@ -173,6 +173,14 @@ function calibrateMarty(ip, name, stage){
             setTimeout(function(){calibrateMarty(ip, name, 1);}, 1000);
             break;
         case 1:
+            if (m.socket.readyState > 1){
+                if (ip=="192.168.4.1"){
+                    alert("Failed to connect. For direct connection, please make sure you are connected to a Marty Setup wifi network");
+                    return;
+                } else {
+                    alert("Failed to connect. Please check the connection and try again");
+                }
+            }
             var battery = m.get_sensor("battery");
             if (battery === null){
                 setTimeout(function(){calibrateMarty(ip, name, 1);}, 500);
@@ -213,6 +221,11 @@ function calibrateMarty(ip, name, stage){
 
 }
 
+function directConnect(){
+    calibrateMarty("192.168.4.1", "Marty", -1);
+}
+
+
 function adjustJoint(id, amount){
     var oldPos = m.get_sensor("mp" + id);
     if (oldPos === null){
@@ -246,6 +259,7 @@ function clear_calibration(){
 <p>
     <div id="MartyList" class="text-center">
       <button onclick="scanForMartys();" class="btn bitbigger rounded"><i class="fa fa-fw fa-search"></i> &nbsp; Scan for Martys</button>
+      <button onclick="directConnect();" class="btn bitbigger rounded"><i class="fa fa-fw fa-search"></i> &nbsp; Direct Connect</button>
     </div>
 </p>
 
