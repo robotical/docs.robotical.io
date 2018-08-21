@@ -55,6 +55,7 @@ This section will give details on each block available through the Scratch inter
 | [Move leg forward/backward](#move_leg_forward) |                       |                        |
 | [Play sound](#play_sound)         |                                    |                        |
 | [Set blocking mode](#set_blocking_mode) |                              |                        |
+| [Side Step](#side_step)           |                                    |                        |
 | [Stand straight](#stand_straight) |                                    |                        |
 | [Stop](#stop)                     |                                    |                        |
 | [Turn](#turn)                     |                                    |                        |
@@ -178,6 +179,15 @@ If timing is really really critical, you might want to pause operation, queue up
 ![Precise timing with pausing and enabling](/img/blocks/multiple_movejoints_pause.png)
 
 That'll avoid any slight timing differences due to network lag.
+
+<a name="side_step"></a>
+#### Side Step ![Side step block](img/blocks/side_step.png)
+
+`Side step` will make Marty take a specified number of side steps to the left or right. 
+
+It defaults to a direction of left, a step time of 1.5s and a step length of length of 50. 
+
+For more information on the step parameters see the [walk](#walk) function.
 
 <a name="stand_straight"></a>
 #### Stand straight ![Stand straight block](/img/blocks/stand_straight.png)
