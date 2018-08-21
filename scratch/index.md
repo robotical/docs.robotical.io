@@ -181,7 +181,7 @@ If timing is really really critical, you might want to pause operation, queue up
 That'll avoid any slight timing differences due to network lag.
 
 <a name="side_step"></a>
-#### Side Step ![Side step block](img/blocks/side_step.png)
+#### Side Step ![Side step block](/img/blocks/side_step.png)
 
 `Side step` will make Marty take a specified number of side steps to the left or right. 
 
