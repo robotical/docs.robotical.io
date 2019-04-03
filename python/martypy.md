@@ -180,7 +180,9 @@ pause and disable
 Move a specific joint, selected by `joint_id` (0 to 8) to `position` (-128 to 127) taking
 `move_time` milliseconds
 
-
+<figure style="max-width: 400px;">
+<img src="/img/marty-joints.jpg" class="img-responsive" title="Marty's Joints numbered">
+</figure>
 
 `lean(direction, amount, move_time)`
 {:.docsubitem#lean}
