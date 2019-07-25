@@ -15,29 +15,41 @@ The easiest way to install *martypy* is using `pip`, the Python package manager:
     $ pip install martypy
 {:.feature}
 
+For **Windows** users, these steps may differ and we recommend that you follow through a more
+involved tutorial on our learning websites. The steps for **Mac** & **Linux** (including Raspberry Pi)
+users are very similar and given here.
+
 Also, when starting a new Python project it is **strongly** recommended that you start it
-using a *virtual environment*, with `pyvenv` for Python 3:
+using a *virtual environment*. For a tutorial on what virtual environments are and how to use
+them, see Python's [official tutorial](https://docs.python.org/3/tutorial/venv.html).
+To do this in Python 3:
 {:.feature}
 
-    $ pyvenv VENV
-    $ source VENV/bin/activate
+    $ python3 -m venv VENV
+    $ source ./VENV/bin/activate
     (VENV) $ pip install martypy
 {:.feature}
 
-Instead, for Python 2 (although we recommend you don't start using Python 2 for
-new projects) use `virtualenv`:
+Remember, each time you open a new terminal you'll need to re-run `source ./VENV/bin/activate`
+to re-enable your VENV.
+
+(**Note**: If your OS says it can't find or recognise `python3`, try using just `python`
+instead, after checking that you have Python 3 installed)
+
+This prevents you from having to install martypy for *all* users on your computer, and lets you
+install specific versions of packages without having conflicts with system packages, making it
+much easier to work on ore than one Python project on the same machine.
+
+Instead, if you *must* use Python 2 (although we strongly recommend you don't use Python 2 as
+support for it will be dropped soon) use `virtualenv`: (which you may need to install)
 
     $ virtualenv VENV
     $ source VENV/bin/activate
     (VENV) $ pip install martypy
 
-This prevents you from having to install martypy for *all* users on your computer, and lets you
-install specific versions of packages without having conflicts with system packages.
-
 The source code form `martypy` is on [GitHub](https://github.com/robotical/martypy), if you need to
 install the bleeding-edge in-development code, or want to fiddle with the library, submit issues
 or contribute pull requests.
-
 
 **ProTip:** See [Python.org](https://www.python.org) for how to install Python on your
 System, and for generic syntax help and learning resources
