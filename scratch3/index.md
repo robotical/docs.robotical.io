@@ -227,7 +227,7 @@ There are several options types of stop:
 
 <a name="turn"></a>
 #### Turn 
-<img src="../img/scratch3_blocks/Turn.png" alt="turn block" height = 56>
+<img src="../img/scratch3_blocks/Turn.png" alt="turn block" height ="56">
 
 Turn will make Marty turn on the spot in the left or right direction. For faster turning try using the [walk block](#walk) to set your own parameters
 
