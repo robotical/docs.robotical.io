@@ -69,7 +69,7 @@ This section will give details on each block available through the Scratch inter
 
 <a name="circle_dance"></a>
 #### Circle Dance 
-<img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height = 56>
+<img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height = 56></img>
  
 
 `Circle dance` will make Marty lean right->forward->left->backward, or left->backward->right->forward, depending on the setting. His head will therefore move round in a clockwise or anticlockwise direction.
