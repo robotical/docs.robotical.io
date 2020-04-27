@@ -69,7 +69,7 @@ This section will give details on each block available through the Scratch inter
 
 <a name="circle_dance"></a>
 #### Circle Dance 
-<img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height = 56></img>
+<img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height="56"></img>
  
 
 `Circle dance` will make Marty lean right->forward->left->backward, or left->backward->right->forward, depending on the setting. His head will therefore move round in a clockwise or anticlockwise direction.
@@ -80,7 +80,7 @@ The movement will end with Marty leaning either forward or backward, so you can 
 
 <a name="enable_motors"></a>
 #### Turn on motors 
-<img src="../img/scratch3_blocks/Turn_On_Motors.png" alt="Enable motors block" height = 56>
+<img src="../img/scratch3_blocks/Turn_On_Motors.png" alt="Enable motors block" height="56"></img>
 
 `Turn on motors` will activate Marty's motors so they're ready to receive commands, but won't send any movement commands.
 
@@ -88,12 +88,13 @@ The movement will end with Marty leaning either forward or backward, so you can 
 
 <a name="eyes"></a>
 #### Eyes 
-<img src="../img/scratch3_blocks/Eyes.png" alt="Eyes block" height = 56>
+<img src="/img/scratch3_blocks/Eyes.png" alt="Eyes block" height="56">
 
 The `Eyes` block will let you move Marty's eyebrows near-instantly to a predefined position - either *angry*, *normal*, *excited*, or *wide*
 
 <a name="get_ready"></a>
 #### Get Ready 
+
 <img src="../img/scratch3_blocks/Get_Ready.png" alt="Get ready block" height = 56>
 
 The `Get ready` block is designed to get Marty's motors activated and finish with all joints in their zero positions. It'll also wiggle the eyebrows, so you know that it's done something even if Marty was already standing straight.
