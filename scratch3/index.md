@@ -11,7 +11,6 @@ a program from blocks.
 
 <div class="center bitbigger padder">
 <p><a href="http://scratch3beta.robotical.io" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch &times; Marty</a></p>
-<p><a href="http://docs.robotical.io/scratchx/?url=http://robotical.github.io/scratchx/scratch_extensions/martyExtended.js#scratch" class="btn rounded warning smaller" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Mirror (if above link doesn't work)</a></p>
 
 </div>
 
@@ -251,7 +250,7 @@ This'll make Marty wiggle.
 ### Sensor blocks
 
 <a name="accelerometer"></a>
-#### Accelerometer (tilt sensing) ![Accelerometer block](/img/scratch3_blocks/Accelerometer.jpg)
+#### Accelerometer (tilt sensing) ![Accelerometer block](/img/scratch3_blocks/Accelerometer.png)
 
 The `accelerometer` block lets you read from Marty's three axis accelerometer. This can tell you information about acceleration, but also about tilt.
 
