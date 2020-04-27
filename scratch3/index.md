@@ -69,7 +69,7 @@ This section will give details on each block available through the Scratch inter
 
 <a name="circle_dance"></a>
 #### Circle Dance 
-<img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height="56"></img>
+<img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height="56">
  
 
 `Circle dance` will make Marty lean right->forward->left->backward, or left->backward->right->forward, depending on the setting. His head will therefore move round in a clockwise or anticlockwise direction.
@@ -80,7 +80,7 @@ The movement will end with Marty leaning either forward or backward, so you can 
 
 <a name="enable_motors"></a>
 #### Turn on motors 
-<img src="../img/scratch3_blocks/Turn_On_Motors.png" alt="Enable motors block" height="56"></img>
+<img src="../img/scratch3_blocks/Turn_On_Motors.png" alt="Enable motors block" height="56">
 
 `Turn on motors` will activate Marty's motors so they're ready to receive commands, but won't send any movement commands.
 
