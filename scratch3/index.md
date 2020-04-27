@@ -10,7 +10,7 @@ a program from blocks.
 
 
 <div class="center bitbigger padder">
-<p><a href="http://scratch3beta.robotical.io" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch &times; Marty</a></p>
+<p><a href="http://scratch3beta.robotical.io" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch 3 &times; Marty</a></p>
 
 </div>
 
