@@ -13,8 +13,9 @@ If you are new to Marty and Scratch it is recommended you use Scratch 3.
 
 
 <div class="center bitbigger padder">
+Scratch 3 documentation can be found by clicking button bellow:
 <p><a href="http://docs.robotical.io/scratch3" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch 3 for Marty - Function Guide</a></p>
 The older version of Scratch (Scratch X) is still available for Marty 
-and can be found by clicking the button bellow:
+and documentation can be found by clicking the button bellow:
 <p><a href="http://docs.robotical.io/scratchxdoc" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Click to open Scratch X for Marty - Function Guide</a></p>
 </div>
