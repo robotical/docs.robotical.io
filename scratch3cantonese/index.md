@@ -88,7 +88,7 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 #### 眼睛 Eyes
 <img src="/img/scratch3_blocks/Eyes.png" alt="Eyes block" height="56">
 
-The `眼睛` 方塊可讓您立即將Marty的眉毛移動到預定的位置：*生氣*、*正常*、*興奮*或*寬闊*。
+`眼睛` 方塊可讓您立即將Marty的眉毛移動到預定的位置：*生氣*、*正常*、*興奮*或*寬闊*。
 
 <a name="get_ready"></a>
 #### 準備就緒 Get Ready
