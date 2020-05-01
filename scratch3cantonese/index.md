@@ -8,7 +8,7 @@ layout: article
 
 
 <div class="center bitbigger padder">
-<p><a href="http://scratch3beta.robotical.io" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; 按此開敫Scratch 3 &times; Marty</a></p>
+<p><a href="http://scratch3beta.robotical.io" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; 按此開啟Scratch 3 &times; Marty</a></p>
 
 </div>
 
@@ -17,7 +17,7 @@ Scratch需要通過您的無線網絡（Wi-Fi）連接到Marty才能發送指令
 當您打開Scratch時，它將會嘗試在您的網絡中尋找Marty。 請參閱 [Scratch入門指南](https://robotical.io/blog/article/8/Marty%20Scratch%203%20Extension%20-%20beta) 以詳細了解其運作原理。
 
 <div class="center bitbigger padder">
-<a href="https://robotical.io/blog/article/8/Marty%20Scratch%203%20Extension%20-%20beta/" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; Getting started with Scratch</a>
+<a href="https://robotical.io/blog/article/8/Marty%20Scratch%203%20Extension%20-%20beta/" class="btn rounded" target="_blank"><i class="fa fa-external-link"></i> &nbsp; 在此開始Scratch</a>
 
 &nbsp;&nbsp;
 <!--
