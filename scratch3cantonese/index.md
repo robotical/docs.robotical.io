@@ -70,7 +70,7 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 <img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height="56">
  
 
-`圓圈舞蹈` 根據設置，圓圈舞蹈（Circle dance）會使Marty向右->向前->向左->向後傾，或向左->向後->向右->向後傾。 因此，他的頭將沿順時針或逆時針方向移動。
+根據設置，`圓圈舞蹈` 會使Marty向右->向前->向左->向後傾，或向左->向後->向右->向後傾。 因此，他的頭將沿順時針或逆時針方向移動。
 
 完整周期的長短能用時間來調教。
 
