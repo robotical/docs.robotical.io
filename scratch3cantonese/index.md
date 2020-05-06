@@ -74,7 +74,7 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 
 完整周期的長短能用時間來調教。
 
-這動作將以Marty向前或向後傾斜而結束，因此您可以連續發送幾個圓圈舞蹈指令以另其不停地的運動。
+這動作將以Marty向前或向後傾斜而結束，因此您可以連續發送幾個跳圈圈舞指令使其不停地的運動。
 
 <a name="enable_motors"></a>
 #### 開啟馬達 Turn on motors
@@ -262,7 +262,7 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 #### 跳擺擺舞 Wiggle 
 <img src="../img/scratch3_blocks/Wiggle.png" alt="wiggle block" height ="56">
 
-這會讓Marty擺動。
+這會讓Marty跳擺擺舞。
 
 ### 感應器方塊 Sensor blocks
 
