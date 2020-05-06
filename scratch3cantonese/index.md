@@ -29,7 +29,7 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 
 我們還推薦你查看關於 [Marty的行為簡介](/learn/article/Intro%20to%20Marty%20Behaviour/Introduction) 的行為簡介以詳細了解Marty的行為和回應方式。概括而言：
 
- * 在默認情況下，Marty的馬達處於關閉狀態時，可以使用 `準備就緒` 方塊（會將Marty移至位置零）或使用`啟動馬達` 方塊來啟動它們。
+ * 在默認情況下，Marty的馬達處於關閉狀態時，可以使用 `準備` 方塊（會將Marty移至位置零）或使用`啟動馬達` 方塊來啟動它們。
  * 如果Marty跌倒，摔倒保護裝置會將Marty的馬達關閉。
  * 如果馬達在瞬間或持續地承受過大的負荷，馬達的電流保護功能將使馬達暫時失效。
  * 在行動結束後，微震動防禦會嘗試減少Marty馬達產生的作用力，因此，Marty可能會自行移動來調節。 如果輕輕推動，它還可以讓您手動移動他的馬達（眼睛除外）。
@@ -40,14 +40,14 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 
 | 行動方塊                                                                        | 感應器方塊                           |
 |:-------------------------------------------------------------------------------|:-----------------------------------|
-| [圓圈舞蹈](#circle_dance) [Circle dance](#circle_dance)                          | [重力感應](#accelerometer) [Accelerometer](#accelerometer)   |
-| [啟動馬達](#enable_motors) [Turn on motors](#enable_motors)                      | [電池電壓](#battery_voltage) [Battery Voltage](#battery_voltage)|
+| [跳圈圈舞](#circle_dance) [Circle dance](#circle_dance)                          | [重力感應](#accelerometer) [Accelerometer](#accelerometer)   |
+| [開啟馬達](#enable_motors) [Turn on motors](#enable_motors)                      | [電池電壓](#battery_voltage) [Battery Voltage](#battery_voltage)|
 | [眼睛](#eyes) [Eyes](#eyes)                                                     | [輸入](#input) [Input](#input)                    |
-| [準備就緒](#get_ready) [Get Ready](#get_ready)                                   | [馬達電流](#motor_current) [Motor current](#motor_current)    |
+| [準備](#get_ready) [Get Ready](#get_ready)                                   | [馬達電流](#motor_current) [Motor current](#motor_current)    |
 | [踢](#kick) [Kick](#kick)                                                       | [距離感應](#proximity) [Proximity](#proximity)           |
 | [靠倚](#lean) [Lean](#lean)                                                     |                                    |
 | [抬腿](#lift_leg) [Lift leg](#lift_leg)                                         |                                    |
-| [小腿](#lower_leg) [Lower leg](#lower_leg)                                      |                                    |
+| [放下腿](#lower_leg) [Lower leg](#lower_leg)                                      |                                    |
 | [移動關節](#move_joint) [Move joint](#move_joint)                                |                                    |
 | [向前/向後移腿](#move_leg_forward) [Move leg forward/backward](#move_leg_forward) |                       |
 | [播放聲效](#play_sound) [Play sound](#play_sound)                                |                                    |
@@ -60,29 +60,29 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 | [步行](#walk) [Walk](#walk)                                                      |                                    |
 | [向後步行](#walk_backward) [Walk backward](#walk_backward)                        |                                    |
 | [向前步行](#walk_forward) [Walk forward](#walk_forward)                           |                                    |
-| [擺動](#wiggle) [Wiggle](#wiggle)                                                |                                    |
+| [跳擺擺舞](#wiggle) [Wiggle](#wiggle)                                                |                                    |
 {:.tt}
 
 ### 行動方塊 Action Blocks
 
 <a name="circle_dance"></a>
-#### 圓圈舞蹈 Circle Dance
+#### 跳圈圈舞 Circle Dance
 <img src="http://docs.robotical.io/img/scratch3_blocks/Circle_Dance.png" alt="Circle Dance Block" height="56">
  
 
-根據設置，`圓圈舞蹈` 會使Marty向右->向前->向左->向後傾，或向左->向後->向右->向後傾。 因此，他的頭將沿順時針或逆時針方向移動。
+根據設置，`跳圈圈舞` 會使Marty向右->向前->向左->向後傾，或向左->向後->向右->向後傾。 因此，他的頭將沿順時針或逆時針方向移動。
 
 完整周期的長短能用時間來調教。
 
 這動作將以Marty向前或向後傾斜而結束，因此您可以連續發送幾個圓圈舞蹈指令以另其不停地的運動。
 
 <a name="enable_motors"></a>
-#### 啟動馬達 Turn on motors
+#### 開啟馬達 Turn on motors
 <img src="../img/scratch3_blocks/Turn_On_Motors.png" alt="Enable motors block" height="56">
 
-`啟動馬達` 會激活Marty的馬達，以便它們準備接收指令，但不會發送任何運作指令。
+`開啟馬達` 會激活Marty的馬達，以便它們準備接收指令，但不會發送任何運作指令。
 
-`啟動馬達` 也會恢復被暫停和在列隊中的動作，因此，如果您以前使用過 [`停止和暫停`](#stop) 方塊， 則可以使用 `啟動馬達` 來恢復運作。
+`開啟馬達` 也會恢復被暫停和在列隊中的動作，因此，如果您以前使用過 [`停止和暫停`](#stop) 方塊， 則可以使用 `開啟馬達` 來恢復運作。
 
 <a name="eyes"></a>
 #### 眼睛 Eyes
@@ -91,16 +91,16 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 `眼睛` 方塊可讓您立即將Marty的眉毛移動到預定的位置：*生氣*、*正常*、*興奮*或*寬闊*。
 
 <a name="get_ready"></a>
-#### 準備就緒 Get Ready
+#### 準備 Get Ready
 <img src="../img/scratch3_blocks/Get_Ready.png" alt="Get ready block" height ="56">
 
-`準備就緒` 方塊旨在激活Marty的馬達，完成時，Marty的所有關節位置會處於零的狀態。 Marty會擺動一下眉毛來通知您它已經準備就緒，即使Marty一開始已經站直了。
+`準備` 方塊旨在激活Marty的馬達，完成時，Marty的所有關節位置會處於零的狀態。 Marty會擺動一下眉毛來通知您它已經準備就緒，即使Marty一開始已經站直了。
 
-這將會[`啟動馬達`](#enable_motors)
+這將會[`開啟馬達`](#enable_motors)
 
 在程式腳本開始時使用此功能是一個不錯的選擇，這可以確保Marty的關節處於啟動狀態並且處於已知的位置。
 
-當停用Marty的馬達後，Marty將無法得知它們的位置。 因此，**當您使用`準備就緒`時，Marty可能會快速移動和猛力地跳一下**。 記得手指要保持距離！
+當停用Marty的馬達後，Marty將無法得知它們的位置。 因此，**當您使用`準備`時，Marty可能會快速移動和猛力地跳一下**。 記得手指要保持距離！
 
 <a name="kick"></a>
 #### 踢 Kick
@@ -126,7 +126,7 @@ TODO: LINK TO TUTORIALS / LEARNING MATERIALS ETC.
 `抬腿` 可以將Marty的左膝或右膝向外移動以抬起該腿。 這可能會使Marty側身傾斜，具體取決於它當前的位置。
 
 <a name="lower_leg"></a>
-#### 小腿 Lower leg
+#### 放下腿 Lower leg
 <img src="../img/scratch3_blocks/Lower_Leg.png" alt="Lower leg block" height ="56">
 
 `小腿` 將測量兩個膝蓋中哪個較高，然後將其降低到與較低的膝蓋相同的角度。 這樣可以將抬高的腳放到地面上。
@@ -218,7 +218,7 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 | 凍結 freeze                          | 清除動作列隊和伺服馬達列隊（凍結您所在的位置）                                 |
 | 停用馬達 disable motors               | 清除所有內容並停用馬達                                                     |
 | 歸零 return to zero                   | 清除所有內容，並使機械人歸零                                               |
-| 暫停 pause                            | 暫停，但保持伺服馬達和行動列隊完好無損並保持啟動馬達                           |
+| 暫停 pause                            | 暫停，但保持伺服馬達和行動列隊完好無損並保持開啟馬達                           |
 | 暫停並停用馬達 pause and disable motors | 作為暫停，但也停用馬達                                                    |
 {:.tt}
 
@@ -232,7 +232,7 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 #### 關閉馬達 Turn off motors 
 <img src="../img/scratch3_blocks/Turn_Off_Motors.png" alt="turn off motors block" height ="56">
 
-`關閉馬達` 將禁用所有Marty伺服馬達系統。 這樣一來，它們便可以手動移動，而您需要使用 [`啟動馬達`](#enable_motors) 或 [`準備就緒`](#get_ready) 方塊重新啟動它們，它們才能再次移動
+`關閉馬達` 將禁用所有Marty伺服馬達系統。 這樣一來，它們便可以手動移動，而您需要使用 [`開啟馬達`](#enable_motors) 或 [`準備`](#get_ready) 方塊重新啟動它們，它們才能再次移動
 
 <a name="walk"></a>
 #### 步行 Walk 
@@ -259,7 +259,7 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 這方塊將使Marty前進行走指定數量的腳步。 它的默認踏步為40，時間為1.8秒。
 
 <a name="wiggle"></a>
-#### 擺動 Wiggle 
+#### 跳擺擺舞 Wiggle 
 <img src="../img/scratch3_blocks/Wiggle.png" alt="wiggle block" height ="56">
 
 這會讓Marty擺動。
@@ -267,10 +267,10 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 ### 感應器方塊 Sensor blocks
 
 <a name="accelerometer"></a>
-#### 重力感應（傾斜感應）Accelerometer (tilt sensing) 
+#### 加速度計（傾斜感應）Accelerometer (tilt sensing) 
 <img src="../img/scratch3_blocks/Accelerometer.png" alt="Accelerometer block" height ="56">
 
-`重力感應` 方塊使您可以從Marty的三軸重力計中進行讀取。 這可以告訴您有關重力的信息，也可以告訴您有關傾斜的信息。
+`重力感應` 方塊使您可以從Marty的三軸加速度計中進行讀取。 這可以告訴您有關重力的信息，也可以告訴您有關傾斜的信息。
 
 一共有三個軸：
 
@@ -284,7 +284,7 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 
 當Marty站直且不動時，Z軸的讀數應為1.0。 
 
-重力計的Z軸也用於跌倒檢測。
+加速度計的Z軸也用於跌倒檢測。
 
 要測量傾斜度，您可以嘗試執行以下操作：
 
@@ -327,10 +327,10 @@ Marty將把多個聲效指令放到列隊中，因此您可以發送整首樂曲
 <img src="../img/scratch3_blocks/Sensor_Usage.png" alt="measuring torque" height ="224">
 
 <a name="proximity"></a>
-#### 距離感應 Proximity 
+#### 距離傳感器 Proximity 
 <img src="../img/scratch3_blocks/Proximity.png" alt="proximity block" height ="56">
 
-`距離感應` 可讓您讀取距離感應器的數據。 它會給回以毫米為單位的讀數，該讀數可能與實際距離略有偏差。
+`距離傳感器` 可讓您讀取距離傳感器的數據。 它會給回以毫米為單位的讀數，該讀數可能與實際距離略有偏差。
 
 要使Marty 在靠近某個物體時停止行動，您可以執行以下操作：
 
