@@ -1,0 +1,409 @@
+---
+title: Marty V1 Landing
+layout: page
+---
+
+
+<div class="bg-grad">
+  <div class="container nogutter vspace">
+
+    <div class="card padder">
+      <h1 class="center">
+        Integration and API Docs for Marty V1
+      </h1>
+      <br>
+      <p class="bitbigger">
+        Marty V1 has two main different modes of operation - remotely controlled with just a Rick in
+        the head (how Marty is normally when you first get one), and an extended mode where a Raspberry Pi,
+        Arduino or other serial or I<sup>2</sup>C enabled microcontroller or mini-pc is inside the
+        head with Rick.
+      </p>
+      <p class="bitbigger">
+        Some of our APIs and Integrations work with only one of these modes, some with both so we've
+        split them into groups below. V1 Martys can also be simulated using V-REP without needing a physical
+        robot, also detailed below.
+      </p>
+      <p class="bigger center">
+        For Tutorials and Guides instead, and sourcecode, check out:<br><br>
+        <a href="https://robotical.io/learn/" class="btn rounded" target=_blank>
+          <i class="fa fa-book muted"></i> &nbsp; Learn Section on the Main Site
+        </a>
+        <a href="https://github.com/robotical/" class="btn complement rounded" target=_blank>
+          <i class="fa fa-github muted"></i> &nbsp; Robotical on GitHub
+        </a>
+        <a href="/calibration" class="btn rounded">
+          <i class="fa fa-fw fa-wrench muted"></i> &nbsp; Marty V1 Calibration Tool 
+        </a>
+        <a href="/calibration-troubleshooting" class="btn rounded">
+          <i class="fa fa-fw fa-wrench muted"></i> &nbsp; Calibration Troubleshooting
+        </a>
+      </p>
+    </div>
+
+
+    <div class="card padder">
+      <h3>
+        Standard Setup with Just Rick
+      </h3>
+      <br>
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="/scratch/" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px;"
+                         src="{{ site.baseurl }}/img/scratchlogo.png"
+                         alt="Scratch">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    Scratch
+                  </div>
+                  <div class="tt smaller muted">
+                    Beginner
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            <strong>Scratch</strong> is the simplest way to program a Marty if you're a
+            complete beginner. It has a simple graphical interface and blocks you can combine
+            to build up a program, and is very popular with kids & educators.
+          </p>
+        </div>
+      </div>
+      <br>
+
+      <div class="row padd">
+        <div class="col">
+          <a href="/python/martypy" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px;"
+                         src="{{ site.baseurl }}/img/python-logo.png"
+                         alt="Python">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    Python
+                  </div>
+                  <div class="tt smaller muted">
+                    Intermediate &amp; Advanced
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            <strong>Python</strong> is an easy to learn real-world programming language used by hundreds of
+            thousands of people, with a strong online community and thousands of libraries.
+          </p>
+          <p>
+            Our Python API is probably the best pick for most people.
+          </p>
+        </div>
+      </div>
+
+
+      
+    </div><!-- /.card -->
+
+
+
+
+
+
+    
+    <div class="card padder">
+
+      <h3>
+        RaspberryPi in head with Rick
+      </h3>
+      <br>
+      
+      <!--div class="row padd">
+        <div class="col">
+          <a href="/hardware/physical-connection" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px; padding: 0 50px;"
+                         src="{{ site.baseurl }}/img/raspberrypi_logo.png"
+                         alt="Python">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    RPi Setup Guide
+                  </div>
+                  <div class="tt smaller muted">
+                    Intermediate
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            Connecting a <strong>Raspberry Pi</strong> to a Marty is pretty simple, and adds a
+            whole leoad of power and new possibilities.
+          </p>
+        </div>
+      </div>
+      <br-->
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="/python/local" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px;"
+                         src="{{ site.baseurl }}/img/python-logo.png"
+                         alt="Python">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    Python
+                  </div>
+                  <div class="tt smaller muted">
+                    Intermediate &amp; Advanced
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            <strong>Python</strong> can also be used to control Marty from within the head.
+            If you've also got <strong>ROS</strong> installed, then you have full access to
+            <strong>rospy</strong>, otherwise you can use <strong>martypy</strong>.
+          </p>
+        </div>
+      </div>
+      <br>
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="/ros" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px;"
+                         src="{{ site.baseurl }}/img/ros_logo.png"
+                         alt="ROS">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    ROS
+                  </div>
+                  <div class="tt smaller muted">
+                    Advanced
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            <strong>ROS</strong>, the <strong>Robot Operating System</strong> is an incredible framework
+            and collection of tools and libraries for building robotics applications. Marty is fully
+            integrated into ROS, with the <strong>ros_marty</strong> API.
+          </p>
+        </div>
+      </div>
+
+      
+    </div><!-- /.card -->
+
+
+
+    
+    
+    <div class="card padder">
+
+      <h3>
+        Simulation
+      </h3>
+      <br>
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="/vrep" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px;"
+                         src="{{ site.baseurl }}/img/vrep_logo.png"
+                         alt="Python">
+                    </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    V-REP
+                  </div>
+                  <div class="tt smaller muted">
+                    Advanced
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            <strong>V-REP</strong> is a popular robot simulator with a whole load of ways to integrate with it.
+            Marty is natively supported and packaged with V-REP.
+          </p>
+          <p class="muted">
+            (Note that V-REP is licensed according to Coppelia Robotics' licensing restrictions and condition)
+          </p>
+        </div>
+      </div>
+      
+    </div><!-- /.card -->
+
+  </div>
+</div><!-- end integ and api-->
+
+
+
+
+
+
+<div class="bg-d-grey">
+  <div class="container nogutter vspace">
+
+    <div class="card padder">
+      <h2 class="center">
+        <a href="/hardware">
+          Hardware & Low-Level APIs
+        </a>
+      </h2>
+      <br>
+      <p class="bigger">
+        This set of articles cover the sensors and physical aspects of Marty, as well as the more
+        nitty-gritty technical details of Rick, Marty's control board and the associated electronics
+        they come with. Also covered are complete connection
+        details for interfacing with Rick's GPIOs and interface connectors.
+      </p>
+      <p class="bigger">
+        Additionally our lowest level APIs are documented here, so if there's a language or system you want to use
+        that's not currently supported, you may still be able to implement your control through these bare-metal APIs.
+      </p>
+      <br>
+
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="{{ site.baseurl }}/hardware/sensors" class="inherit">
+            <div class="well bigger">
+              <strong>Sensors</strong>
+              <p class="smaller">
+                Description of the different things Marty can sense and detect,
+                as well as axis conventions
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <a href="{{ site.baseurl }}/hardware/remote-connection" class="inherit">
+            <div class="well bigger">
+              <strong>WiFi Connection Guide</strong>
+              <p class="smaller">
+                Connecting to a Rick over a local network from a computer or
+                other device.
+              </p>
+            </div>
+          </a>
+        </div>
+        <!--div class="col">
+          <a href="{{ site.baseurl }}/hardware/physical-connection" class="inherit">
+            <div class="well bigger">
+              <strong>Physical Connection Guide</strong>
+              <p class="smaller">
+                Pinouts from Rick and information on
+                how to connect a RaspberryPi, Arduino or other serial-enabled device
+                to Rick inside a Marty's head.
+              </p>
+            </div>
+          </a>
+        </div-->
+      </div>
+      <br>
+
+
+
+
+
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="{{ site.baseurl }}/hardware/esp-socket-api" class="inherit">
+            <div class="well bigger">
+              <strong>Socket API</strong>
+              <p class="smaller">
+                Byte-level specification of the WiFi TCP socket API with Rick via the ESP, as well
+                as low-level info on the ROS Serial integration and Websocket communication with Rick
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <a href="{{ site.baseurl }}/hardware/specs" class="inherit">
+            <div class="well bigger">
+              <strong>Specs &amp; Ratings</strong>
+              <p class="smaller">
+                Rick's maximum power output ratings, battery safety, thermal characteristics,
+                limits and charge capablity.
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <a href="{{ site.baseurl }}/hardware/rick" class="inherit">
+            <div class="well bigger">
+              <strong>Rick Info</strong>
+              <p class="smaller">
+                Full schematics for the Rick control board and its common connections to peripherals such
+                as serial ports, GPIOs, Motors and cabling.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+
+<br>
+<br>
+</div>
