@@ -6,17 +6,19 @@ layout: page
 
 <div class="bg-grad">
   <div class="container nogutter vspace">
-
     <div class="card padder">
       <h1 class="center">
         Integration and API Docs for Marty V2
       </h1>
+      
       <br>
       <p class="left">
         <a href="/MartyV1" class="btn rounded">
-            <i class="fa fa-fw fa-wrench muted"></i> &nbsp; Marty V1 Docs
+            <i class="fa fa-fw fa-wrench muted"></i> Marty V1 Docs
+        </a>
       </p>
       <br>
+      
       <p class="bitbigger">
         Marty V2 can be controlled using your smart devices bluetooth connection. Marty's controller board (RIC) 
         supports Bluetooth Version 4.2 and newer. Support for Raspberry Pi, 
@@ -27,6 +29,7 @@ layout: page
         Some of our API's and integration will only work in some of these modes, so we have split them 
         into groups bellow.
       </p>
+      
       <p class="bigger center">
         For Tutorials and Guides instead, and sourcecode, check out:<br><br>
         <a href="https://robotical.io/learn/" class="btn rounded" target=_blank>
@@ -85,6 +88,55 @@ layout: page
         </div>
       </div>
       <br>
+      
+    </div><!-- /.card -->
+
+    <div class="card padder">
+
+      <h3>
+        Marty App
+      </h3>
+      <br>
+      
+      <div class="row padd">
+        <div class="col">
+          <a href="martyv2/react-native/" class="inherit">
+            <div class="well bigger">
+
+              <div class="media responsive">
+                <div class="media-left">
+                  <div class="center">
+                    <img style="max-width: 150px;"
+                         src="{{ site.baseurl }}/img/React-Native-Logo.png"
+                         alt="React Native">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="bigger">
+                    React Native
+                  </div>
+                  <div class="tt smaller muted">
+                    Intermediate &amp; Advanced
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col">
+          <p>
+            A <strong>React Native</strong> app has been developed with basic capabilities. It allows: <br>
+            <ul>
+              <li>Connection of Marty over BLE (Bluetooth)</li>
+              <li>Scratch running in a web-view</li>
+              <li>Basic configuration - firmware update, etc</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+      <br>
+      </div>
+
       
     </div><!-- /.card -->
 
@@ -178,7 +230,7 @@ layout: page
           </a>
         </div>
         <div class="col">
-          <a href="{{ site.baseurl }}/martyv2/hardware/rick" class="inherit">
+          <a href="{{ site.baseurl }}/martyv2/hardware/RIC" class="inherit">
             <div class="well bigger">
               <strong>RIC Info</strong>
               <p class="smaller">
