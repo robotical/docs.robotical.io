@@ -21,11 +21,14 @@ navigation:
   - text: 'Main Site'
     url: 'https://robotical.io'
     icon: 'external-link'
-  - text: 'Learn'
-    url: 'https://robotical.io/learn/'
+  - text: 'Shop'
+    url: 'https://shop.robotical.io'
     icon: 'external-link'
-  - text: 'Forum'
-    url: 'https://robotical.io/forum/'
+  - text: 'Learning Portal'
+    url: 'https://learn.martytherobot.com'
+    icon: 'external-link'
+  - text: 'Knowledge Base'
+    url: 'https://userguides.robotical.io'
     icon: 'external-link'
 
 # Primary and Accent (Compliment) colour:
