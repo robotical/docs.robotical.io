@@ -34,8 +34,6 @@ so aren't documented here.
 
 ![VCNL4200 Distance Sensor Board](https://content.robotical.io/static/media/stock/DSC07892-ed-opt.jpg)
 
-Product Page
-: [https://robotical.io/shop/sku/28](https://robotical.io/shop/sku/28)
 
 VCNL4200 Module Datasheet
 : [https://public.robotical.io/Datasheets/VCNL4200.pdf](https://public.robotical.io/Datasheets/VCNL4200.pdf)
